@@ -1,0 +1,26 @@
+﻿@using System.IO;
+@using Microsoft.AspNetCore.Blazor;
+@using Microsoft.AspNetCore.Blazor.Components;
+@using FileReaderComponent;
+
+<input type="file" ref="@fileElement"  />
+
+@functions{
+    ElementRef fileElement;
+    FileReaderRef fileReference;
+
+    [Parameter]
+    private IFileReaderRef FileReference
+    {
+        get { return fileReference; }
+        set
+        {
+            var typed = value as FileReaderRef;
+            fileReference = typed;
+            if (typed != null)
+            {
+                typed.GetElementRef = () => fileElement;
+            }
+        }
+    }
+}
