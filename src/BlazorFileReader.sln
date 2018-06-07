@@ -5,11 +5,6 @@ VisualStudioVersion = 15.0.27705.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorFileReader", "BlazorFileReader\BlazorFileReader.csproj", "{0781BC55-3054-47ED-A6B2-37448CA58038}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{153C6F34-C438-4FDD-B531-4C9AAAF21A20}"
-	ProjectSection(SolutionItems) = preProject
-		NuGet.config = NuGet.config
-	EndProjectSection
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FileReaderComponent", "FileReaderComponent\FileReaderComponent.csproj", "{5F8084DD-9D88-4407-BCFC-15C71C5AF11E}"
 EndProject
 Global
