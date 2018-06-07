@@ -7,90 +7,128 @@
 Welcome to your new filehashing app.<br />
 This demo calculates SHA256 using the .NET framework hash function.<br />
 The chunked version only loads a chunk at a time into the algorithm,<br />
-whereas the full-ram version reads the entire file into ram before doing anything.<br /><br/>
+whereas the full-ram version reads the entire file into ram before doing anything.<br /><br />
+The full-ram version should be the fastest for larger files,<br />
+but may also block the interface for larger files unless an inferior buffersize is used.<br />
+In any case the full-ram version will use at least the same amount of ram as the file size.<br />
 
-<FileReader FileReference="@FileReference" /><br />
-<button onclick="@HashFile">Hash SHA256 of file - chunked</button><br />
-<button onclick="@HashFileRam">Hash SHA256 of file - full-ram</button>
 <br /><br />
+<FileReader FileReference="@FileReference" />
+<br /><br />
+<input type="checkbox" bind="@DebugOutput" id="useDebugOutput" />
+<label for="useDebugOutput">Debug output</label><br />
+<input type="checkbox" bind="@UseBufferSize" id="useBufferSizeCheck" />
+<label for="useBufferSizeCheck">Use buffer size</label>
+<input type="number" bind="@BufferSize" alt="buffersize" placeholder="Buffer size" />
+<br /><br />
+<button onclick="@HashFile">Hash SHA256 of file - chunked</button>
+<button onclick="@HashFileRam" style="margin-left:20px;">Hash SHA256 of file - full-ram</button>
+<br /><br />
+
+<h3>Log output</h3>
 <textarea cols="200" rows="200">@Output</textarea>
+
 @functions {
-IFileReaderRef FileReference;
+        IFileReaderRef FileReference;
 
-string Output { get; set; }
+        string Output { get; set; }
 
-protected override void OnInit()
-{
-    FileReference = FileReaderReference.Create();
-    base.OnInit();
-}
+        bool UseBufferSize { get; set; } = false;
+        bool DebugOutput { get; set; } = true;
 
-public async Task HashFile()
+        int BufferSize { get; set; } = 4096;
 
-{
-    await HashFile(false);
-}
-
-public async Task HashFileRam()
-{
-    await HashFile(true);
-}
-
-public async Task HashFile(bool useMemoryStream)
-{
-    Output = string.Empty;
-    this.StateHasChanged();
-    var nl = Environment.NewLine;
-    foreach (var file in FileReference.Files)
+    protected override void OnInit()
     {
-        Output += $"{nameof(file)}.{nameof(file.Name)}: {file.Name}{nl}";
-        Output += $"{nameof(file)}.{nameof(file.Size)}: {file.Size}{nl}";
-        Output += $"{nameof(file)}.{nameof(file.Type)}: {file.Type}{nl}";
-        Output += $"{nameof(file)}.{nameof(file.LastModifiedDate)}: {file.LastModifiedDate}{nl}";
-        Output += $"Reading file...";
-        var stopWatch = new System.Diagnostics.Stopwatch();
-        this.StateHasChanged();
-        stopWatch.Start();
-        var outputBuffer = new StringBuilder();
-        using (var fs = file.OpenRead())
-        using (var hash = new SHA256Managed())
-        {
-            if (useMemoryStream)
-            {
-                // If the API that takes a stream as an argument does not support Async, this is how you
-                // need to do it - Read() is not supported on the underlying stream.
-                using (var ms = new MemoryStream())
-                {
-                    await fs.CopyToAsync(ms);
-                    ms.Position = 0;
-                    hash.ComputeHash(ms);
-                }
-            }
-            else
-            {
-                var bufferSize = 4096 * 8;
-                outputBuffer.AppendLine($"Using chunks of size {bufferSize}");
-                var buffer = new byte[bufferSize];
-                int count;
-
-                while ((count = await fs.ReadAsync(buffer, 0, buffer.Length)) != 0)
-                {
-                    outputBuffer.AppendLine($"Hashing {count} bytes. {fs.Position} / {fs.Length}{nl}");
-                    hash.TransformBlock(buffer, 0, count, buffer, 0);
-                }
-                hash.TransformFinalBlock(buffer, 0, count);
-            }
-            var sb = new StringBuilder(hash.HashSize / 4);
-            foreach (var b in hash.Hash)
-            {
-                sb.AppendFormat("{0:x2}", b);
-            }
-            stopWatch.Stop();
-            Output += outputBuffer.ToString();
-            Output += $"Done hashing file {file.Name} in {stopWatch.ElapsedMilliseconds}ms{nl}:";
-            Output += sb.ToString();
-        }
+        FileReference = FileReaderReference.Create();
+        base.OnInit();
     }
 
-}
+    public async Task HashFile()
+
+    {
+        await HashFile(false);
+    }
+
+    public async Task HashFileRam()
+    {
+        await HashFile(true);
+    }
+
+    public async Task HashFile(bool useMemoryStream)
+    {
+        Output = string.Empty;
+        this.StateHasChanged();
+        var nl = Environment.NewLine;
+        foreach (var file in FileReference.Files)
+        {
+            if (DebugOutput)
+            {
+                Output += $"{nameof(file)}.{nameof(file.Name)}: {file.Name}{nl}";
+                Output += $"{nameof(file)}.{nameof(file.Size)}: {file.Size}{nl}";
+                Output += $"{nameof(file)}.{nameof(file.Type)}: {file.Type}{nl}";
+                Output += $"{nameof(file)}.{nameof(file.LastModifiedDate)}: {file.LastModifiedDate}{nl}";
+                Output += $"Reading file...";
+                this.StateHasChanged();
+            }
+            var stopWatch = new System.Diagnostics.Stopwatch();
+
+            stopWatch.Start();
+            var outputBuffer = new StringBuilder();
+            using (var hash = new SHA256Managed())
+            {
+                if (useMemoryStream)
+                {
+                    using (var fs = UseBufferSize ?
+                        await file.CreateMemoryStreamAsync(BufferSize) :
+                        await file.CreateMemoryStreamAsync())
+                    {
+                        hash.ComputeHash(fs);
+                    }
+                }
+                else
+                {
+                    using (var fs = file.OpenRead())
+                    {
+                        var bufferSize = UseBufferSize ? BufferSize : 4096 * 8;
+                        if (DebugOutput)
+                        {
+                            outputBuffer.AppendLine($"Using chunks of size {bufferSize}");
+                        }
+                        var buffer = new byte[bufferSize];
+                        int count;
+
+                        while ((count = await fs.ReadAsync(buffer, 0, buffer.Length)) != 0)
+                        {
+                            if (DebugOutput)
+                            {
+                                outputBuffer.AppendLine($"Hashing {count} bytes. {fs.Position} / {fs.Length}");
+                            }
+                            hash.TransformBlock(buffer, 0, count, buffer, 0);
+                        }
+                        hash.TransformFinalBlock(buffer, 0, count);
+                    }
+                }
+                var sb = new StringBuilder(hash.HashSize / 4);
+                foreach (var b in hash.Hash)
+                {
+                    sb.AppendFormat("{0:x2}", b);
+                }
+
+                stopWatch.Stop();
+                if (DebugOutput)
+                {
+                    Output += $"Done hashing file {file.Name} in {stopWatch.ElapsedMilliseconds}ms:{nl}";
+                }
+
+                Output += sb.ToString();
+                if (outputBuffer.Length > 0)
+                {
+                    Output += $"{nl}{nl}Debug output:{nl}";
+                    Output += outputBuffer.ToString();
+                }
+            }
+        }
+
+    }
 }

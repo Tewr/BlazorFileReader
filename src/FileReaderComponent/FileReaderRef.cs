@@ -14,7 +14,6 @@ namespace FileReaderComponent
 
     public interface IFileReference
     {
-
         /// <summary>
         /// Opens a stream to read the file
         /// </summary>
@@ -22,9 +21,23 @@ namespace FileReaderComponent
         Stream OpenRead();
 
         /// <summary>
+        /// Read the file into memory and returns it as a MemoryStream.
+        /// For large files, this may be the fastest method, but it may block the interface.
+        /// </summary>
+        /// <returns></returns>
+        Task<MemoryStream> CreateMemoryStreamAsync();
+
+        /// <summary>
+        /// Read the file into memory and returns it as a MemoryStream, using the specified buffersize.
+        /// </summary>
+        /// <returns></returns>
+        Task<MemoryStream> CreateMemoryStreamAsync(int bufferSize);
+
+        /// <summary>
         /// Returns the name of the file referenced by the File object.
         /// </summary>
         string Name { get; }
+
         /// <summary>
         /// Returns the size of the file in bytes.
         /// </summary>
@@ -97,6 +110,42 @@ namespace FileReaderComponent
         public long? LastModified => this.lastModified.Value;
 
         public DateTime? LastModifiedDate => this.lastModifiedDate.Value;
+
+        public Task<MemoryStream> CreateMemoryStreamAsync() {
+            return InnerCreateMemoryStreamAsync(null);
+        }
+        public Task<MemoryStream> CreateMemoryStreamAsync(int bufferSize)
+        {
+            return InnerCreateMemoryStreamAsync(bufferSize);
+        }
+
+        private async Task<MemoryStream> InnerCreateMemoryStreamAsync(int? bufferSizeParam)
+        {
+            MemoryStream memoryStream;
+            var bufferSize = bufferSizeParam.GetValueOrDefault((int)Size.GetValueOrDefault());
+            // If size is not supported in browser or file is empty
+            if (bufferSize == 0)
+            {
+                memoryStream = new MemoryStream();
+            }
+            else
+            {
+                memoryStream = new MemoryStream(bufferSize);
+            }
+
+            var buffer = new byte[bufferSize];
+            
+            using (var fs = OpenRead())
+            {
+                int count;
+                while ((count = await fs.ReadAsync(buffer, 0, buffer.Length)) != 0)
+                {
+                    await memoryStream.WriteAsync(buffer, 0, count);
+                }
+            }
+            memoryStream.Position = 0;
+            return memoryStream;
+        }
 
         public Stream OpenRead()
         {
