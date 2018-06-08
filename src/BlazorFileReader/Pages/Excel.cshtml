@@ -1,11 +1,9 @@
 ﻿@page "/"
 @using System.IO;
-<h1>Hello, files!</h1>
+<h1>Hello, Excel!</h1>
 
 Welcome to your new filestreaming app.<br />
-This demo reads a file without doing anything particular with it.<br />
-There are other demos in the menu.<br /><br />
-
+This demo reads Excel files using EPPlus.<br /><br />
 
 <FileReader FileReference="@FileReference" /><br />
 <button onclick="@ReadFile" class="btn btn-primary">Read file</button>
