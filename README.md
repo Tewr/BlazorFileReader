@@ -26,15 +26,25 @@ Here is a [Live demo](https://tewr.github.io/BlazorFileReader/) that contains th
     {
         foreach (var file in FileReference.Files)
         {
+			// Read into buffer and act (uses less memory)
             using(Stream stream = file.OpenRead()) {
-              /// Do stuff with stream...
+              // Do stuff with stream...
+			  await stream.ReadAsync(buffer, ...);
+			  // This will fail. Only async read is allowed.
+			  stream.Read(buffer, ...)
             }
+
+			// Read into memory and act
+			using(var memoryStream = await file.CreateMemoryStreamAsync(4096)) {
+				// Sync calls are ok once file is in memory
+				memoryStream.Read(buffer, ...)
+			}
         }
     }
 }
 ```
 
 To use the code in this demo in your own project you need to use at least version 
-```0.4.0-preview1-10303``` of blazor.
+```0.4.0-``` of blazor.
 
 
