@@ -7,7 +7,7 @@ This demo reads Excel files using <a href="https://github.com/JanKallman/EPPlus"
 <FileReader FileReference="@FileReference" />
 <button onclick="@ReadFile" class="btn btn-primary">Import Excel file</button><br /><br />
 <input type="checkbox" bind="@FirstRowIsHeader" id="firstRowIsHeader" />
-<label for="firstRowIsHeader">First row is header</label><br />
+<label for="firstRowIsHeader">Treat first row as header</label><br />
 
 <br /><br />
 <h3>Import results</h3>
@@ -25,6 +25,9 @@ This demo reads Excel files using <a href="https://github.com/JanKallman/EPPlus"
         .excel th {
             border: 2px solid black;
             padding: 5px;
+            text-align: center;
+        }
+        .excel caption {
             text-align: center;
         }
 </style>

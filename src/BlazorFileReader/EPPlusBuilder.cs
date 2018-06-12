@@ -8,7 +8,7 @@ namespace BlazorFileReader
 {
     public class EPPlusBuilder
     {
-        public static TablesModel Parse(OfficeOpenXml.ExcelPackage xlPackage, bool firstRowIsHeader)
+        public static TablesModel Parse(ExcelPackage xlPackage, bool treatFirstRowAsHeader)
         {
             var tableModel = new TablesModel();
             var workbook = xlPackage.Workbook;
@@ -25,14 +25,16 @@ namespace BlazorFileReader
                     var rowCount = 0;
                     var firstIteration = rowCount;
                     var maxColumnNumber = worksheet.Dimension.End.Column;
-                    var excelRows = worksheet.Cells.GroupBy(c => c.Start.Row).ToList();
+                    var rows = worksheet.Cells.ToLookup(c => c.Start.Row);
+                    var tableRows = Enumerable.Range(1, rows.Max(x => x.Key));
                     var worksheet1 = worksheet;
-                    excelRows.ForEach(r =>
+                    foreach (var rowNumber in tableRows)
                     {
+                        
                         var isFirstRow = rowCount == firstIteration;
                         rowCount++;
                         var rowModel = new TablesModel.RowModel();
-                        if (isFirstRow && firstRowIsHeader)
+                        if (isFirstRow && treatFirstRowAsHeader)
                         {
                             table.Header = rowModel;
                         }
@@ -40,14 +42,25 @@ namespace BlazorFileReader
                         {
                             table.Body.Add(rowModel);
                         }
-
-                        var cells = r.OrderBy(cell => cell.Start.Column).ToList();
-
+                        var row = rows[rowNumber];
+                        if (!row.Any())
+                        {
+                            for (var i = 0; i < maxColumnNumber; i++)
+                            {
+                                rowModel.AddCell();
+                            }
+                            continue;
+                        }
+                        var cells = row.OrderBy(cell => cell.Start.Column).ToList();
                         rowModel.Height = worksheet1.Row(rowCount).Height;
                         for (var i = 1; i <= maxColumnNumber; i++)
                         {
-                            var currentCell = cells.Single(c => c.Start.Column == i);
-
+                            var cell = rowModel.AddCell();
+                            var currentCell = cells.SingleOrDefault(c => c.Start.Column == i);
+                            if (currentCell == null)
+                            {
+                                continue;
+                            }
                             var colSpan = 1;
                             var rowSpan = 1;
 
@@ -81,13 +94,13 @@ namespace BlazorFileReader
                                 }
                             }
 
-                            var cell = rowModel.AddCell();
+                            
                             cell.Colspan = colSpan;
                             cell.Rowspan = rowSpan;
 
                             cell.Value = currentCell.Value.ToString();
                         }
-                    });
+                    }
                 }
             }
 
@@ -127,9 +140,9 @@ namespace BlazorFileReader
 
             public class CellModel
             {
-                public string Value { get; set; }
-                public int Colspan { get; set; }
-                public int Rowspan { get; set; }
+                public string Value { get; set; } = string.Empty;
+                public int Colspan { get; set; } = 1;
+                public int Rowspan { get; set; } = 1;
             }
 
         }
