@@ -6,11 +6,10 @@ Welcome to your new filestreaming app.<br />
 This demo reads a file without doing anything particular with it.<br />
 There are other demos in the menu.<br /><br />
 
-
-<FileReader FileReference="@FileReference" /><br />
+<FileReader FileReference="@FileReference" />
 <button onclick="@ReadFile" class="btn btn-primary">Read file</button>
 <br /><br />
-<textarea cols="200" rows="200">@Output</textarea>
+<textarea style="max-width: 100%;" cols="50" rows="20">@Output</textarea>
 @functions {
     IFileReaderRef FileReference;
 

@@ -9,9 +9,9 @@
 
   <ItemGroup>
     <PackageReference Include="Epplus" Version="4.5.2.1" />
-    <PackageReference Include="Microsoft.AspNetCore.Blazor.Browser" Version="0.4.0-preview1-10303	" />
-    <PackageReference Include="Microsoft.AspNetCore.Blazor.Build" Version="0.4.0-preview1-10303	" />
-    <DotNetCliToolReference Include="Microsoft.AspNetCore.Blazor.Cli" Version="0.4.0-preview1-10303	" />
+    <PackageReference Include="Microsoft.AspNetCore.Blazor.Browser" Version="0.4.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Blazor.Build" Version="0.4.0" />
+    <DotNetCliToolReference Include="Microsoft.AspNetCore.Blazor.Cli" Version="0.4.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -21,24 +21,12 @@
   <ItemGroup>
     <BlazorGenerate Remove="Pages\SHA256.cshtml" />
   </ItemGroup>
-
+  
   <ItemGroup>
-    <Content Remove="Pages\SHA256.cshtml" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="Pages\SHA256.cshtml" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <BlazorGenerate Remove="Pages\Excel.cshtml" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Remove="Pages\Excel.cshtml" />
+    <None Include="Pages\EPPlus.cshtml" />
   </ItemGroup>
   
   <ItemGroup>
-    <None Include="Pages\Excel.cshtml" />
+    <BlazorGenerate Remove="Pages\EPPlus.cshtml" />
   </ItemGroup>
 </Project>
