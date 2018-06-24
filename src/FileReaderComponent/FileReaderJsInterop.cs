@@ -91,30 +91,39 @@ namespace FileReaderComponent
             private readonly int fileRef;
             private readonly Lazy<long> length;
             private bool isDisposed;
+            private long _position;
 
             public InteropFileStream(int fileReference)
             {
                 this.fileRef = fileReference;
-                this.length = new Lazy<long>(() => 
+                this.length = new Lazy<long>(() =>
                     long.Parse(GetFilePropertyByRef(this.fileRef, "size")));
             }
 
-            public override bool CanRead => true;
+            public override bool CanRead => ThrowIfDisposedOrReturn(true);
 
-            public override bool CanSeek => true;
+            public override bool CanSeek => ThrowIfDisposedOrReturn(true);
 
-            public override bool CanWrite => false;
+            public override bool CanWrite => ThrowIfDisposedOrReturn(false);
 
-            public override long Length => length.Value;
+            public override long Length => ThrowIfDisposedOrReturn(() => length.Value);
 
-            public override long Position { get; set; }
+            public override long Position {
+                get => ThrowIfDisposedOrReturn(_position);
+                set {
+                    ThrowIfDisposed();
+                    _position = value;
+                }
+            }
 
             public override void Flush()
             {
+                ThrowIfDisposed();
             }
 
             public override async Task<int> ReadAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)
-            {   
+            {
+                ThrowIfDisposed();
                 Console.WriteLine($"{nameof(InteropFileStream)}.{nameof(ReadAsync)}({nameof(buffer)}=byte[{buffer.Length}], {nameof(offset)}={offset}, {nameof(count)}={count})");
                 var bytesRead = await ReadFileAsync(fileRef, buffer, Position + offset, count, cancellationToken);
                 Position += bytesRead;
@@ -128,6 +137,7 @@ namespace FileReaderComponent
 
             public override long Seek(long offset, SeekOrigin origin)
             {
+                ThrowIfDisposed();
                 if (offset > Length)
                     throw new ArgumentOutOfRangeException("offset");
                 switch (origin)
@@ -190,100 +200,6 @@ namespace FileReaderComponent
                     throw new ObjectDisposedException(nameof(InteropFileStream));
                 }
             }
-        }
-
-
-
-        private class InMemoryFileStream : Stream
-        {
-            readonly Stream innerStream;
-            readonly IDisposable[] toDispose;
-            bool isDisposed;
-
-            public InMemoryFileStream(Stream innerStream, params IDisposable[] toDispose)
-            {
-                this.innerStream = innerStream;
-                this.toDispose = toDispose;
-            }
-
-            public static Stream FromBase64String(string base64ASCIIString)
-            {
-                MemoryStream memoryStream = new MemoryStream();
-                using (var writer = new StreamWriter(memoryStream, System.Text.Encoding.ASCII, 512, true))
-                {
-                    writer.Write(base64ASCIIString);
-                }
-                memoryStream.Position = 0;
-                ICryptoTransform base64 = new FromBase64Transform();
-                CryptoStream cryptoStream = new CryptoStream(memoryStream, base64, CryptoStreamMode.Read);
-                
-                return new InMemoryFileStream(cryptoStream, memoryStream, base64, cryptoStream);
-            }
-
-            public override bool CanRead => ThrowIfDisposedOrReturn(() => this.innerStream.CanRead);
-
-            public override bool CanSeek => ThrowIfDisposedOrReturn(() => this.innerStream.CanSeek);
-
-            public override bool CanWrite => ThrowIfDisposedOrReturn(() => false);
-
-            public override long Length => ThrowIfDisposedOrReturn(() => this.innerStream.Length);
-
-            public override long Position {
-                get => ThrowIfDisposedOrReturn(()=> this.innerStream.Position);
-                set => ThrowIfDisposedOrReturn(() => this.innerStream.Position = value);
-            }
-
-            public override void Flush()
-                => ThrowIfDisposedOrDo(() => this.innerStream.Flush());
-            
-            
-            public override int Read(byte[] buffer, int offset, int count)
-                => ThrowIfDisposedOrReturn(() => this.innerStream.Read(buffer, offset, count));
-
-            public override long Seek(long offset, SeekOrigin origin)
-               => ThrowIfDisposedOrReturn(() => this.innerStream.Seek(offset, origin));
-
-            public override void SetLength(long value)
-            {
-                throw new NotSupportedException();
-            }
-
-            public override void Write(byte[] buffer, int offset, int count)
-            {
-                throw new NotSupportedException();
-            }
-
-            protected override void Dispose(bool disposing)
-            {
-                base.Dispose(disposing);
-                if (this.isDisposed)
-                {
-                    return;
-                }
-
-                this.isDisposed = true;
-                if (this.toDispose != null)
-                {
-                    foreach (var item in this.toDispose)
-                    {
-                        item.Dispose();
-                    }
-                }
-            }
-
-            private void ThrowIfDisposed()
-            {
-                if (this.isDisposed)
-                {
-                    throw new ObjectDisposedException(nameof(InMemoryFileStream));
-                }
-            }
-
-            private void ThrowIfDisposedOrDo(Action value)
-            {
-                ThrowIfDisposed();
-                value();
-            }
 
             private T ThrowIfDisposedOrReturn<T>(Func<T> value)
             {
@@ -291,8 +207,14 @@ namespace FileReaderComponent
 
                 return value();
             }
-        }
 
+            private T ThrowIfDisposedOrReturn<T>(T value)
+            {
+                ThrowIfDisposed();
+
+                return value;
+            }
+        }
     }
     public class BrowserFileReaderException : Exception
     {

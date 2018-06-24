@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Blazor.Browser.Services;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using FileReaderComponent;
 
 namespace BlazorFileReader
 {
@@ -19,8 +20,7 @@ namespace BlazorFileReader
         {
             var serviceProvider = new BrowserServiceProvider(services =>
             {
-                
-                // Add any custom services here
+                services.AddSingleton<IFileReaderService>(sp => new FileReaderService());
             });
 
             new BrowserRenderer(serviceProvider).AddComponent<App>("app");

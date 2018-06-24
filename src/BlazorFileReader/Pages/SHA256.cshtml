@@ -2,6 +2,8 @@
 @using System.IO;
 @using System.Text;
 @using System.Security.Cryptography;
+@inject IFileReaderService fileReaderService;
+
 <h1>Hello, hash!</h1>
 
 Welcome to your new filehashing app.<br />
@@ -13,7 +15,7 @@ In any case the full-ram version will use at least the same amount of ram as the
 For any API accepting a stream but not supporting ReadAsync, the full-ram version must be used.<br />
 
 <br /><br />
-<FileReader FileReference="@FileReference" />
+<FileReader ReaderRef="@Reader" />
 <br /><br />
 <input type="checkbox" bind="@DebugOutput" id="useDebugOutput" />
 <label for="useDebugOutput">Debug output</label><br />
@@ -21,7 +23,7 @@ For any API accepting a stream but not supporting ReadAsync, the full-ram versio
 <label for="useBufferSizeCheck">Use buffer size</label>
 <input type="number" bind="@BufferSize" alt="buffersize" placeholder="Buffer size" />
 <br /><br />
-<button onclick="@HashFile"  class="btn btn-primary">Hash SHA256 of file - chunked</button>
+<button onclick="@HashFile" class="btn btn-primary">Hash SHA256 of file - chunked</button>
 <button onclick="@HashFileRam" style="margin-left:20px;" class="btn btn-primary">Hash SHA256 of file - full-ram</button>
 <br /><br />
 
@@ -29,7 +31,7 @@ For any API accepting a stream but not supporting ReadAsync, the full-ram versio
 <textarea style="max-width: 100%;" cols="50" rows="20">@Output</textarea>
 
 @functions {
-IFileReaderRef FileReference;
+IFileReaderRef Reader;
 
 string Output { get; set; }
 
@@ -40,7 +42,7 @@ int BufferSize { get; set; } = 4096;
 
 protected override void OnInit()
 {
-    FileReference = FileReaderReference.Create();
+    Reader = fileReaderService.CreateReference();
     base.OnInit();
 }
 
@@ -60,7 +62,7 @@ public async Task HashFile(bool useMemoryStream)
     Output = string.Empty;
     this.StateHasChanged();
     var nl = Environment.NewLine;
-    foreach (var file in FileReference.Files)
+    foreach (var file in Reader.Files)
     {
         if (DebugOutput)
         {

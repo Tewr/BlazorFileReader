@@ -1,23 +1,24 @@
 ﻿@page "/"
 @using System.IO;
+@inject IFileReaderService fileReaderService;
 <h1>Hello, files!</h1>
 
 Welcome to your new filestreaming app.<br />
 This demo reads a file without doing anything particular with it.<br />
 There are other demos in the menu.<br /><br />
 
-<FileReader FileReference="@FileReference" />
+<FileReader ReaderRef="@Reader" />
 <button onclick="@ReadFile" class="btn btn-primary">Read file</button>
 <br /><br />
 <textarea style="max-width: 100%;" cols="50" rows="20">@Output</textarea>
 @functions {
-    IFileReaderRef FileReference;
+    IFileReaderRef Reader;
 
     string Output { get; set; }
 
     protected override void OnInit()
     {
-        FileReference = FileReaderReference.Create();
+        Reader = fileReaderService.CreateReference();
         base.OnInit();
     }
 
@@ -26,7 +27,7 @@ There are other demos in the menu.<br /><br />
         Output = string.Empty;
         this.StateHasChanged();
         var nl = Environment.NewLine;
-        foreach (var file in FileReference.Files)
+        foreach (var file in Reader.Files)
         {
             Output += $"{nameof(file)}.{nameof(file.Name)}: {file.Name}{nl}";
             Output += $"{nameof(file)}.{nameof(file.Size)}: {file.Size}{nl}";

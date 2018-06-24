@@ -1,10 +1,11 @@
 ﻿@page "/EPPlus"
 @using System.IO;
+@inject IFileReaderService fileReaderService;
 <h1>Hello, Excel!</h1>
 
 This demo reads Excel files using <a href="https://github.com/JanKallman/EPPlus">EPPlus</a>.<br /><br />
 
-<FileReader FileReference="@FileReference" />
+<FileReader ReaderRef="@Reader" />
 <button onclick="@ReadFile" class="btn btn-primary">Import Excel file</button><br /><br />
 <input type="checkbox" bind="@FirstRowIsHeader" id="firstRowIsHeader" />
 <label for="firstRowIsHeader">Treat first row as header</label><br />
@@ -62,47 +63,47 @@ This demo reads Excel files using <a href="https://github.com/JanKallman/EPPlus"
 
 }
 @functions {
-IFileReaderRef FileReference;
+    IFileReaderRef Reader;
 
-string Message;
-bool FirstRowIsHeader;
+    string Message;
+    bool FirstRowIsHeader;
 
-EPPlusBuilder.TablesModel Tables = new EPPlusBuilder.TablesModel();
+    EPPlusBuilder.TablesModel Tables = new EPPlusBuilder.TablesModel();
 
-protected override void OnInit()
-{
-    FileReference = FileReaderReference.Create();
-
-    base.OnInit();
-}
-
-public async Task ReadFile()
-{
-    Message = string.Empty;
-    this.StateHasChanged();
-    var file = FileReference.Files.FirstOrDefault();
-    if (file != null)
+    protected override void OnInit()
     {
-        try
+        Reader = fileReaderService.CreateReference();
+
+        base.OnInit();
+    }
+
+    public async Task ReadFile()
+    {
+        Message = string.Empty;
+        this.StateHasChanged();
+        var file = Reader.Files.FirstOrDefault();
+        if (file != null)
         {
-            Message = "Reading file...";
-            this.StateHasChanged();
-            var fileInRam = await file.CreateMemoryStreamAsync(4096);
-            Message = "Parsing file...";
-            this.StateHasChanged();
-            using (var package = new OfficeOpenXml.ExcelPackage(fileInRam))
+            try
             {
-                Tables = EPPlusBuilder.Parse(package, FirstRowIsHeader);
+                Message = "Reading file...";
+                this.StateHasChanged();
+                var fileInRam = await file.CreateMemoryStreamAsync(4096);
+                Message = "Parsing file...";
+                this.StateHasChanged();
+                using (var package = new OfficeOpenXml.ExcelPackage(fileInRam))
+                {
+                    Tables = EPPlusBuilder.Parse(package, FirstRowIsHeader);
+                }
+                this.StateHasChanged();
+                Message = "Done.";
             }
-            this.StateHasChanged();
-            Message = "Done.";
-        }
-        catch (Exception e)
-        {
-            Message = e.ToString();
+            catch (Exception e)
+            {
+                Message = e.ToString();
+            }
         }
     }
-}
 }
 
 

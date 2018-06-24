@@ -21,8 +21,7 @@ namespace FileReaderComponent
         Stream OpenRead();
 
         /// <summary>
-        /// Read the file into memory and returns it as a MemoryStream.
-        /// For large files, this may be the fastest method, but it may block the interface.
+        /// Read the file into memory using a single interop call and returns it as a MemoryStream.
         /// </summary>
         /// <returns></returns>
         Task<MemoryStream> CreateMemoryStreamAsync();
@@ -53,7 +52,23 @@ namespace FileReaderComponent
         /// </summary>
         long? LastModified { get; }
 
+        /// <summary>
+        /// Returns the last modified time of the file.
+        /// </summary>
         DateTime? LastModifiedDate { get; }
+    }
+
+    public interface IFileReaderService
+    {
+        IFileReaderRef CreateReference();
+    }
+
+    public class FileReaderService : IFileReaderService
+    {
+        public IFileReaderRef CreateReference()
+        {
+            return FileReaderReference.Create();
+        }
     }
 
     public static class FileReaderReference
@@ -63,7 +78,6 @@ namespace FileReaderComponent
             return new FileReaderRef();
         }
     }
-    
 
     internal class FileReaderRef : IFileReaderRef
     {
@@ -123,10 +137,9 @@ namespace FileReaderComponent
         {
             MemoryStream memoryStream;
             var bufferSize = bufferSizeParam.GetValueOrDefault((int)Size.GetValueOrDefault());
-            // If size is not supported in browser or file is empty
-            if (bufferSize == 0)
+            if (bufferSize < 1)
             {
-                memoryStream = new MemoryStream();
+                throw new InvalidOperationException("Unable to determine buffersize or provided buffersize was 0 or less");
             }
             else
             {
