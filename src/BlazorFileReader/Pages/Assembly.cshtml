@@ -1,0 +1,74 @@
+﻿@page "/Assembly"
+@using System.IO;
+@inject IFileReaderService fileReaderService;
+<h1>Hello, .NET standard assemblies!</h1>
+
+Welcome to your new filestreaming app.<br />
+This demo reads a .net Standard assembly and takes a look inside.<br /><br />
+
+<FileReader ReaderRef="@Reader" Accept=".dll,.exe" />
+<button onclick="@ReadFile" class="btn btn-primary">Read assembly</button>
+<br /><br />
+<textarea style="max-width: 100%;" cols="60" rows="20">@Output</textarea>
+@functions {
+    IFileReaderRef Reader;
+
+    string Output { get; set; }
+
+    protected override void OnInit()
+    {
+        Reader = fileReaderService.CreateReference();
+        base.OnInit();
+    }
+
+    public async Task ReadFile()
+    {
+        Output = string.Empty;
+        this.StateHasChanged();
+        var nl = Environment.NewLine;
+        foreach (var file in Reader.Files)
+        {
+            Output += $"{nameof(file)}.{nameof(file.Name)}: {file.Name}{nl}";
+            Output += $"{nameof(file)}.{nameof(file.Size)}: {file.Size}{nl}";
+            Output += $"{nameof(file)}.{nameof(file.Type)}: {file.Type}{nl}";
+            Output += $"{nameof(file)}.{nameof(file.LastModifiedDate)}: {(file.LastModifiedDate == null ? "(N/A)" : file.LastModifiedDate.Value.ToString())}{nl}";
+            Output += $"Reading file...";
+            this.StateHasChanged();
+            System.Reflection.Assembly assembly;
+            using (var fs = await file.CreateMemoryStreamAsync(4096))
+            {
+                Output += $"Done reading file {file.Name}{nl}.";
+                Output += $"Loading assembly...{nl}";
+                this.StateHasChanged();
+                try
+                {
+                    assembly = System.Reflection.Assembly.Load(fs.ToArray());
+                    Output += $"Assembly loaded.{nl}";
+                    this.StateHasChanged();
+                }
+                catch (Exception e)
+                {
+                    Output += $"Assembly load failed: {e}";
+                    this.StateHasChanged();
+                    return;
+                }
+
+            }
+            Output += $"Loading assembly contents...{nl}";
+            try
+            {
+                Output += $"Public Types:{nl}";
+                Output += string.Join(nl, assembly.GetExportedTypes().Select(x => x.FullName));
+            }
+            catch(Exception e)
+            {
+                Output += $"Assembly loading of types failed: {e}";
+                this.StateHasChanged();
+                return;
+            }
+        }
+    }
+}
+
+
+

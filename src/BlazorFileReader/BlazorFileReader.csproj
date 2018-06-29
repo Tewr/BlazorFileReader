@@ -29,4 +29,10 @@
   <ItemGroup>
     <BlazorGenerate Remove="Pages\EPPlus.cshtml" />
   </ItemGroup>
+  
+  <ItemGroup>
+    <Content Update="Pages\Assembly.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+  </ItemGroup>
 </Project>
