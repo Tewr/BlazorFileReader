@@ -32,7 +32,7 @@ namespace FileReaderComponent
         /// <returns></returns>
         Task<MemoryStream> CreateMemoryStreamAsync(int bufferSize);
 
-        Task<IFileInfo> ReadFileInfo();
+        Task<IFileInfo> ReadFileInfoAsync();
     }
 
     public interface IFileInfo
@@ -126,7 +126,7 @@ namespace FileReaderComponent
         private async Task<MemoryStream> InnerCreateMemoryStreamAsync(int? bufferSizeParam)
         {
             MemoryStream memoryStream;
-            var file = await ReadFileInfo();
+            var file = await ReadFileInfoAsync();
             var bufferSize = bufferSizeParam.GetValueOrDefault((int)file.Size.GetValueOrDefault());
             if (bufferSize < 1)
             {
@@ -158,7 +158,7 @@ namespace FileReaderComponent
 
         private Task<string> FromElementAsync(string name)
         {
-            return FileReaderJsInterop.GetFileProperty(fileLoaderRef.GetElementRef(), index, name);
+            return FileReaderJsInterop.GetFileInfo(fileLoaderRef.GetElementRef(), index, name);
         }
 
         private async Task<long?> FromElementLongAsync(string name)
@@ -167,7 +167,7 @@ namespace FileReaderComponent
             return (s == null) ? new long?() : new long?(long.Parse(s));
         }
 
-        public Task<IFileInfo> ReadFileInfo()
+        public Task<IFileInfo> ReadFileInfoAsync()
         {
             throw new NotImplementedException();
         }

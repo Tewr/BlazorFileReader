@@ -21,8 +21,9 @@ namespace FileReaderComponent
 
         public static async Task<Stream> OpenFileStream(ElementRef elementReference, int index)
         {
-            var length = long.Parse(await GetFileProperty(elementReference, index, "length"));
-            return new InteropFileStream(await OpenRead(elementReference, index), length);
+            var fileInfo = await GetFileInfo(elementReference, index);
+            
+            return new InteropFileStream(await OpenRead(elementReference, index), fileInfo.Size));
         }
         
         public static Task<int> GetFileCount(ElementRef elementReference)
@@ -30,9 +31,9 @@ namespace FileReaderComponent
             return JSRuntime.Current.InvokeAsync<int>($"{nameof(FileReaderComponent)}.GetFileCount", elementReference);
         }
 
-        public static Task<string> GetFileProperty(ElementRef elementReference, int index, string propertyName)
+        public static Task<FileInfo> GetFileInfo(ElementRef elementReference, int index)
         {
-            return JSRuntime.Current.InvokeAsync<string>($"{nameof(FileReaderComponent)}.GetFileProperty", elementReference, index, propertyName);
+            return JSRuntime.Current.InvokeAsync<FileInfo>($"{nameof(FileReaderComponent)}.GetFileInfo", elementReference, index);
         }
 
         public static Task<string> GetFilePropertyByRef(int fileRef, string propertyName)
@@ -98,8 +99,7 @@ namespace FileReaderComponent
             public InteropFileStream(int fileReference, long length)
             {
                 this.fileRef = fileReference;
-                this.length = new Lazy<long>(() =>
-                    long.Parse(GetFilePropertyByRef(this.fileRef, "size")));
+                this.length = length;
             }
 
             public override bool CanRead => ThrowIfDisposedOrReturn(true);
