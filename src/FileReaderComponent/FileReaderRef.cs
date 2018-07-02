@@ -109,7 +109,7 @@ namespace FileReaderComponent
             this.index = index;
             this.name = new Lazy<string>(() => FromElement("name"));
             this.size = new Lazy<long?>(() =>  FromElementLong("size"));
-            this.type = new Lazy<string>(() => FromElement("name"));
+            this.type = new Lazy<string>(() => FromElement("type"));
             this.lastModified = new Lazy<long?>(() => FromElementLong("lastModified"));
             this.lastModifiedDate = new Lazy<DateTime?>(() => 
                 LastModified == null ? null: (DateTime?)Epoch.AddMilliseconds(this.LastModified.Value));
