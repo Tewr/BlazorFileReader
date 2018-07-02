@@ -1,6 +1,30 @@
 ﻿
 declare var Blazor: any;
 
+interface ReadFileParams {
+    fileRef: number,
+    position: number,
+    count: number,
+    callBackId: string
+};
+
+interface DotNetBuffer {
+    toUint8Array(): Uint8Array
+}
+
+interface IFileStream {
+    Dispose(fileRef: number): boolean,
+    GetProperty(fileRef: number, property: string): string,
+    OpenRead(element: HTMLInputElement, fileIndex: number): number,
+    ReadFileAsync(dotNetArrayPtr: any, readFileParamsPtr: any): boolean 
+}
+
+interface FileReaderComponent {
+    GetFileCount(element: HTMLInputElement): number,
+    GetFileProperty(element: HTMLInputElement, index: number, property: string): string,
+    FileStream:IFileStream 
+}
+
 class FileReaderInteropMethods {
 
     private static assemblyName: string = "FileReaderComponent";
@@ -25,18 +49,19 @@ class FileReaderInteropMethods {
         return this.methods[name] = this.methods[name] ||
             this.platform.findMethod(this.assemblyName, this.namespace, this.type, name);
     }
-
 }
 
-Blazor.registerFunction('FileReaderComponent.GetFileCount', (element: HTMLInputElement):number => {
+// TODO: refactor all this into a class instance
+var registry = ((window as any).FileReaderComponent = {}) as FileReaderComponent;
+registry.GetFileCount = (element: HTMLInputElement):number => {
     if (!element.files) {
         return -1;
     }
 
     return element.files.length;
-});
+};
 
-Blazor.registerFunction('FileReaderComponent.GetFileProperty',
+registry.GetFileProperty =
     (element: HTMLInputElement, index: number, property: string): string => {
     if (!element.files) {
         return null;
@@ -54,7 +79,7 @@ Blazor.registerFunction('FileReaderComponent.GetFileProperty',
     else {
         return null;
     }
-});
+};
 
 
 class FileStream {
@@ -120,22 +145,11 @@ class FileStream {
     }
 }
 
-Blazor.registerFunction(FileStream.Name + '.Dispose', (fileRef: number):boolean => FileStream.Dispose(fileRef));
-Blazor.registerFunction(FileStream.Name + '.GetProperty', (fileRef: number, property: string):string => FileStream.GetProperty(fileRef, property));
-Blazor.registerFunction(FileStream.Name + '.OpenRead', (element: HTMLInputElement, fileIndex: number):number => FileStream.OpenRead(element, fileIndex));
-Blazor.registerFunction(FileStream.Name + '.ReadFileAsync', (dotNetArrayPtr: any, readFileParamsPtr: any):boolean => {
+window[FileStream.Name + '.Dispose'] = (fileRef: number):boolean => FileStream.Dispose(fileRef);
+window[FileStream.Name + '.GetProperty'] = (fileRef: number, property: string):string => FileStream.GetProperty(fileRef, property);
+window[FileStream.Name + '.OpenRead'] = (element: HTMLInputElement, fileIndex: number):number => FileStream.OpenRead(element, fileIndex);
+window[FileStream.Name + '.ReadFileAsync'] = (dotNetArrayPtr: any, readFileParamsPtr: any):boolean => {
         const readFileParams: ReadFileParams = JSON.parse(Blazor.platform.toJavaScriptString(readFileParamsPtr));
         const dotNetBuffer: DotNetBuffer = { toUint8Array: () => Blazor.platform.toUint8Array(dotNetArrayPtr) };
         return FileStream.ReadFileAsync(readFileParams, dotNetBuffer);
-    });
-
-interface ReadFileParams {
-    fileRef: number,
-    position : number,
-    count : number,
-    callBackId : string
-};
-
-interface DotNetBuffer {
-    toUint8Array(): Uint8Array
-}
+    };

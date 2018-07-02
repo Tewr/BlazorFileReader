@@ -1,5 +1,4 @@
 ﻿using System;
-using Microsoft.AspNetCore.Blazor.Browser.Interop;
 using System.Collections.Concurrent;
 using System.Threading.Tasks;
 using System.IO;
@@ -9,6 +8,8 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Diagnostics.Contracts;
 using System.Text;
+using Microsoft.JSInterop;
+using Mono.WebAssembly.Interop;
 
 namespace FileReaderComponent
 {
@@ -18,34 +19,35 @@ namespace FileReaderComponent
         private static ConcurrentDictionary<string, TaskCompletionSource<int>> readFileAsyncCalls =
             new ConcurrentDictionary<string, TaskCompletionSource<int>>();
 
-        public static Stream OpenFileStream(ElementRef elementReference, int index)
+        public static async Task<Stream> OpenFileStream(ElementRef elementReference, int index)
         {
-            return new InteropFileStream(OpenRead(elementReference, index));
+            var length = long.Parse(await GetFileProperty(elementReference, index, "length"));
+            return new InteropFileStream(await OpenRead(elementReference, index), length);
         }
         
-        public static int GetFileCount(ElementRef elementReference)
+        public static Task<int> GetFileCount(ElementRef elementReference)
         {
-            return RegisteredFunction.Invoke<int>($"{nameof(FileReaderComponent)}.GetFileCount", elementReference);
+            return JSRuntime.Current.InvokeAsync<int>($"{nameof(FileReaderComponent)}.GetFileCount", elementReference);
         }
 
-        public static string GetFileProperty(ElementRef elementReference, int index, string propertyName)
+        public static Task<string> GetFileProperty(ElementRef elementReference, int index, string propertyName)
         {
-            return RegisteredFunction.Invoke<string>($"{nameof(FileReaderComponent)}.GetFileProperty", elementReference, index, propertyName);
+            return JSRuntime.Current.InvokeAsync<string>($"{nameof(FileReaderComponent)}.GetFileProperty", elementReference, index, propertyName);
         }
 
-        public static string GetFilePropertyByRef(int fileRef, string propertyName)
+        public static Task<string> GetFilePropertyByRef(int fileRef, string propertyName)
         {
-            return RegisteredFunction.Invoke<string>($"{nameof(FileReaderComponent)}.FileStream.GetProperty", fileRef, propertyName);
+            return JSRuntime.Current.InvokeAsync<string>($"{nameof(FileReaderComponent)}.FileStream.GetProperty", fileRef, propertyName);
         }
 
-        private static int OpenRead(ElementRef elementReference, int fileIndex)
+        private static Task<int> OpenRead(ElementRef elementReference, int fileIndex)
         {
-            return RegisteredFunction.Invoke<int>($"{nameof(FileReaderComponent)}.FileStream.OpenRead", elementReference, fileIndex);
+            return JSRuntime.Current.InvokeAsync<int>($"{nameof(FileReaderComponent)}.FileStream.OpenRead", elementReference, fileIndex);
         }
 
-        private static bool Dispose(int fileRef)
+        private static Task<bool> Dispose(int fileRef)
         {
-            return RegisteredFunction.Invoke<bool>($"{nameof(FileReaderComponent)}.FileStream.Dispose", fileRef);
+            return JSRuntime.Current.InvokeAsync<bool>($"{nameof(FileReaderComponent)}.FileStream.Dispose", fileRef);
         }
 
         private static Task<int> ReadFileAsync(int fileRef, byte[] buffer, long position, int count, CancellationToken cancellationToken)
@@ -56,9 +58,9 @@ namespace FileReaderComponent
             var callBackId = Guid.NewGuid().ToString("n");
             if (readFileAsyncCalls.TryAdd(callBackId, taskCompletionSource))
             {
-                var startCallBack = RegisteredFunction.InvokeUnmarshalled<byte[], string, bool>(
+                var startCallBack = ExtendedJSRuntime.Current.InvokeUnmarshalled<byte[], string, bool>(
                 $"{nameof(FileReaderComponent)}.FileStream.ReadFileAsync",
-                    buffer, JsonUtil.Serialize(new { position, count, callBackId, fileRef }));
+                    buffer, Json.Serialize(new { position, count, callBackId, fileRef }));
                 return taskCompletionSource.Task;
             }
 
@@ -89,11 +91,11 @@ namespace FileReaderComponent
         private class InteropFileStream : Stream
         {
             private readonly int fileRef;
-            private readonly Lazy<long> length;
+            private readonly long length;
             private bool isDisposed;
             private long _position;
 
-            public InteropFileStream(int fileReference)
+            public InteropFileStream(int fileReference, long length)
             {
                 this.fileRef = fileReference;
                 this.length = new Lazy<long>(() =>

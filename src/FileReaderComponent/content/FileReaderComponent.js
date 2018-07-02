@@ -1,3 +1,4 @@
+;
 var FileReaderInteropMethods = /** @class */ (function () {
     function FileReaderInteropMethods() {
     }
@@ -22,28 +23,31 @@ var FileReaderInteropMethods = /** @class */ (function () {
     FileReaderInteropMethods.platform = Blazor.platform;
     return FileReaderInteropMethods;
 }());
-Blazor.registerFunction('FileReaderComponent.GetFileCount', function (element) {
+// TODO: refactor all this into a class instance
+var registry = (window.FileReaderComponent = {});
+registry.GetFileCount = function (element) {
     if (!element.files) {
         return -1;
     }
     return element.files.length;
-});
-Blazor.registerFunction('FileReaderComponent.GetFileProperty', function (element, index, property) {
-    if (!element.files) {
-        return null;
-    }
-    var file = element.files.item(index);
-    if (!file) {
-        return null;
-    }
-    var prop = file[property];
-    if (prop) {
-        return prop.toString();
-    }
-    else {
-        return null;
-    }
-});
+};
+registry.GetFileProperty =
+    function (element, index, property) {
+        if (!element.files) {
+            return null;
+        }
+        var file = element.files.item(index);
+        if (!file) {
+            return null;
+        }
+        var prop = file[property];
+        if (prop) {
+            return prop.toString();
+        }
+        else {
+            return null;
+        }
+    };
 var FileStream = /** @class */ (function () {
     function FileStream() {
     }
@@ -104,13 +108,12 @@ var FileStream = /** @class */ (function () {
     FileStream.fileStreams = {};
     return FileStream;
 }());
-Blazor.registerFunction(FileStream.Name + '.Dispose', function (fileRef) { return FileStream.Dispose(fileRef); });
-Blazor.registerFunction(FileStream.Name + '.GetProperty', function (fileRef, property) { return FileStream.GetProperty(fileRef, property); });
-Blazor.registerFunction(FileStream.Name + '.OpenRead', function (element, fileIndex) { return FileStream.OpenRead(element, fileIndex); });
-Blazor.registerFunction(FileStream.Name + '.ReadFileAsync', function (dotNetArrayPtr, readFileParamsPtr) {
+window[FileStream.Name + '.Dispose'] = function (fileRef) { return FileStream.Dispose(fileRef); };
+window[FileStream.Name + '.GetProperty'] = function (fileRef, property) { return FileStream.GetProperty(fileRef, property); };
+window[FileStream.Name + '.OpenRead'] = function (element, fileIndex) { return FileStream.OpenRead(element, fileIndex); };
+window[FileStream.Name + '.ReadFileAsync'] = function (dotNetArrayPtr, readFileParamsPtr) {
     var readFileParams = JSON.parse(Blazor.platform.toJavaScriptString(readFileParamsPtr));
     var dotNetBuffer = { toUint8Array: function () { return Blazor.platform.toUint8Array(dotNetArrayPtr); } };
     return FileStream.ReadFileAsync(readFileParams, dotNetBuffer);
-});
-;
+};
 //# sourceMappingURL=FileReaderComponent.js.map
