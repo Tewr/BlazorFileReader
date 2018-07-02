@@ -1,5 +1,5 @@
 # BlazorFileReader
-Demo of file streams in [Blazor](https://github.com/aspnet/Blazor). 
+Blazor component and Demo of file streams in [Blazor](https://github.com/aspnet/Blazor). 
 
 This demo exposes read-only streams using a Blazor component that wraps 
 ```<input type="file" />```
@@ -45,6 +45,6 @@ Here is a [Live demo](https://tewr.github.io/BlazorFileReader/) that contains th
 ```
 
 To use the code in this demo in your own project you need to use at least version 
-```0.4.0-``` of blazor.
+```0.4.0``` of blazor.
 
 
