@@ -1,69 +1,76 @@
-﻿
-declare var Blazor: any;
+﻿declare var Blazor: any;
 
-class FileReaderInteropMethods {
+interface ReadFileParams {
+    fileRef: number,
+    position: number,
+    count: number,
+    callBackId: number
+};
 
-    private static assemblyName: string = "FileReaderComponent";
-    private static namespace: string = "FileReaderComponent";
-    private static type: string = "FileReaderJsInterop";
-    private static methods: { [key: string]: any } = {};
-    private static platform = Blazor.platform;
-    
-    public static ReadFileAsyncError(callBackId: string, exception: string) {
-        this.CallMethod("ReadFileAsyncError", [callBackId, exception]);
-    }
+interface FileInfo {
+    name: string,
+    size: number,
+    type: string,
+    lastModified: number
+};
 
-    public static ReadFileAsyncCallback(callBackId: string, length: number) { 
-        this.CallMethod("ReadFileAsyncCallback", [callBackId, length.toString()]);
-    }
 
-    private static CallMethod(name: string, params: any[]): any {
-        this.platform.callMethod(this.GetExport(name), null, params.map((v) => this.platform.toDotNetString(v)));
-    }
-
-    private static GetExport(name: string): any {
-        return this.methods[name] = this.methods[name] ||
-            this.platform.findMethod(this.assemblyName, this.namespace, this.type, name);
-    }
-
+interface DotNetBuffer {
+    toUint8Array(): Uint8Array
 }
 
-Blazor.registerFunction('FileReaderComponent.GetFileCount', (element: HTMLInputElement):number => {
-    if (!element.files) {
-        return -1;
+class FileReaderComponent {
+
+    private newFileStreamReference: number = 0;
+    private readonly fileStreams: { [reference: number]: File } = {};
+
+    public GetFileCount(element: HTMLInputElement): number {
+        if (!element.files) {
+            return -1;
+        }
+        var result = element.files.length;
+        return result;
     }
 
-    return element.files.length;
-});
+    public GetFileInfoFromElement = (element: HTMLInputElement, index: number, property: string): string => {
+        if (!element.files) {
+            return null;
+        }
 
-Blazor.registerFunction('FileReaderComponent.GetFileProperty',
-    (element: HTMLInputElement, index: number, property: string): string => {
-    if (!element.files) {
-        return null;
+        let file = element.files.item(index);
+        if (!file) {
+            return null;
+        }
+        console.debug(this);
+        return this.GetFileInfoFromFile(file);
     }
-        
-    let file = element.files.item(index);
-    if (!file) {
-        return null;
+
+    public Dispose = (fileRef: number): boolean => {
+        return delete (this.fileStreams[fileRef]);
     }
 
-    var prop = file[property];
-    if (prop) {
-        return prop.toString();
+    public GetFileInfoFromReference = (fileRef: number): string => {
+        const file: File = this.fileStreams[fileRef];
+        if (!file) {
+            return null;
+        }
+        return this.GetFileInfoFromFile(file);
     }
-    else {
-        return null;
+
+    public GetFileInfoFromFile(file: File): string {
+        var result = JSON.stringify({
+            lastModified: file.lastModified,
+            name: file.name,
+            size: file.size,
+            type: file.type
+        });
+
+        console.debug("GetFileInfoFromFile", result);
+        return result;
     }
-});
+    
+    public OpenRead = (element: HTMLInputElement, fileIndex: number): number => {
 
-
-class FileStream {
-    public static readonly Name: string = "FileReaderComponent.FileStream";
-
-    private static newFileStreamReference: number = 0;
-    private static readonly fileStreams: { [reference: number]: File } = {};
-
-    public static OpenRead(element: HTMLInputElement, fileIndex: number): number {
         if (!element.files) {
             throw 'No FileList available. Is this element a reference to an input of type="file"?';
         }
@@ -77,13 +84,16 @@ class FileStream {
         return fileRef;
     }
 
-    public static ReadFileAsync(readFileParams: ReadFileParams, dotNetBuffer: DotNetBuffer): boolean {
+    public ReadFileAsync = (dotNetArrayPtr: any, readFileParamsPtr: any): boolean => {
+        const readFileParams: ReadFileParams = JSON.parse(Blazor.platform.toJavaScriptString(readFileParamsPtr));
+        const dotNetBuffer: DotNetBuffer = { toUint8Array: () => Blazor.platform.toUint8Array(dotNetArrayPtr) };
+        
         const file: File = this.fileStreams[readFileParams.fileRef];
         try {
             const reader = new FileReader();
             reader.onload = ((r) => {
                 return () => {
-                    try { 
+                    try {
                         const contents: ArrayBuffer = r.result;
                         const dotNetBufferView: Uint8Array = dotNetBuffer.toUint8Array();
                         dotNetBufferView.set(new Uint8Array(contents));
@@ -97,45 +107,36 @@ class FileStream {
         } catch (e) {
             FileReaderInteropMethods.ReadFileAsyncError(readFileParams.callBackId, e.message);
         }
+
         return true;
-        
+    }   
+}
+
+class FileReaderInteropMethods {
+
+    private static assemblyName: string = "FileReaderComponent";
+    private static namespace: string = "FileReaderComponent";
+    private static type: string = "FileReaderJsInterop";
+    private static methods: { [key: string]: any } = {};
+    private static platform = Blazor.platform;
+    
+    public static ReadFileAsyncError(callBackId: number, exception: string) {
+        this.CallMethod("ReadFileAsyncError", { callBackId: callBackId, exception: exception });
     }
 
-    public static GetProperty(fileRef: number, property: string): string|null {
-        const file: File = this.fileStreams[fileRef];
-        if (!file) {
-            return null;
-        }
-        const prop = file[property];
-        if (prop) {
-            return prop.toString();
-        }
-        else {
-            return null;
-        }
+    public static ReadFileAsyncCallback(callBackId: number, bytesRead: number) { 
+        this.CallMethod("ReadFileAsyncCallback", { callBackId: callBackId, bytesRead: bytesRead });
     }
 
-    public static Dispose(fileRef: number): boolean {
-        return delete (this.fileStreams[fileRef]);
+    private static CallMethod(name: string, params: any): any {
+        console.debug("CallMethod", name, params);
+        this.platform.callMethod(this.GetExport(name), null, [this.platform.toDotNetString(JSON.stringify(params))]);
+    }
+
+    private static GetExport(name: string): any {
+        return this.methods[name] = this.methods[name] ||
+            this.platform.findMethod(this.assemblyName, this.namespace, this.type, name);
     }
 }
 
-Blazor.registerFunction(FileStream.Name + '.Dispose', (fileRef: number):boolean => FileStream.Dispose(fileRef));
-Blazor.registerFunction(FileStream.Name + '.GetProperty', (fileRef: number, property: string):string => FileStream.GetProperty(fileRef, property));
-Blazor.registerFunction(FileStream.Name + '.OpenRead', (element: HTMLInputElement, fileIndex: number):number => FileStream.OpenRead(element, fileIndex));
-Blazor.registerFunction(FileStream.Name + '.ReadFileAsync', (dotNetArrayPtr: any, readFileParamsPtr: any):boolean => {
-        const readFileParams: ReadFileParams = JSON.parse(Blazor.platform.toJavaScriptString(readFileParamsPtr));
-        const dotNetBuffer: DotNetBuffer = { toUint8Array: () => Blazor.platform.toUint8Array(dotNetArrayPtr) };
-        return FileStream.ReadFileAsync(readFileParams, dotNetBuffer);
-    });
-
-interface ReadFileParams {
-    fileRef: number,
-    position : number,
-    count : number,
-    callBackId : string
-};
-
-interface DotNetBuffer {
-    toUint8Array(): Uint8Array
-}
+(window as any).FileReaderComponent = new FileReaderComponent();

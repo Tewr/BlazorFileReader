@@ -77,16 +77,22 @@ This demo reads Excel files using <a href="https://github.com/JanKallman/EPPlus"
         base.OnInit();
     }
 
-    public void OnChange(IFileReaderRef reader)
+    public async Task OnChange(IFileReaderRef reader)
     {
-        Console.WriteLine(string.Join(",", reader.Files.Select(x => x.Name)));
+        Message = string.Empty;
+        foreach (var file in await Reader.EnumerateFilesAsync())
+        {
+            Message += (await file.ReadFileInfoAsync()).Name;
+        }
+        this.StateHasChanged();
     }
 
     public async Task ReadFile()
     {
         Message = string.Empty;
         this.StateHasChanged();
-        var file = Reader.Files.FirstOrDefault();
+
+        var file = (await Reader.EnumerateFilesAsync()).FirstOrDefault();
         if (file != null)
         {
             try
@@ -100,6 +106,7 @@ This demo reads Excel files using <a href="https://github.com/JanKallman/EPPlus"
                 {
                     Tables = EPPlusBuilder.Parse(package, FirstRowIsHeader);
                 }
+                
                 this.StateHasChanged();
                 Message = "Done.";
             }
