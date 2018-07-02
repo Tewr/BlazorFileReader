@@ -19,7 +19,7 @@
     private int MaxLength { get; set; }
 
     [Parameter]
-    private Action<IFileReaderRef> Change { get; set; }
+    private Func<IFileReaderRef, Task> Change { get; set; }
 
     [Parameter]
     private IFileReaderRef ReaderRef
@@ -36,9 +36,9 @@
         }
     }
 
-    private void onChange()
+    private async Task onChange()
     {
         // ReaderRef is initiated here if not already done just in case the component just listens to change events
-        Change?.Invoke(ReaderRef ?? (ReaderRef = FileReaderReference.Create()));
+        await Change?.Invoke(ReaderRef ?? (ReaderRef = FileReaderReference.Create()));
     }
 }

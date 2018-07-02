@@ -25,18 +25,19 @@ This demo reads a .net Standard assembly and takes a look inside.<br /><br />
         Output = string.Empty;
         this.StateHasChanged();
         var nl = Environment.NewLine;
-        foreach (var file in Reader.Files)
+        foreach (var file in await Reader.EnumerateFilesAsync())
         {
-            Output += $"{nameof(file)}.{nameof(file.Name)}: {file.Name}{nl}";
-            Output += $"{nameof(file)}.{nameof(file.Size)}: {file.Size}{nl}";
-            Output += $"{nameof(file)}.{nameof(file.Type)}: {file.Type}{nl}";
-            Output += $"{nameof(file)}.{nameof(file.LastModifiedDate)}: {(file.LastModifiedDate == null ? "(N/A)" : file.LastModifiedDate.Value.ToString())}{nl}";
+            var fileInfo = await file.ReadFileInfoAsync();
+            Output += $"{nameof(IFileInfo)}.{nameof(fileInfo.Name)}: {fileInfo.Name}{nl}";
+            Output += $"{nameof(IFileInfo)}.{nameof(fileInfo.Size)}: {fileInfo.Size}{nl}";
+            Output += $"{nameof(IFileInfo)}.{nameof(fileInfo.Type)}: {fileInfo.Type}{nl}";
+            Output += $"{nameof(IFileInfo)}.{nameof(fileInfo.LastModifiedDate)}: {fileInfo.LastModifiedDate?.ToString() ?? "(N/A)"}{nl}";
             Output += $"Reading file...";
             this.StateHasChanged();
             System.Reflection.Assembly assembly;
             using (var fs = await file.CreateMemoryStreamAsync(4096))
             {
-                Output += $"Done reading file {file.Name}{nl}.";
+                Output += $"Done reading file {fileInfo.Name}{nl}.";
                 Output += $"Loading assembly...{nl}";
                 this.StateHasChanged();
                 try

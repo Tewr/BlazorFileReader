@@ -2,91 +2,106 @@
 using System.Collections.Concurrent;
 using System.Threading.Tasks;
 using System.IO;
-using System.Security.Cryptography;
 using Microsoft.AspNetCore.Blazor;
-using System.Collections.Generic;
 using System.Threading;
 using System.Diagnostics.Contracts;
-using System.Text;
 using Microsoft.JSInterop;
-using Mono.WebAssembly.Interop;
 
 namespace FileReaderComponent
 {
     public class FileReaderJsInterop
-    { 
-
-        private static ConcurrentDictionary<string, TaskCompletionSource<int>> readFileAsyncCalls =
-            new ConcurrentDictionary<string, TaskCompletionSource<int>>();
+    {
+        private static long _nextPendingTaskId = 1; // Start at 1 because zero signals "no response needed"
+        private static ConcurrentDictionary<long, TaskCompletionSource<long>> readFileAsyncCalls =
+            new ConcurrentDictionary<long, TaskCompletionSource<long>>();
 
         public static async Task<Stream> OpenFileStream(ElementRef elementReference, int index)
         {
-            var fileInfo = await GetFileInfo(elementReference, index);
-            
-            return new InteropFileStream(await OpenRead(elementReference, index), fileInfo.Size));
+            var fileInfo = await GetFileInfoFromElement(elementReference, index);
+            return new InteropFileStream(await OpenReadAsync(elementReference, index), fileInfo.Size);
         }
         
-        public static Task<int> GetFileCount(ElementRef elementReference)
+        public static async Task<int> GetFileCount(ElementRef elementReference)
         {
-            return JSRuntime.Current.InvokeAsync<int>($"{nameof(FileReaderComponent)}.GetFileCount", elementReference);
+            return (int)await JSRuntime.Current.InvokeAsync<long>($"{nameof(FileReaderComponent)}.GetFileCount", elementReference);
         }
 
-        public static Task<FileInfo> GetFileInfo(ElementRef elementReference, int index)
+        public static async Task<FileInfo> GetFileInfoFromElement(ElementRef elementReference, int index)
         {
-            return JSRuntime.Current.InvokeAsync<FileInfo>($"{nameof(FileReaderComponent)}.GetFileInfo", elementReference, index);
+            return Json.Deserialize<FileInfo>(await JSRuntime.Current.InvokeAsync<string>($"{nameof(FileReaderComponent)}.GetFileInfoFromElement", elementReference, index));
+            //return await JSRuntime.Current.InvokeAsync<FileInfo>($"{nameof(FileReaderComponent)}.GetFileInfoFromElement", elementReference, index);
         }
 
-        public static Task<string> GetFilePropertyByRef(int fileRef, string propertyName)
+        public static async Task<FileInfo> GetFileInfoFromReference(int fileRef)
         {
-            return JSRuntime.Current.InvokeAsync<string>($"{nameof(FileReaderComponent)}.FileStream.GetProperty", fileRef, propertyName);
+            return Json.Deserialize<FileInfo>(await JSRuntime.Current.InvokeAsync<string>($"{nameof(FileReaderComponent)}.GetFileInfoFromReference", fileRef));
+            //return await JSRuntime.Current.InvokeAsync<FileInfo>($"{nameof(FileReaderComponent)}.GetFileInfoFromReference", fileRef);
         }
 
-        private static Task<int> OpenRead(ElementRef elementReference, int fileIndex)
+        private static async Task<int> OpenReadAsync(ElementRef elementReference, int fileIndex)
         {
-            return JSRuntime.Current.InvokeAsync<int>($"{nameof(FileReaderComponent)}.FileStream.OpenRead", elementReference, fileIndex);
+            return (int)await JSRuntime.Current.InvokeAsync<long>($"{nameof(FileReaderComponent)}.OpenRead", elementReference, fileIndex);
         }
 
         private static Task<bool> Dispose(int fileRef)
         {
-            return JSRuntime.Current.InvokeAsync<bool>($"{nameof(FileReaderComponent)}.FileStream.Dispose", fileRef);
+            return JSRuntime.Current.InvokeAsync<bool>($"{nameof(FileReaderComponent)}.Dispose", fileRef);
         }
 
-        private static Task<int> ReadFileAsync(int fileRef, byte[] buffer, long position, int count, CancellationToken cancellationToken)
+        private static async Task<int> ReadFileAsync(int fileRef, byte[] buffer, long position, int count, CancellationToken cancellationToken)
         {
-            var taskCompletionSource = new TaskCompletionSource<int>();
+            Console.WriteLine("ReadFileAsync 1");
+            var taskCompletionSource = new TaskCompletionSource<long>();
             cancellationToken.Register(() => taskCompletionSource.TrySetCanceled());
-
-            var callBackId = Guid.NewGuid().ToString("n");
-            if (readFileAsyncCalls.TryAdd(callBackId, taskCompletionSource))
-            {
-                var startCallBack = ExtendedJSRuntime.Current.InvokeUnmarshalled<byte[], string, bool>(
-                $"{nameof(FileReaderComponent)}.FileStream.ReadFileAsync",
-                    buffer, Json.Serialize(new { position, count, callBackId, fileRef }));
-                return taskCompletionSource.Task;
-            }
-
-            throw new InvalidOperationException("Guid Conflict, unable to register callback");
+            var callBackId = Interlocked.Increment(ref _nextPendingTaskId);
+            readFileAsyncCalls[callBackId] = taskCompletionSource;
+            Console.WriteLine("ReadFileAsync 2");
+            var startCallBack = ExtendedJSRuntime.Current.InvokeUnmarshalled<byte[], string, bool>(
+            $"{nameof(FileReaderComponent)}.ReadFileAsync",
+                buffer, Json.Serialize(new { position, count, callBackId, fileRef }));
+            Console.WriteLine("ReadFileAsync 3");
+            var longResult = await taskCompletionSource.Task;
+            Console.WriteLine($"ReadFileAsync returns {longResult}");
+            return (int) longResult;
         }
         
-        private static bool ReadFileAsyncCallback(string callBackId, string countInt)
+        public class ReadFileAsyncCallbackParams
         {
-            if (!readFileAsyncCalls.TryRemove(callBackId, out TaskCompletionSource<int> taskCompletionSource))
+            public long CallBackId { get; set; }
+            public long BytesRead { get; set; }
+        }
+        private static bool ReadFileAsyncCallback(string readFileAsyncCallback)
+        {
+            Console.WriteLine($"ReadFileAsyncCallback({readFileAsyncCallback})");
+            var args = Json.Deserialize<ReadFileAsyncCallbackParams>(readFileAsyncCallback);
+            if (!readFileAsyncCalls.TryRemove(args.CallBackId, out TaskCompletionSource<long> taskCompletionSource))
             {
+                Console.WriteLine($"ReadFileAsyncCallback({args.CallBackId}, {args.BytesRead}): no call found");
                 return false;
             }
 
-            taskCompletionSource.SetResult(int.Parse(countInt));
+            Console.WriteLine($"ReadFileAsyncCallback({args.CallBackId}, {args.BytesRead}): Call found, ending task");
+            taskCompletionSource.SetResult(args.BytesRead);
             return true;
         }
 
-        private static bool ReadFileAsyncError(string callBackId, string exception)
+        public class ReadFileAsyncErrorParams
         {
-            if (!readFileAsyncCalls.TryRemove(callBackId, out TaskCompletionSource<int> taskCompletionSource))
+            public long CallBackId { get; set; }
+            public string Exception { get; set; }
+        }
+
+        private static bool ReadFileAsyncError(string readFileAsyncError)
+        {
+            var args = Json.Deserialize<ReadFileAsyncErrorParams>(readFileAsyncError);
+            Console.WriteLine($"ReadFileAsyncCallback({readFileAsyncError})");
+            
+            if (!readFileAsyncCalls.TryRemove(args.CallBackId, out TaskCompletionSource<long> taskCompletionSource))
             {
                 return false;
             }
 
-            taskCompletionSource.SetException(new BrowserFileReaderException(exception));
+            taskCompletionSource.SetException(new BrowserFileReaderException(args.Exception));
             return true;
         }
         private class InteropFileStream : Stream
@@ -108,7 +123,7 @@ namespace FileReaderComponent
 
             public override bool CanWrite => ThrowIfDisposedOrReturn(false);
 
-            public override long Length => ThrowIfDisposedOrReturn(() => length.Value);
+            public override long Length => ThrowIfDisposedOrReturn(length);
 
             public override long Position {
                 get => ThrowIfDisposedOrReturn(_position);
@@ -127,7 +142,7 @@ namespace FileReaderComponent
             {
                 ThrowIfDisposed();
                 Console.WriteLine($"{nameof(InteropFileStream)}.{nameof(ReadAsync)}({nameof(buffer)}=byte[{buffer.Length}], {nameof(offset)}={offset}, {nameof(count)}={count})");
-                var bytesRead = await ReadFileAsync(fileRef, buffer, Position + offset, count, cancellationToken);
+                var bytesRead = await FileReaderJsInterop.ReadFileAsync(fileRef, buffer, Position + offset, count, cancellationToken);
                 Position += bytesRead;
                 return bytesRead;
             }
@@ -201,13 +216,6 @@ namespace FileReaderComponent
                 {
                     throw new ObjectDisposedException(nameof(InteropFileStream));
                 }
-            }
-
-            private T ThrowIfDisposedOrReturn<T>(Func<T> value)
-            {
-                ThrowIfDisposed();
-
-                return value();
             }
 
             private T ThrowIfDisposedOrReturn<T>(T value)

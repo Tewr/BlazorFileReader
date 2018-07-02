@@ -32,6 +32,10 @@ namespace FileReaderComponent
         /// <returns></returns>
         Task<MemoryStream> CreateMemoryStreamAsync(int bufferSize);
 
+        /// <summary>
+        /// Reads the available file metadata
+        /// </summary>
+        /// <returns></returns>
         Task<IFileInfo> ReadFileInfoAsync();
     }
 
@@ -45,7 +49,7 @@ namespace FileReaderComponent
         /// <summary>
         /// Returns the size of the file in bytes.
         /// </summary>
-        long? Size { get; }
+        long Size { get; }
 
         /// <summary>
         /// Returns the MIME type of the file.
@@ -99,21 +103,15 @@ namespace FileReaderComponent
 
     internal class FileReference : IFileReference
     {
-        
         private readonly FileReaderRef fileLoaderRef;
         private readonly int index;
-        private readonly Lazy<string> name;
-        private readonly Lazy<long?> size;
-        private readonly Lazy<string> type;
-        private readonly Lazy<long?> lastModified;
-        
+        private IFileInfo fileInfo;
 
         public FileReference(FileReaderRef fileLoaderRef, int index)
         {
             this.fileLoaderRef = fileLoaderRef;
             this.index = index;
         }
-        
 
         public Task<MemoryStream> CreateMemoryStreamAsync() {
             return InnerCreateMemoryStreamAsync(null);
@@ -127,7 +125,7 @@ namespace FileReaderComponent
         {
             MemoryStream memoryStream;
             var file = await ReadFileInfoAsync();
-            var bufferSize = bufferSizeParam.GetValueOrDefault((int)file.Size.GetValueOrDefault());
+            var bufferSize = bufferSizeParam.GetValueOrDefault((int)file.Size);
             if (bufferSize < 1)
             {
                 throw new InvalidOperationException("Unable to determine buffersize or provided buffersize was 0 or less");
@@ -156,20 +154,14 @@ namespace FileReaderComponent
             return FileReaderJsInterop.OpenFileStream(fileLoaderRef.GetElementRef(), index);
         }
 
-        private Task<string> FromElementAsync(string name)
+        public async Task<IFileInfo> ReadFileInfoAsync()
         {
-            return FileReaderJsInterop.GetFileInfo(fileLoaderRef.GetElementRef(), index, name);
-        }
+            if (fileInfo == null)
+            {
+                fileInfo = await FileReaderJsInterop.GetFileInfoFromElement(fileLoaderRef.GetElementRef(), index); ;
+            }
 
-        private async Task<long?> FromElementLongAsync(string name)
-        {
-            var s = await FromElementAsync(name);
-            return (s == null) ? new long?() : new long?(long.Parse(s));
-        }
-
-        public Task<IFileInfo> ReadFileInfoAsync()
-        {
-            throw new NotImplementedException();
+            return fileInfo;
         }
     }
 
@@ -177,7 +169,6 @@ namespace FileReaderComponent
     {
         private readonly static DateTime Epoch = new DateTime(1970, 01, 01);
         private readonly Lazy<DateTime?> lastModifiedDate;
-
         public FileInfo()
         {
             this.lastModifiedDate = new Lazy<DateTime?>(() =>
@@ -186,7 +177,7 @@ namespace FileReaderComponent
 
         public string Name { get; set; }
 
-        public long? Size { get; set; }
+        public long Size { get; set; }
 
         public string Type { get; set; }
 

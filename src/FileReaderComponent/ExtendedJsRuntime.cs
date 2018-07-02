@@ -1,8 +1,6 @@
 ﻿using Microsoft.JSInterop;
 using Mono.WebAssembly.Interop;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace FileReaderComponent
@@ -14,6 +12,7 @@ namespace FileReaderComponent
 
     public static class ExtendedJSRuntime
     {
+
         private static Lazy<IExtendedJSRuntime> extendedJSRuntimeWrapper = 
             new Lazy<IExtendedJSRuntime>(() => new ExtendedJSRuntimeWrapper(JSRuntime.Current));
 
