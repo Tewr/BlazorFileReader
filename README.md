@@ -5,7 +5,7 @@ This demo exposes read-only streams using a Blazor component that wraps
 ```<input type="file" />```
 and [FileReader](https://developer.mozilla.org/en-US/docs/Web/API/FileReader).
 
-Here is a [Live demo](https://tewr.github.io/BlazorFileReader/) that contains the output of this project. 
+Here is a [Live demo](https://tewr.github.io/BlazorFileReader/) that contains the output of this project (master branch compiled in Release configuration). 
 
 ## Usage
 ```cs
@@ -45,6 +45,6 @@ Here is a [Live demo](https://tewr.github.io/BlazorFileReader/) that contains th
 ```
 
 To use the code in this demo in your own project you need to use at least version 
-```0.4.0``` of blazor.
+```0.4.0``` of blazor, the ```master``` branch uses ```0.5.0-preview1-10327```.
 
 
