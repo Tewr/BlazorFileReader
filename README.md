@@ -13,21 +13,21 @@ Here is a [Live demo](https://tewr.github.io/BlazorFileReader/) that contains th
 @using System.IO;
 @using BlazorFileReader.FileReaderComponent;
 
-<FileReader FileReference="@MyFileReference" /><button onclick="@ReadFile">Read file</button>
+<FileReader ReaderRef="@MyFileReaderReference" /><button onclick="@ReadFile">Read file</button>
 
 @functions {
-    IFileReaderRef MyFileReference;
+    IFileReaderRef MyFileReaderReference;
     protected override void OnInit()
     {
-        FileReference = FileReaderReference.Create();
+        MyFileReaderReference = FileReaderReference.Create();
         base.OnInit();
     }
     public async Task ReadFile()
     {
-        foreach (var file in FileReference.Files)
+        foreach (var file in await MyFileReaderReference.EnumerateFilesAsync())
         {
             // Read into buffer and act (uses less memory)
-            using(Stream stream = file.OpenRead()) {
+            using(Stream stream = await file.OpenReadAsync()) {
 			  // Do stuff with stream...
 			  await stream.ReadAsync(buffer, ...);
 			  // This following will fail. Only async read is allowed.
@@ -35,7 +35,7 @@ Here is a [Live demo](https://tewr.github.io/BlazorFileReader/) that contains th
             }
 
             // Read into memory and act
-            using(var memoryStream = await file.CreateMemoryStreamAsync(4096)) {
+            using(MemoryStream memoryStream = await file.CreateMemoryStreamAsync(4096)) {
 			  // Sync calls are ok once file is in memory
 			  memoryStream.Read(buffer, ...)
             }
@@ -45,6 +45,8 @@ Here is a [Live demo](https://tewr.github.io/BlazorFileReader/) that contains th
 ```
 
 To use the code in this demo in your own project you need to use at least version 
-```0.4.0``` of blazor, the ```master``` branch uses ```0.5.0-preview1-10327```.
+```0.4.0``` of blazor (branch 0.4.0). 
+
+The ```master``` branch uses ```0.5.0-preview1-10327```.
 
 
