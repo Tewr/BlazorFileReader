@@ -10,8 +10,10 @@ There are other demos in the menu.<br /><br />
 <FileReader ReaderRef="@Reader" />
 <button onclick="@ReadFile" class="btn btn-primary">Read file</button>
 <br /><br />
+<em>Progress: @this.progress</em><br />
 <textarea style="max-width: 100%;" cols="50" rows="20">@Output</textarea>
 @functions {
+    private int progress = 0;
     IFileReaderRef Reader;
 
     string Output { get; set; }
@@ -37,7 +39,7 @@ There are other demos in the menu.<br /><br />
             Output += $"Reading file...";
             this.StateHasChanged();
 
-            using (var fs = await file.OpenReadAsync())
+            using (var fs = await file.OpenReadAsync(this.LogCallback))
             {
                 var bufferSize = 4096;
                 var buffer = new byte[bufferSize];
@@ -52,6 +54,17 @@ There are other demos in the menu.<br /><br />
             this.StateHasChanged();
         }
 
+    }
+
+    private void LogCallback(long position, int offset, long length)
+    {
+        var progress = (int)( (double)position / length * 100 );
+        if ( progress == this.progress )
+            return;
+ 
+        this.progress = progress;
+        Console.WriteLine($"Progress: Position:{position} | Offset:{offset} | Length:{length}");
+        this.StateHasChanged();
     }
 }
 

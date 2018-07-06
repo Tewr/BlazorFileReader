@@ -15,10 +15,10 @@ namespace FileReaderComponent
         private static ConcurrentDictionary<long, TaskCompletionSource<long>> readFileAsyncCalls =
             new ConcurrentDictionary<long, TaskCompletionSource<long>>();
 
-        public static async Task<Stream> OpenFileStream(ElementRef elementReference, int index)
+        public static async Task<Stream> OpenFileStream(ElementRef elementReference, int index, Action<long, int, long> logCallback = null)
         {
             var fileInfo = await GetFileInfoFromElement(elementReference, index);
-            return new InteropFileStream(await OpenReadAsync(elementReference, index), fileInfo.Size);
+            return new InteropFileStream(await OpenReadAsync(elementReference, index), fileInfo.Size, logCallback);
         }
         
         public static async Task<int> GetFileCount(ElementRef elementReference)
@@ -108,14 +108,16 @@ namespace FileReaderComponent
         {
             private readonly int fileRef;
             private readonly long length;
-            private bool isDisposed;
+	        private readonly Action<long, int, long> logCallback;
+			private bool isDisposed;
             private long _position;
 
-            public InteropFileStream(int fileReference, long length)
+            public InteropFileStream(int fileReference, long length, Action<long, int, long> logCallback)
             {
                 this.fileRef = fileReference;
                 this.length = length;
-            }
+	            this.logCallback = logCallback;
+			}
 
             public override bool CanRead => ThrowIfDisposedOrReturn(true);
 
@@ -142,7 +144,8 @@ namespace FileReaderComponent
             {
                 ThrowIfDisposed();
                 Console.WriteLine($"{nameof(InteropFileStream)}.{nameof(ReadAsync)}({nameof(buffer)}=byte[{buffer.Length}], {nameof(offset)}={offset}, {nameof(count)}={count})");
-                var bytesRead = await FileReaderJsInterop.ReadFileAsync(fileRef, buffer, Position + offset, count, cancellationToken);
+	            this.logCallback?.Invoke(this.Position, offset, this.Length);
+				var bytesRead = await FileReaderJsInterop.ReadFileAsync(fileRef, buffer, Position + offset, count, cancellationToken);
                 Position += bytesRead;
                 return bytesRead;
             }
