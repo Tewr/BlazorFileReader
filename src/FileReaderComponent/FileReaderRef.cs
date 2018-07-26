@@ -18,19 +18,19 @@ namespace FileReaderComponent
         /// Opens a stream to read the file
         /// </summary>
         /// <returns></returns>
-        Task<Stream> OpenReadAsync();
+        Task<Stream> OpenReadAsync(Action<long, int, long> logCallback = null);
 
         /// <summary>
         /// Read the file into memory using a single interop call and returns it as a MemoryStream.
         /// </summary>
         /// <returns></returns>
-        Task<MemoryStream> CreateMemoryStreamAsync();
+        Task<MemoryStream> CreateMemoryStreamAsync(Action<long, int, long> logCallback = null);
 
         /// <summary>
         /// Read the file into memory and returns it as a MemoryStream, using the specified buffersize.
         /// </summary>
         /// <returns></returns>
-        Task<MemoryStream> CreateMemoryStreamAsync(int bufferSize);
+        Task<MemoryStream> CreateMemoryStreamAsync(int bufferSize, Action<long, int, long> logCallback = null);
 
         /// <summary>
         /// Reads the available file metadata
@@ -113,15 +113,15 @@ namespace FileReaderComponent
             this.index = index;
         }
 
-        public Task<MemoryStream> CreateMemoryStreamAsync() {
-            return InnerCreateMemoryStreamAsync(null);
+        public Task<MemoryStream> CreateMemoryStreamAsync(Action<long, int, long> logCallback = null) {
+            return InnerCreateMemoryStreamAsync(null, logCallback);
         }
-        public Task<MemoryStream> CreateMemoryStreamAsync(int bufferSize)
+        public Task<MemoryStream> CreateMemoryStreamAsync(int bufferSize, Action<long, int, long> logCallback = null)
         {
-            return InnerCreateMemoryStreamAsync(bufferSize);
+            return InnerCreateMemoryStreamAsync(bufferSize, logCallback);
         }
 
-        private async Task<MemoryStream> InnerCreateMemoryStreamAsync(int? bufferSizeParam)
+        private async Task<MemoryStream> InnerCreateMemoryStreamAsync(int? bufferSizeParam, Action<long, int, long> logCallback = null)
         {
             MemoryStream memoryStream;
             var file = await ReadFileInfoAsync();
@@ -137,7 +137,7 @@ namespace FileReaderComponent
 
             var buffer = new byte[bufferSize];
             
-            using (var fs = await OpenReadAsync())
+            using (var fs = await OpenReadAsync(logCallback))
             {
                 int count;
                 while ((count = await fs.ReadAsync(buffer, 0, buffer.Length)) != 0)
@@ -149,9 +149,9 @@ namespace FileReaderComponent
             return memoryStream;
         }
 
-        public Task<Stream> OpenReadAsync()
+        public Task<Stream> OpenReadAsync(Action<long, int, long> logCallback = null)
         {
-            return FileReaderJsInterop.OpenFileStream(fileLoaderRef.GetElementRef(), index);
+            return FileReaderJsInterop.OpenFileStream(fileLoaderRef.GetElementRef(), index, logCallback);
         }
 
         public async Task<IFileInfo> ReadFileInfoAsync()
