@@ -47,6 +47,6 @@ Here is a [Live demo](https://tewr.github.io/BlazorFileReader/) that contains th
 To use the code in this demo in your own project you need to use at least version 
 ```0.4.0``` of blazor (branch 0.4.0). 
 
-The ```master``` branch uses ```0.5.0-preview1-10327```.
+The ```master``` branch uses ```0.5.0```.
 
 
