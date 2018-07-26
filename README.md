@@ -1,3 +1,5 @@
+[![Build status](https://ci.appveyor.com/api/projects/status/rr7pchwk7wbc3mn1/branch/master?svg=true)](https://ci.appveyor.com/project/Tewr/blazorfilereader/branch/master)
+
 # BlazorFileReader
 Blazor component and Demo of file streams in [Blazor](https://github.com/aspnet/Blazor). 
 
