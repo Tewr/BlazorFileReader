@@ -38,7 +38,10 @@ namespace FileReaderComponent
                 return current.InvokeUnmarshalled<T1, T2, TRes>(identifier, arg1, arg2);
             }
 
-            
+            public void UntrackObjectRef(DotNetObjectRef dotNetObjectRef)
+            {
+                current.UntrackObjectRef(dotNetObjectRef);
+            }
         }
     }
 }
