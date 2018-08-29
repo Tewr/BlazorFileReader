@@ -139,4 +139,4 @@ class FileReaderInteropMethods {
     }
 }
 
-(window as any).FileReaderComponent = new FileReaderComponent();
+(window as any).FileReader = new FileReaderComponent();

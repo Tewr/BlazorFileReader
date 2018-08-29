@@ -18,7 +18,7 @@ There are other demos in the menu.<br /><br />
 
     protected override void OnInit()
     {
-        Reader = fileReaderService.CreateReference();
+        Reader = fileReaderService.CreateReference(ElementRef);
         base.OnInit();
     }
 

@@ -2,9 +2,10 @@
 using Microsoft.AspNetCore.Blazor.Browser.Services;
 using Microsoft.Extensions.DependencyInjection;
 using System;
-using FileReaderComponent;
+using Blazor.FileReader;
 
-namespace BlazorFileReader
+
+namespace Blazor.FileReader.Demo
 {
     public class Program
     {

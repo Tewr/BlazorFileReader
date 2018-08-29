@@ -3,7 +3,7 @@ using Mono.WebAssembly.Interop;
 using System;
 using System.Threading.Tasks;
 
-namespace FileReaderComponent
+namespace Blazor.FileReader
 {
     public interface IExtendedJSRuntime: IJSRuntime
     {

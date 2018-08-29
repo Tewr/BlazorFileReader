@@ -5,7 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace FileReaderComponent
+namespace Blazor.FileReader
 {
     public interface IFileReaderRef
     {
@@ -69,35 +69,28 @@ namespace FileReaderComponent
 
     public interface IFileReaderService
     {
-        IFileReaderRef CreateReference();
+        IFileReaderRef CreateReference(ElementRef inputFileElement);
     }
 
     public class FileReaderService : IFileReaderService
     {
-        public IFileReaderRef CreateReference()
+        public IFileReaderRef CreateReference(ElementRef inputFileElement)
         {
-            return FileReaderReference.Create();
+            return new FileReaderRef(inputFileElement);
         }
     }
-
-    public static class FileReaderReference
-    {
-        public static IFileReaderRef Create()
-        {
-            return new FileReaderRef();
-        }
-    }
-
+    
     internal class FileReaderRef : IFileReaderRef
     {
         public async Task<IEnumerable<IFileReference>> EnumerateFilesAsync() => 
-            Enumerable.Range(0, await FileReaderJsInterop.GetFileCount(GetElementRef()))
+            Enumerable.Range(0, await FileReaderJsInterop.GetFileCount(ElementRef))
                 .Select(index => (IFileReference)new FileReference(this, index));
 
-        public Func<ElementRef> GetElementRef { get; internal set; }
+        public ElementRef ElementRef { get; private set; }
 
-        internal FileReaderRef()
+        internal FileReaderRef(ElementRef elementRef)
         {
+            this.ElementRef = elementRef;
         }
     }
 
@@ -151,14 +144,14 @@ namespace FileReaderComponent
 
         public Task<Stream> OpenReadAsync()
         {
-            return FileReaderJsInterop.OpenFileStream(fileLoaderRef.GetElementRef(), index);
+            return FileReaderJsInterop.OpenFileStream(fileLoaderRef.ElementRef, index);
         }
 
         public async Task<IFileInfo> ReadFileInfoAsync()
         {
             if (fileInfo == null)
             {
-                fileInfo = await FileReaderJsInterop.GetFileInfoFromElement(fileLoaderRef.GetElementRef(), index); ;
+                fileInfo = await FileReaderJsInterop.GetFileInfoFromElement(fileLoaderRef.ElementRef, index); ;
             }
 
             return fileInfo;

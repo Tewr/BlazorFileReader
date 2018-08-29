@@ -1,11 +1,11 @@
 ﻿@page "/EPPlus"
 @using System.IO;
-@inject IFileReaderService fileReaderService;
+@inject IFileReaderService fileReaderService
 <h1>Hello, Excel!</h1>
 
 This demo reads Excel files using <a href="https://github.com/JanKallman/EPPlus">EPPlus</a>.<br /><br />
 
-<FileReader ReaderRef="@Reader" Accept=".xlsx" Change="@OnChange" />
+<input type="file" ElementRef="@inputElement" Accept=".xlsx" onchange="@OnChange" />
 <button onclick="@ReadFile" class="btn btn-primary">Import Excel file</button><br /><br />
 <input type="checkbox" bind="@FirstRowIsHeader" id="firstRowIsHeader" />
 <label for="firstRowIsHeader">Treat first row as header</label><br />
@@ -63,8 +63,8 @@ This demo reads Excel files using <a href="https://github.com/JanKallman/EPPlus"
 
 }
 @functions {
-    IFileReaderRef Reader;
-
+    ElementRef inputElement;
+    IFileReaderRef readerRef;
     string Message;
     bool FirstRowIsHeader;
 
@@ -72,15 +72,15 @@ This demo reads Excel files using <a href="https://github.com/JanKallman/EPPlus"
 
     protected override void OnInit()
     {
-        Reader = fileReaderService.CreateReference();
+        readerRef = fileReaderService.CreateReference(inputElement);
 
         base.OnInit();
     }
 
-    public async Task OnChange(IFileReaderRef reader)
+    public async Task OnChange(UIChangeEventArgs e)
     {
         Message = string.Empty;
-        foreach (var file in await Reader.EnumerateFilesAsync())
+        foreach (var file in await readerRef.EnumerateFilesAsync())
         {
             Message += (await file.ReadFileInfoAsync()).Name;
         }
@@ -92,7 +92,7 @@ This demo reads Excel files using <a href="https://github.com/JanKallman/EPPlus"
         Message = string.Empty;
         this.StateHasChanged();
 
-        var file = (await Reader.EnumerateFilesAsync()).FirstOrDefault();
+        var file = (await readerRef.EnumerateFilesAsync()).FirstOrDefault();
         if (file != null)
         {
             try

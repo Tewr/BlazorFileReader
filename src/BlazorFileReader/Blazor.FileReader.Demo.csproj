@@ -9,13 +9,9 @@
 
   <ItemGroup>
     <PackageReference Include="Epplus" Version="4.5.2.1" />
-    <PackageReference Include="Microsoft.AspNetCore.Blazor.Browser" Version="0.5.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Blazor.Build" Version="0.5.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Blazor.Browser" Version="0.5.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Blazor.Build" Version="0.5.1" />
     <DotNetCliToolReference Include="Microsoft.AspNetCore.Blazor.Cli" Version="0.5.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\FileReaderComponent\FileReaderComponent.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -23,16 +19,10 @@
   </ItemGroup>
   
   <ItemGroup>
-    <None Include="Pages\EPPlus.cshtml" />
-  </ItemGroup>
-  
-  <ItemGroup>
     <BlazorGenerate Remove="Pages\EPPlus.cshtml" />
   </ItemGroup>
   
   <ItemGroup>
-    <Content Update="Pages\Assembly.cshtml">
-      <Pack>$(IncludeRazorContentInPack)</Pack>
-    </Content>
+    <ProjectReference Include="..\FileReaderComponent\Blazor.FileReader.csproj" />
   </ItemGroup>
 </Project>

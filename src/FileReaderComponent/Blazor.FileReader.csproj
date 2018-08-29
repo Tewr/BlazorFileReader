@@ -17,8 +17,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Blazor.Browser" Version="0.5.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Blazor.Build" Version="0.5.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Blazor.Browser" Version="0.5.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Blazor.Build" Version="0.5.1" />
     <DotNetCliToolReference Include="Microsoft.AspNetCore.Blazor.Cli" Version="0.5.0" />
   </ItemGroup>
   <ItemGroup>
@@ -29,10 +29,6 @@
     <TypeScriptCompile Include="content\FileReaderComponent.ts">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </TypeScriptCompile>
-  </ItemGroup>
-
-  <ItemGroup>
-    <BlazorGenerate Remove="FileReader.cshtml" />
   </ItemGroup>
 
 </Project>

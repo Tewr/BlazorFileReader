@@ -5,27 +5,21 @@
 
 This demo reads a .net Standard assembly and takes a look inside.<br /><br />
 
-<FileReader ReaderRef="@Reader" Accept=".dll,.exe" />
+<input type="file" ElementRef="@inputElement" Accept=".dll,.exe" />
 <button onclick="@ReadFile" class="btn btn-primary">Read assembly</button>
 <br /><br />
 <textarea style="max-width: 100%;" cols="60" rows="20">@Output</textarea>
 @functions {
-    IFileReaderRef Reader;
+    ElementRef inputElement;
 
     string Output { get; set; }
-
-    protected override void OnInit()
-    {
-        Reader = fileReaderService.CreateReference();
-        base.OnInit();
-    }
 
     public async Task ReadFile()
     {
         Output = string.Empty;
         this.StateHasChanged();
         var nl = Environment.NewLine;
-        foreach (var file in await Reader.EnumerateFilesAsync())
+        foreach (var file in await fileReaderService.CreateReference(inputElement).EnumerateFilesAsync())
         {
             var fileInfo = await file.ReadFileInfoAsync();
             Output += $"{nameof(IFileInfo)}.{nameof(fileInfo.Name)}: {fileInfo.Name}{nl}";

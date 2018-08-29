@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using OfficeOpenXml;
-namespace BlazorFileReader
+namespace Blazor.FileReader.Demo
 {
     public class EPPlusBuilder
     {
