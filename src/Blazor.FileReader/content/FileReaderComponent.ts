@@ -114,9 +114,9 @@ class FileReaderComponent {
 
 class FileReaderInteropMethods {
 
-    private static assemblyName: string = "FileReaderComponent";
-    private static namespace: string = "FileReaderComponent";
-    private static type: string = "FileReaderJsInterop";
+    private static assemblyName: string = "Blazor.FileReader";
+    private static namespace: string = "Blazor.FileReader";
+    private static type: string = "Blazor.FileReader";
     private static methods: { [key: string]: any } = {};
     private static platform = Blazor.platform;
     

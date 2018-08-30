@@ -101,9 +101,9 @@ var FileReaderInteropMethods = /** @class */ (function () {
         return this.methods[name] = this.methods[name] ||
             this.platform.findMethod(this.assemblyName, this.namespace, this.type, name);
     };
-    FileReaderInteropMethods.assemblyName = "FileReaderComponent";
-    FileReaderInteropMethods.namespace = "FileReaderComponent";
-    FileReaderInteropMethods.type = "FileReaderJsInterop";
+    FileReaderInteropMethods.assemblyName = "Blazor.FileReader";
+    FileReaderInteropMethods.namespace = "Blazor.FileReader";
+    FileReaderInteropMethods.type = "Blazor.FileReader";
     FileReaderInteropMethods.methods = {};
     FileReaderInteropMethods.platform = Blazor.platform;
     return FileReaderInteropMethods;
