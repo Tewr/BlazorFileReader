@@ -29,13 +29,11 @@ namespace Blazor.FileReader
         public static async Task<FileInfo> GetFileInfoFromElement(ElementRef elementReference, int index)
         {
             return Json.Deserialize<FileInfo>(await JSRuntime.Current.InvokeAsync<string>($"{nameof(Blazor.FileReader)}.GetFileInfoFromElement", elementReference, index));
-            //return await JSRuntime.Current.InvokeAsync<FileInfo>($"{nameof(FileReaderComponent)}.GetFileInfoFromElement", elementReference, index);
         }
 
         public static async Task<FileInfo> GetFileInfoFromReference(int fileRef)
         {
             return Json.Deserialize<FileInfo>(await JSRuntime.Current.InvokeAsync<string>($"{nameof(Blazor.FileReader)}.GetFileInfoFromReference", fileRef));
-            //return await JSRuntime.Current.InvokeAsync<FileInfo>($"{nameof(FileReaderComponent)}.GetFileInfoFromReference", fileRef);
         }
 
         private static async Task<int> OpenReadAsync(ElementRef elementReference, int fileIndex)
@@ -70,6 +68,7 @@ namespace Blazor.FileReader
             public long CallBackId { get; set; }
             public long BytesRead { get; set; }
         }
+
         private static bool ReadFileAsyncCallback(string readFileAsyncCallback)
         {
             Console.WriteLine($"ReadFileAsyncCallback({readFileAsyncCallback})");

@@ -7,6 +7,12 @@
     <BlazorLinkOnBuild>false</BlazorLinkOnBuild>
     <TypeScriptToolsVersion>2.8</TypeScriptToolsVersion>
     <LangVersion>latest</LangVersion>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Version>0.5.1.1</Version>
+    <Authors>Tor Knutsson</Authors>
+    <PackageProjectUrl>https://github.com/Tewr/BlazorFileReader</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/Tewr/BlazorFileReader/blob/master/LICENSE</PackageLicenseUrl>
+    <RepositoryUrl>https://github.com/Tewr/BlazorFileReader</RepositoryUrl>
   </PropertyGroup>
 
   <ItemGroup>
@@ -19,7 +25,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Blazor.Browser" Version="0.5.1" />
     <PackageReference Include="Microsoft.AspNetCore.Blazor.Build" Version="0.5.1" />
-    <DotNetCliToolReference Include="Microsoft.AspNetCore.Blazor.Cli" Version="0.5.0" />
+    <DotNetCliToolReference Include="Microsoft.AspNetCore.Blazor.Cli" Version="0.5.1" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="content\FileReaderComponent.ts" />

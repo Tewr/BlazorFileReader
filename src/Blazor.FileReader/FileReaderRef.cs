@@ -160,7 +160,7 @@ namespace Blazor.FileReader
 
     public class FileInfo : IFileInfo
     {
-        private readonly static DateTime Epoch = new DateTime(1970, 01, 01);
+        private static readonly DateTime Epoch = new DateTime(1970, 01, 01);
         private readonly Lazy<DateTime?> lastModifiedDate;
         public FileInfo()
         {
