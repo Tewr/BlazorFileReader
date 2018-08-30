@@ -14,7 +14,7 @@ In any case the full-ram version will use at least the same amount of ram as the
 For any API accepting a stream but not supporting ReadAsync, the full-ram version must be used.<br />
 
 <br /><br />
-<FileReader ReaderRef="@Reader" />
+<input ref="@element" />
 <br /><br />
 <input type="checkbox" bind="@DebugOutput" id="useDebugOutput" />
 <label for="useDebugOutput">Debug output</label><br />
@@ -30,6 +30,7 @@ For any API accepting a stream but not supporting ReadAsync, the full-ram versio
 <textarea style="max-width: 100%;" cols="50" rows="20">@Output</textarea>
 
 @functions {
+    ElementRef element;
     IFileReaderRef Reader;
 
     string Output { get; set; }
@@ -41,7 +42,7 @@ For any API accepting a stream but not supporting ReadAsync, the full-ram versio
 
     protected override void OnInit()
     {
-        Reader = fileReaderService.CreateReference();
+        Reader = fileReaderService.CreateReference(element);
         base.OnInit();
     }
 

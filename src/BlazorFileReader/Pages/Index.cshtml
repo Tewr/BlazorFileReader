@@ -7,18 +7,19 @@ Welcome to your new filestreaming app.<br />
 This demo reads a file without doing anything particular with it.<br />
 There are other demos in the menu.<br /><br />
 
-<FileReader ReaderRef="@Reader" />
+<input type="file" ref="@element" />
 <button onclick="@ReadFile" class="btn btn-primary">Read file</button>
 <br /><br />
 <textarea style="max-width: 100%;" cols="50" rows="20">@Output</textarea>
 @functions {
+    ElementRef element;
     IFileReaderRef Reader;
 
     string Output { get; set; }
 
     protected override void OnInit()
     {
-        Reader = fileReaderService.CreateReference(ElementRef);
+        Reader = fileReaderService.CreateReference(element);
         base.OnInit();
     }
 
