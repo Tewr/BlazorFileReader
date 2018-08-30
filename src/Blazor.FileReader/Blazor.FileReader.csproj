@@ -13,6 +13,8 @@
     <PackageProjectUrl>https://github.com/Tewr/BlazorFileReader</PackageProjectUrl>
     <PackageLicenseUrl>https://github.com/Tewr/BlazorFileReader/blob/master/LICENSE</PackageLicenseUrl>
     <RepositoryUrl>https://github.com/Tewr/BlazorFileReader</RepositoryUrl>
+    <Description>Read-Only File streams in blazor</Description>
+    <PackageTags>blazor blazor-component stream filestream file-stream read-file</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>

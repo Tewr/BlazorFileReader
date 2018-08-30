@@ -8,17 +8,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Blazor.FileReader" Version="0.5.1.1" />
     <PackageReference Include="Epplus" Version="4.5.2.1" />
     <PackageReference Include="Microsoft.AspNetCore.Blazor.Browser" Version="0.5.1" />
     <PackageReference Include="Microsoft.AspNetCore.Blazor.Build" Version="0.5.1" />
     <DotNetCliToolReference Include="Microsoft.AspNetCore.Blazor.Cli" Version="0.5.1" />
   </ItemGroup>
 
-  <ItemGroup>
-    <BlazorGenerate Remove="Pages\SHA256.cshtml" />
-  </ItemGroup>
-  
-  <ItemGroup>
-    <BlazorGenerate Remove="Pages\EPPlus.cshtml" />
-  </ItemGroup>
 </Project>
