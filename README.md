@@ -1,3 +1,5 @@
+[![Build status](https://ci.appveyor.com/api/projects/status/rr7pchwk7wbc3mn1/branch/master?svg=true)](https://ci.appveyor.com/project/Tewr/blazorfilereader/branch/master)
+
 # BlazorFileReader
 Blazor component and Demo of file streams in [Blazor](https://github.com/aspnet/Blazor). 
 
@@ -47,6 +49,6 @@ Here is a [Live demo](https://tewr.github.io/BlazorFileReader/) that contains th
 To use the code in this demo in your own project you need to use at least version 
 ```0.4.0``` of blazor (branch 0.4.0). 
 
-The ```master``` branch uses ```0.5.0-preview1-10327```.
+The ```master``` branch uses ```0.5.0```.
 
 
