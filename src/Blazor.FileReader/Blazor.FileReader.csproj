@@ -16,6 +16,8 @@
     <Description>Read-Only File streams in blazor</Description>
     <PackageTags>blazor blazor-component stream filestream file-stream read-file</PackageTags>
     <Configurations>Debug;Release;Ghpages</Configurations>
+    <PackageId>Tewr.Blazor.FileReader</PackageId>
+    
   </PropertyGroup>
 
   <ItemGroup>
