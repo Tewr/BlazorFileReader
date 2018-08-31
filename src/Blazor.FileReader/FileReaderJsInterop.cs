@@ -11,7 +11,7 @@ namespace Blazor.FileReader
 {
     public class FileReaderJsInterop
     {
-        private static long _nextPendingTaskId = 1; // Start at 1 because zero signals "no response needed"
+        private static long nextPendingTaskId = 1; // Start at 1 because zero signals "no response needed"
         private static readonly ConcurrentDictionary<long, TaskCompletionSource<long>> readFileAsyncCalls =
             new ConcurrentDictionary<long, TaskCompletionSource<long>>();
 
