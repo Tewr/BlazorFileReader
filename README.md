@@ -7,26 +7,26 @@ Blazor library and Demo of read-only file streams in [Blazor](https://github.com
 This demo exposes read-only streams using ```<input type="file" />```
 and [FileReader](https://developer.mozilla.org/en-US/docs/Web/API/FileReader).
 
-Here is a [Live demo](https://tewr.github.io/BlazorFileReader/) that contains the output of this project (master branch compiled in Release configuration). 
+Here is a [Live demo](https://tewr.github.io/BlazorFileReader/) that contains the output of [the demo project](src/Blazor.FileReader.Demo).
 
 ## Installation
 
-Use [Nuget](https://www.nuget.org/packages/Tewr.Blazor.FileReader)
+Use [Nuget](https://www.nuget.org/packages/Tewr.Blazor.FileReader): ```Tewr.Blazor.FileReader```
 
 ## Usage
 
-Setup IoC for ```IFileReaderService``` in ([Program.cs](blob/master/src/Blazor.FileReader.Demo/Program.cs)):
+Setup IoC for ```IFileReaderService``` in ([Program.cs](src/Blazor.FileReader.Demo/Program.cs#L24)):
 
 ```cs
-
-        static void Main(string[] args)
-        {
-            var serviceProvider = new BrowserServiceProvider(services =>
-            {
-                services.AddSingleton<IFileReaderService>(sp => new FileReaderService());
-            });
-
-		(...)
+   using Blazor.FileReader;
+   static void Main(string[] args)
+   {
+       var serviceProvider = new BrowserServiceProvider(services =>
+       {
+            services.AddSingleton<IFileReaderService>(sp => new FileReaderService());
+       });
+       new BrowserRenderer(serviceProvider).AddComponent<App>("app");
+       (...)
 ```
 
 And then use in a view:
@@ -68,7 +68,8 @@ And then use in a view:
 To use the code in this demo in your own project you need to use at least version 
 ```0.4.0``` of blazor (branch 0.4.0). 
 
-The ```master``` branch uses ```0.5.1```.
+The ```master``` branch uses ```0.5.1``` of Blazor.
 
-Blazor is an experimental project, do not use in production. Just as blazor frequently has breaking changes, so does the API of this library.
+Blazor is an experimental project, not ready for production use. Just as Blazor frequently has breaking changes, so does the API of this library.
 
+Versions previous to ```0.5.1``` wrapped the input element in a Blazor Component, this has been removed for better configurability and general lack of value.
