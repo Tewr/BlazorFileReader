@@ -1,5 +1,5 @@
 [![Build status](https://ci.appveyor.com/api/projects/status/rr7pchwk7wbc3mn1/branch/master?svg=true)](https://ci.appveyor.com/project/Tewr/blazorfilereader/branch/master)
-![NuGet](https://img.shields.io/nuget/v/Tewr.Blazor.FileReader.svg)
+[![NuGet](https://img.shields.io/nuget/v/Tewr.Blazor.FileReader.svg)](https://www.nuget.org/packages/Tewr.Blazor.FileReader)
 
 # BlazorFileReader
 Blazor library and Demo of read-only file streams in [Blazor](https://github.com/aspnet/Blazor). 
