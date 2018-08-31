@@ -108,5 +108,5 @@ var FileReaderInteropMethods = /** @class */ (function () {
     FileReaderInteropMethods.platform = Blazor.platform;
     return FileReaderInteropMethods;
 }());
-window.FileReader = new FileReaderComponent();
+window.FileReaderComponent = new FileReaderComponent();
 //# sourceMappingURL=FileReaderComponent.js.map

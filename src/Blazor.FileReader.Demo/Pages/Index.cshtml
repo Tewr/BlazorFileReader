@@ -13,22 +13,15 @@ There are other demos in the menu.<br /><br />
 <textarea style="max-width: 100%;" cols="50" rows="20">@Output</textarea>
 @functions {
     ElementRef inputElement;
-    IFileReaderRef Reader;
 
     string Output { get; set; }
-
-    protected override void OnInit()
-    {
-        Reader = fileReaderService.CreateReference(inputElement);
-        base.OnInit();
-    }
 
     public async Task ReadFile()
     {
         Output = string.Empty;
         this.StateHasChanged();
         var nl = Environment.NewLine;
-        foreach (var file in await Reader.EnumerateFilesAsync())
+        foreach (var file in await fileReaderService.CreateReference(inputElement).EnumerateFilesAsync())
         {
             var fileInfo = await file.ReadFileInfoAsync();
             Output += $"{nameof(IFileInfo)}.{nameof(fileInfo.Name)}: {fileInfo.Name}{nl}";

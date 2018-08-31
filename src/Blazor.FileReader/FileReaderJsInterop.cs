@@ -23,27 +23,27 @@ namespace Blazor.FileReader
         
         public static async Task<int> GetFileCount(ElementRef elementReference)
         {
-            return (int)await JSRuntime.Current.InvokeAsync<long>($"{nameof(Blazor.FileReader)}.GetFileCount", elementReference);
+            return (int)await JSRuntime.Current.InvokeAsync<long>($"FileReaderComponent.GetFileCount", elementReference);
         }
 
         public static async Task<FileInfo> GetFileInfoFromElement(ElementRef elementReference, int index)
         {
-            return Json.Deserialize<FileInfo>(await JSRuntime.Current.InvokeAsync<string>($"{nameof(Blazor.FileReader)}.GetFileInfoFromElement", elementReference, index));
+            return Json.Deserialize<FileInfo>(await JSRuntime.Current.InvokeAsync<string>($"FileReaderComponent.GetFileInfoFromElement", elementReference, index));
         }
 
         public static async Task<FileInfo> GetFileInfoFromReference(int fileRef)
         {
-            return Json.Deserialize<FileInfo>(await JSRuntime.Current.InvokeAsync<string>($"{nameof(Blazor.FileReader)}.GetFileInfoFromReference", fileRef));
+            return Json.Deserialize<FileInfo>(await JSRuntime.Current.InvokeAsync<string>($"FileReaderComponent.GetFileInfoFromReference", fileRef));
         }
 
         private static async Task<int> OpenReadAsync(ElementRef elementReference, int fileIndex)
         {
-            return (int)await JSRuntime.Current.InvokeAsync<long>($"{nameof(Blazor.FileReader)}.OpenRead", elementReference, fileIndex);
+            return (int)await JSRuntime.Current.InvokeAsync<long>($"FileReaderComponent.OpenRead", elementReference, fileIndex);
         }
 
         private static Task<bool> Dispose(int fileRef)
         {
-            return JSRuntime.Current.InvokeAsync<bool>($"{nameof(Blazor.FileReader)}.Dispose", fileRef);
+            return JSRuntime.Current.InvokeAsync<bool>($"FileReaderComponent.Dispose", fileRef);
         }
 
         private static async Task<int> ReadFileAsync(int fileRef, byte[] buffer, long position, int count, CancellationToken cancellationToken)
@@ -55,7 +55,7 @@ namespace Blazor.FileReader
             readFileAsyncCalls[callBackId] = taskCompletionSource;
             //Console.WriteLine("ReadFileAsync 2");
             var startCallBack = ExtendedJSRuntime.Current.InvokeUnmarshalled<byte[], string, bool>(
-            $"{nameof(Blazor.FileReader)}.ReadFileAsync",
+            $"FileReaderComponent.ReadFileAsync",
                 buffer, Json.Serialize(new { position, count, callBackId, fileRef }));
             //Console.WriteLine("ReadFileAsync 3");
             var longResult = await taskCompletionSource.Task;

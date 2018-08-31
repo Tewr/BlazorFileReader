@@ -70,12 +70,12 @@ This demo reads Excel files using <a href="https://github.com/JanKallman/EPPlus"
 
     EPPlusBuilder.TablesModel Tables = new EPPlusBuilder.TablesModel();
 
-    protected override void OnInit()
+    protected override void OnAfterRender()
     {
+        base.OnAfterRender();
         readerRef = fileReaderService.CreateReference(inputElement);
-
-        base.OnInit();
     }
+
 
     public async Task OnChange(UIChangeEventArgs e)
     {
