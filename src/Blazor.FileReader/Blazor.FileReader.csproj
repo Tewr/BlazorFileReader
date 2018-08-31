@@ -4,17 +4,18 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <OutputType>library</OutputType>
     <IsPackable>true</IsPackable>
-    <BlazorLinkOnBuild>false</BlazorLinkOnBuild>
+    <BlazorLinkOnBuild>true</BlazorLinkOnBuild>
     <TypeScriptToolsVersion>2.8</TypeScriptToolsVersion>
     <LangVersion>latest</LangVersion>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>0.5.1.1</Version>
+    <Version>0.5.1.2</Version>
     <Authors>Tor Knutsson</Authors>
     <PackageProjectUrl>https://github.com/Tewr/BlazorFileReader</PackageProjectUrl>
     <PackageLicenseUrl>https://github.com/Tewr/BlazorFileReader/blob/master/LICENSE</PackageLicenseUrl>
     <RepositoryUrl>https://github.com/Tewr/BlazorFileReader</RepositoryUrl>
     <Description>Read-Only File streams in blazor</Description>
     <PackageTags>blazor blazor-component stream filestream file-stream read-file</PackageTags>
+    <Configurations>Debug;Release;Ghpages</Configurations>
   </PropertyGroup>
 
   <ItemGroup>

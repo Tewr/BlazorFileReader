@@ -103,7 +103,7 @@ var FileReaderInteropMethods = /** @class */ (function () {
     };
     FileReaderInteropMethods.assemblyName = "Blazor.FileReader";
     FileReaderInteropMethods.namespace = "Blazor.FileReader";
-    FileReaderInteropMethods.type = "Blazor.FileReader";
+    FileReaderInteropMethods.type = "FileReaderJsInterop";
     FileReaderInteropMethods.methods = {};
     FileReaderInteropMethods.platform = Blazor.platform;
     return FileReaderInteropMethods;

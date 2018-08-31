@@ -5,7 +5,7 @@
 
 This demo reads Excel files using <a href="https://github.com/JanKallman/EPPlus">EPPlus</a>.<br /><br />
 
-<input type="file" ref="@inputElement" accept=".xlsx" onchange="@OnChange" />
+<input type="file" ref="inputElement" accept=".xlsx" onchange="@OnChange" />
 <button onclick="@ReadFile" class="btn btn-primary">Import Excel file</button><br /><br />
 <input type="checkbox" bind="@FirstRowIsHeader" id="firstRowIsHeader" />
 <label for="firstRowIsHeader">Treat first row as header</label><br />

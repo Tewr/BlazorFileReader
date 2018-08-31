@@ -11,7 +11,7 @@ namespace Blazor.FileReader.Demo
     {
         // Github sub-directory
         public static readonly string BasePath
-#if RELEASE
+#if GHPAGES
              = "/BlazorFileReader";
 #else
             = "";

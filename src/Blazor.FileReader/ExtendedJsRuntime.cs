@@ -12,8 +12,7 @@ namespace Blazor.FileReader
 
     public static class ExtendedJSRuntime
     {
-
-        private static Lazy<IExtendedJSRuntime> extendedJSRuntimeWrapper = 
+        private static readonly Lazy<IExtendedJSRuntime> extendedJSRuntimeWrapper = 
             new Lazy<IExtendedJSRuntime>(() => new ExtendedJSRuntimeWrapper(JSRuntime.Current));
 
         public static IExtendedJSRuntime Current => extendedJSRuntimeWrapper.Value;
