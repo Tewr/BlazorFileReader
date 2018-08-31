@@ -1,22 +1,22 @@
 ﻿declare var Blazor: any;
 
 interface ReadFileParams {
-    fileRef: number,
-    position: number,
-    count: number,
-    callBackId: number
+    fileRef: number;
+    position: number;
+    count: number;
+    callBackId: number;
 };
 
 interface FileInfo {
-    name: string,
-    size: number,
-    type: string,
-    lastModified: number
+    name: string;
+    size: number;
+    type: string;
+    lastModified: number;
 };
 
 
 interface DotNetBuffer {
-    toUint8Array(): Uint8Array
+    toUint8Array(): Uint8Array;
 }
 
 class FileReaderComponent {
@@ -41,7 +41,7 @@ class FileReaderComponent {
         if (!file) {
             return null;
         }
-        console.debug(this);
+        //console.debug(this);
         return this.GetFileInfoFromFile(file);
     }
 
@@ -65,7 +65,7 @@ class FileReaderComponent {
             type: file.type
         });
 
-        console.debug("GetFileInfoFromFile", result);
+        //console.debug("GetFileInfoFromFile", result);
         return result;
     }
     
@@ -129,7 +129,7 @@ class FileReaderInteropMethods {
     }
 
     private static CallMethod(name: string, params: any): any {
-        console.debug("CallMethod", name, params);
+        //console.debug("CallMethod", name, params);
         this.platform.callMethod(this.GetExport(name), null, [this.platform.toDotNetString(JSON.stringify(params))]);
     }
 

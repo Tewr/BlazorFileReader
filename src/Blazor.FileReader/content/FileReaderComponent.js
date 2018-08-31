@@ -13,7 +13,7 @@ var FileReaderComponent = /** @class */ (function () {
             if (!file) {
                 return null;
             }
-            console.debug(_this);
+            //console.debug(this);
             return _this.GetFileInfoFromFile(file);
         };
         this.Dispose = function (fileRef) {
@@ -79,7 +79,7 @@ var FileReaderComponent = /** @class */ (function () {
             size: file.size,
             type: file.type
         });
-        console.debug("GetFileInfoFromFile", result);
+        //console.debug("GetFileInfoFromFile", result);
         return result;
     };
     return FileReaderComponent;
@@ -94,7 +94,7 @@ var FileReaderInteropMethods = /** @class */ (function () {
         this.CallMethod("ReadFileAsyncCallback", { callBackId: callBackId, bytesRead: bytesRead });
     };
     FileReaderInteropMethods.CallMethod = function (name, params) {
-        console.debug("CallMethod", name, params);
+        //console.debug("CallMethod", name, params);
         this.platform.callMethod(this.GetExport(name), null, [this.platform.toDotNetString(JSON.stringify(params))]);
     };
     FileReaderInteropMethods.GetExport = function (name) {
