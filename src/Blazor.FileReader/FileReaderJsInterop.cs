@@ -51,7 +51,7 @@ namespace Blazor.FileReader
             //Console.WriteLine("ReadFileAsync 1");
             var taskCompletionSource = new TaskCompletionSource<long>();
             cancellationToken.Register(() => taskCompletionSource.TrySetCanceled());
-            var callBackId = Interlocked.Increment(ref _nextPendingTaskId);
+            var callBackId = Interlocked.Increment(ref nextPendingTaskId);
             readFileAsyncCalls[callBackId] = taskCompletionSource;
             //Console.WriteLine("ReadFileAsync 2");
             var startCallBack = ExtendedJSRuntime.Current.InvokeUnmarshalled<byte[], string, bool>(
