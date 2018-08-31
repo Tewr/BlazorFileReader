@@ -1,14 +1,20 @@
 [![Build status](https://ci.appveyor.com/api/projects/status/rr7pchwk7wbc3mn1/branch/master?svg=true)](https://ci.appveyor.com/project/Tewr/blazorfilereader/branch/master)
+![NuGet](https://img.shields.io/nuget/v/Tewr.Blazor.FileReader.svg)
 
 # BlazorFileReader
-Blazor component and Demo of read-only file streams in [Blazor](https://github.com/aspnet/Blazor). 
+Blazor library and Demo of read-only file streams in [Blazor](https://github.com/aspnet/Blazor). 
 
 This demo exposes read-only streams using ```<input type="file" />```
 and [FileReader](https://developer.mozilla.org/en-US/docs/Web/API/FileReader).
 
 Here is a [Live demo](https://tewr.github.io/BlazorFileReader/) that contains the output of this project (master branch compiled in Release configuration). 
 
+## Installation
+
+Use [Nuget](https://www.nuget.org/packages/Tewr.Blazor.FileReader)
+
 ## Usage
+
 Setup IoC for ```IFileReaderService``` in ([Program.cs](blob/master/src/Blazor.FileReader.Demo/Program.cs)):
 
 ```cs
@@ -22,7 +28,8 @@ Setup IoC for ```IFileReaderService``` in ([Program.cs](blob/master/src/Blazor.F
 
 		(...)
 ```
-Usage in a view:
+
+And then use in a view:
 
 ```cs
 @page "/MyPage"
@@ -56,9 +63,12 @@ Usage in a view:
 }
 ```
 
+## Notes
+
 To use the code in this demo in your own project you need to use at least version 
 ```0.4.0``` of blazor (branch 0.4.0). 
 
 The ```master``` branch uses ```0.5.1```.
 
+Blazor is an experimental project, do not use in production. Just as blazor frequently has breaking changes, so does the API of this library.
 
