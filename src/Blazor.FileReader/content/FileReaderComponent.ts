@@ -94,7 +94,7 @@ class FileReaderComponent {
             reader.onload = ((r) => {
                 return () => {
                     try {
-                        const contents: ArrayBuffer = r.result;
+                        const contents: ArrayBuffer = <ArrayBuffer>r.result;
                         const dotNetBufferView: Uint8Array = dotNetBuffer.toUint8Array();
                         dotNetBufferView.set(new Uint8Array(contents));
                         FileReaderInteropMethods.ReadFileAsyncCallback(readFileParams.callBackId, contents.byteLength);
