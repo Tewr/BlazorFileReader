@@ -7,7 +7,7 @@ Blazor library and Demo of read-only file streams in [Blazor](https://github.com
 This demo exposes read-only streams using ```<input type="file" />```
 and [FileReader](https://developer.mozilla.org/en-US/docs/Web/API/FileReader).
 
-Here is a [Live demo](https://tewr.github.io/BlazorFileReader/) that contains the output of [the demo project](src/Blazor.FileReader.Demo).
+Here is a [Live demo](https://tewr.github.io/BlazorFileReader/) that contains the output of [the demo project](src/Blazor.FileReader.Demo). Currently, its a build based on ```v0.5.1```.
 
 ## Installation
 
@@ -68,7 +68,7 @@ And then use in a view:
 To use the code in this demo in your own project you need to use at least version 
 ```0.4.0``` of blazor (branch 0.4.0). 
 
-The ```master``` branch uses ```0.5.1``` of Blazor.
+The ```master``` branch uses ```0.6.0``` of Blazor.
 
 Blazor is an experimental project, not ready for production use. Just as Blazor frequently has breaking changes, so does the API of this library.
 
