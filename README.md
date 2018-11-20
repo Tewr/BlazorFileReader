@@ -68,7 +68,7 @@ And then use in a view:
 To use the code in this demo in your own project you need to use at least version 
 ```0.4.0``` of blazor (branch 0.4.0). 
 
-The ```master``` branch uses ```0.6.0``` of Blazor.
+The ```master``` branch uses ```0.7.0``` of Blazor.
 
 Blazor is an experimental project, not ready for production use. Just as Blazor frequently has breaking changes, so does the API of this library.
 
