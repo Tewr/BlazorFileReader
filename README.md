@@ -76,7 +76,7 @@ Versions previous to ```0.5.1``` wrapped the input element in a Blazor Component
 
 ## Troubleshooting
 
-When using this project outside of a runtime in the browser, you may encounter the folling exception when trying to invoke read():
+When using this project outside of a runtime in the browser, you may encounter the [following](src/Blazor.FileReader/ExtendedJsRuntime.cs#L26) exception when trying to invoke ```ReadAsync()```:
 
 ```
 [System.PlatformNotSupportedException] Requires MonoWebAssemblyJSRuntime as the JSRuntime
