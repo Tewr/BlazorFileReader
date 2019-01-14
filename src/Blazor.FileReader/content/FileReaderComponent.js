@@ -72,7 +72,7 @@ var FileReaderComponent = /** @class */ (function () {
                     return function () {
                         try {
                             var contents = r.result;
-                            var data = contents.split("base64,")[1];
+                            var data = contents.split(";base64,")[1];
                             FileReaderInteropMethods.ReadFileMarshalledAsyncCallback(readFileParams.callBackId, data);
                         }
                         catch (e) {

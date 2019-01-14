@@ -119,7 +119,7 @@ class FileReaderComponent {
         return () => {
           try {
             const contents = r.result as string;
-            const data = contents.split("base64,")[1];
+            const data = contents.split(";base64,")[1];
             FileReaderInteropMethods.ReadFileMarshalledAsyncCallback(readFileParams.callBackId, data);
           } catch (e) {
             FileReaderInteropMethods.ReadFileAsyncError(readFileParams.callBackId, e.message);
