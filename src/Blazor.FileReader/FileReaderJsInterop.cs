@@ -48,28 +48,77 @@ namespace Blazor.FileReader
 
         private static async Task<int> ReadFileAsync(int fileRef, byte[] buffer, long position, int count, CancellationToken cancellationToken)
         {
-            //Console.WriteLine("ReadFileAsync 1");
             var taskCompletionSource = new TaskCompletionSource<long>();
             cancellationToken.Register(() => taskCompletionSource.TrySetCanceled());
             var callBackId = Interlocked.Increment(ref nextPendingTaskId);
             readFileAsyncCalls[callBackId] = taskCompletionSource;
-            //Console.WriteLine("ReadFileAsync 2");
+            if (ExtendedJSRuntime.IsAvailable)
+            {
+                return await ReadFileUnmarshalledAsync(fileRef, buffer, position, count, callBackId, taskCompletionSource);
+            }
+            else
+            {
+                return await ReadFileMarshalledAsync(fileRef, buffer, position, count, callBackId,
+                    taskCompletionSource);
+            }
+        }
+
+        private static async Task<int> ReadFileUnmarshalledAsync(
+            int fileRef, byte[] buffer, long position, int count, long callBackId,
+            TaskCompletionSource<long> taskCompletionSource)
+        {
             var startCallBack = ExtendedJSRuntime.Current.InvokeUnmarshalled<byte[], string, bool>(
-            $"FileReaderComponent.ReadFileAsync",
-                buffer, Json.Serialize(new { position, count, callBackId, fileRef }));
-            //Console.WriteLine("ReadFileAsync 3");
+                $"FileReaderComponent.ReadFileUnmarshalledAsync",
+                buffer, Json.Serialize(new {position, count, callBackId, fileRef}));
+            
             var longResult = await taskCompletionSource.Task;
-            //Console.WriteLine($"ReadFileAsync returns {longResult}");
+            
             return (int) longResult;
         }
-        
+
+        private static async Task<int> ReadFileMarshalledAsync(
+            int fileRef, byte[] buffer, long position, int count, long callBackId,
+            TaskCompletionSource<long> taskCompletionSource)
+        {
+            var startCallBack = JSRuntime.Current.InvokeAsync<long>(
+                $"FileReaderComponent.ReadFileToBufferAsync",
+                Json.Serialize(new { position, count, callBackId, fileRef }));
+
+            var longResult = await taskCompletionSource.Task;
+
+            return (int)longResult;
+        }
+
         public class ReadFileAsyncCallbackParams
         {
             public long CallBackId { get; set; }
             public long BytesRead { get; set; }
         }
 
+        public class ReadFileMarshalledAsyncCallbackParams
+        {
+            public long CallBackId { get; set; }
+            public long BytesRead { get; set; }
+
+            public string Data { get; set; }
+        }
+
         private static bool ReadFileAsyncCallback(string readFileAsyncCallback)
+        {
+            //Console.WriteLine($"ReadFileAsyncCallback({readFileAsyncCallback})");
+            var args = Json.Deserialize<ReadFileAsyncCallbackParams>(readFileAsyncCallback);
+            if (!readFileAsyncCalls.TryRemove(args.CallBackId, out TaskCompletionSource<long> taskCompletionSource))
+            {
+                //Console.WriteLine($"ReadFileAsyncCallback({args.CallBackId}, {args.BytesRead}): no call found");
+                return false;
+            }
+
+            //Console.WriteLine($"ReadFileAsyncCallback({args.CallBackId}, {args.BytesRead}): Call found, ending task");
+            taskCompletionSource.SetResult(args.BytesRead);
+            return true;
+        }
+
+        private static bool ReadFileMarshalledAsyncCallback(string readFileAsyncCallback)
         {
             //Console.WriteLine($"ReadFileAsyncCallback({readFileAsyncCallback})");
             var args = Json.Deserialize<ReadFileAsyncCallbackParams>(readFileAsyncCallback);

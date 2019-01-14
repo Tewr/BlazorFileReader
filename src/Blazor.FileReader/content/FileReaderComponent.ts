@@ -84,7 +84,7 @@ class FileReaderComponent {
         return fileRef;
     }
 
-    public ReadFileAsync = (dotNetArrayPtr: any, readFileParamsPtr: any): boolean => {
+    public ReadFileUnmarshalledAsync = (dotNetArrayPtr: any, readFileParamsPtr: any): boolean => {
         const readFileParams: ReadFileParams = JSON.parse(Blazor.platform.toJavaScriptString(readFileParamsPtr));
         const dotNetBuffer: DotNetBuffer = { toUint8Array: () => Blazor.platform.toUint8Array(dotNetArrayPtr) };
         
@@ -109,7 +109,30 @@ class FileReaderComponent {
         }
 
         return true;
-    }   
+  }   
+
+  public ReadFileMarshalledAsync = (readFileParams: ReadFileParams): number => {
+    const file: File = this.fileStreams[readFileParams.fileRef];
+    try {
+      const reader = new FileReader();
+      reader.onload = ((r) => {
+        return () => {
+          try {
+            const contents = r.result as string;
+            const data = contents.split("base64,")[1];
+            FileReaderInteropMethods.ReadFileMarshalledAsyncCallback(readFileParams.callBackId, data);
+          } catch (e) {
+            FileReaderInteropMethods.ReadFileAsyncError(readFileParams.callBackId, e.message);
+          }
+        }
+      })(reader);
+      reader.readAsDataURL(file.slice(readFileParams.position, readFileParams.position + readFileParams.count));
+    } catch (e) {
+      FileReaderInteropMethods.ReadFileAsyncError(readFileParams.callBackId, e.message);
+    }
+
+    return 0;
+  }   
 }
 
 class FileReaderInteropMethods {
@@ -121,11 +144,15 @@ class FileReaderInteropMethods {
     private static platform = Blazor.platform;
     
     public static ReadFileAsyncError(callBackId: number, exception: string) {
-        this.CallMethod("ReadFileAsyncError", { callBackId: callBackId, exception: exception });
+        this.CallMethod("ReadFileAsyncError", { callBackId, exception });
     }
 
     public static ReadFileAsyncCallback(callBackId: number, bytesRead: number) { 
-        this.CallMethod("ReadFileAsyncCallback", { callBackId: callBackId, bytesRead: bytesRead });
+        this.CallMethod("ReadFileAsyncCallback", { callBackId, bytesRead });
+    }
+
+    public static ReadFileMarshalledAsyncCallback(callBackId: number, data:string) {
+      this.CallMethod("ReadFileMarshalledAsyncCallback", { callBackId, data });
     }
 
     private static CallMethod(name: string, params: any): any {
