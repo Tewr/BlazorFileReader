@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27705.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blazor.FileReader.Demo", "Blazor.FileReader.Demo\Blazor.FileReader.Demo.csproj", "{0781BC55-3054-47ED-A6B2-37448CA58038}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blazor.FileReader.Browser.Demo", "Blazor.FileReader.Demo\Blazor.FileReader.Browser.Demo.csproj", "{0781BC55-3054-47ED-A6B2-37448CA58038}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blazor.FileReader", "Blazor.FileReader\Blazor.FileReader.csproj", "{5F8084DD-9D88-4407-BCFC-15C71C5AF11E}"
 EndProject
