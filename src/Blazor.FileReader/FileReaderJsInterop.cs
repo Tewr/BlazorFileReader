@@ -92,8 +92,8 @@ namespace Blazor.FileReader
             var callBackId = Interlocked.Increment(ref nextPendingTaskId);
             readFileMarshalledAsyncCalls[callBackId] = taskCompletionSource;
             var startCallBack = JSRuntime.Current.InvokeAsync<long>(
-                $"FileReaderComponent.ReadFileToBufferAsync",
-                Json.Serialize(new { position, count, callBackId, fileRef }));
+                $"FileReaderComponent.ReadFileMarshalledAsync",
+                new { position, count, callBackId, fileRef });
 
             var longResult = await taskCompletionSource.Task;
 

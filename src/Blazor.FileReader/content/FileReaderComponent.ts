@@ -1,4 +1,5 @@
 ﻿declare var Blazor: any;
+declare var DotNet: any;
 
 interface ReadFileParams {
     fileRef: number;

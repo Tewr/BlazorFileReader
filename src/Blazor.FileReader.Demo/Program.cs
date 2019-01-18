@@ -21,7 +21,7 @@ namespace Blazor.FileReader.Demo
         {
             var serviceProvider = new BrowserServiceProvider(services =>
             {
-                services.AddSingleton<IFileReaderService>(sp => new FileReaderService());
+                services.AddSingleton<IFileReaderService, FileReaderService>();
             });
 
             new BrowserRenderer(serviceProvider).AddComponent<App>("app");
