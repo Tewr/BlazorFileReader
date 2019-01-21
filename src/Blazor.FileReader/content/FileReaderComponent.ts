@@ -1,14 +1,32 @@
-﻿declare var Blazor: any;
-declare var DotNet: any;
+﻿declare var Blazor: IBlazor;
+declare var DotNet: IDotNet;
 
-interface ReadFileParams {
+interface IBlazor {
+  platform: IBlazorPlatform;
+}
+
+interface IBlazorPlatform {
+  callMethod(methodPointer: IBlazorMethodPointer, instancePointer: any, arguments: any[]);
+  findMethod(assembly: string, namespace: string, typeName: string, methodName: string): IBlazorMethodPointer;
+  toJavaScriptString(pointer: any): string;
+  toDotNetString(jsString: string): any;
+  toUint8Array(pointer: any): Uint8Array;
+}
+
+interface IBlazorMethodPointer { };
+
+interface IDotNet {
+  invokeMethodAsync<T>(assemblyName: string, methodIdentifier: string, ...args: any[]): Promise<T>
+}
+
+interface IReadFileParams {
     fileRef: number;
     position: number;
     count: number;
     callBackId: number;
 };
 
-interface FileInfo {
+interface IFileInfo {
     name: string;
     size: number;
     type: string;
@@ -86,8 +104,8 @@ class FileReaderComponent {
     }
 
     public ReadFileUnmarshalledAsync = (dotNetArrayPtr: any, readFileParamsPtr: any): boolean => {
-        const readFileParams: ReadFileParams = JSON.parse(Blazor.platform.toJavaScriptString(readFileParamsPtr));
-        const dotNetBuffer: DotNetBuffer = { toUint8Array: () => Blazor.platform.toUint8Array(dotNetArrayPtr) };
+        const readFileParams: IReadFileParams = JSON.parse(Blazor.platform.toJavaScriptString(readFileParamsPtr));
+      const dotNetBuffer: DotNetBuffer = { toUint8Array: (): Uint8Array => Blazor.platform.toUint8Array(dotNetArrayPtr) };
         
         const file: File = this.fileStreams[readFileParams.fileRef];
         try {
@@ -112,7 +130,7 @@ class FileReaderComponent {
         return true;
   }   
 
-  public ReadFileMarshalledAsync = (readFileParams: ReadFileParams): number => {
+  public ReadFileMarshalledAsync = (readFileParams: IReadFileParams): number => {
     const file: File = this.fileStreams[readFileParams.fileRef];
     try {
       const reader = new FileReader();
@@ -157,7 +175,6 @@ class FileReaderInteropMethods {
     }
 
     private static CallMethod(name: string, params: any): any {
-        //console.debug("CallMethod", name, params);
         this.platform.callMethod(this.GetExport(name), null, [this.platform.toDotNetString(JSON.stringify(params))]);
     }
 

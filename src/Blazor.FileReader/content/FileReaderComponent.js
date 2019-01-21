@@ -1,5 +1,6 @@
 ;
 ;
+;
 var FileReaderComponent = /** @class */ (function () {
     function FileReaderComponent() {
         var _this = this;
@@ -120,7 +121,6 @@ var FileReaderInteropMethods = /** @class */ (function () {
         this.CallMethod("ReadFileMarshalledAsyncCallback", { callBackId: callBackId, data: data });
     };
     FileReaderInteropMethods.CallMethod = function (name, params) {
-        //console.debug("CallMethod", name, params);
         this.platform.callMethod(this.GetExport(name), null, [this.platform.toDotNetString(JSON.stringify(params))]);
     };
     FileReaderInteropMethods.GetExport = function (name) {
