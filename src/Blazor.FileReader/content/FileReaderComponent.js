@@ -14,7 +14,6 @@ var FileReaderComponent = /** @class */ (function () {
             if (!file) {
                 return null;
             }
-            //console.debug(this);
             return _this.GetFileInfoFromFile(file);
         };
         this.Dispose = function (fileRef) {
@@ -121,7 +120,14 @@ var FileReaderInteropMethods = /** @class */ (function () {
         this.CallMethod("ReadFileMarshalledAsyncCallback", { callBackId: callBackId, data: data });
     };
     FileReaderInteropMethods.CallMethod = function (name, params) {
-        this.platform.callMethod(this.GetExport(name), null, [this.platform.toDotNetString(JSON.stringify(params))]);
+        if (this.dotNet) {
+            console.debug("using 'dotnet' callback method");
+            this.dotNet.invokeMethodAsync(this.assemblyName, name, params);
+        }
+        else {
+            console.debug("using 'platform' callback method");
+            this.platform.callMethod(this.GetExport("Platform" + name), null, [this.platform.toDotNetString(JSON.stringify(params))]);
+        }
     };
     FileReaderInteropMethods.GetExport = function (name) {
         return this.methods[name] = this.methods[name] ||
@@ -132,6 +138,7 @@ var FileReaderInteropMethods = /** @class */ (function () {
     FileReaderInteropMethods.type = "FileReaderJsInterop";
     FileReaderInteropMethods.methods = {};
     FileReaderInteropMethods.platform = Blazor.platform;
+    FileReaderInteropMethods.dotNet = DotNet;
     return FileReaderInteropMethods;
 }());
 window.FileReaderComponent = new FileReaderComponent();

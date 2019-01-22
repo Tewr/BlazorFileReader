@@ -53,7 +53,6 @@ namespace Blazor.FileReader
 
         private static async Task<int> ReadFileAsync(int fileRef, byte[] buffer, long position, int count, CancellationToken cancellationToken)
         {
-
             if (ExtendedJSRuntime.IsAvailable)
             {
                 return await ReadFileUnmarshalledAsync(fileRef, buffer, position, count, cancellationToken);
@@ -96,10 +95,15 @@ namespace Blazor.FileReader
                 new { position, count, callBackId, fileRef });
 
             var longResult = await taskCompletionSource.Task;
+            var bytesRead = 0;
+            if (!string.IsNullOrEmpty(longResult.Data?.Trim()))
+            {
+                var byteResult = Convert.FromBase64String(longResult.Data);
+                bytesRead = byteResult.Length;
+                Array.Copy(byteResult, buffer, bytesRead);
+            }
 
-            Array.Copy(Convert.FromBase64String(longResult.Data), buffer, longResult.BytesRead);
-
-            return (int)longResult.BytesRead;
+            return bytesRead;
         }
 
         public class ReadFileAsyncCallbackParams
@@ -112,11 +116,10 @@ namespace Blazor.FileReader
         {
             public long CallBackId { get; set; }
 
-            public long BytesRead { get; set; }
-
             public string Data { get; set; }
         }
 
+        [JSInvokable(nameof(ReadFileAsyncCallback))]
         private static bool ReadFileAsyncCallback(string readFileAsyncCallback)
         {
             var args = Json.Deserialize<ReadFileAsyncCallbackParams>(readFileAsyncCallback);
@@ -129,9 +132,19 @@ namespace Blazor.FileReader
             return true;
         }
 
-        private static bool ReadFileMarshalledAsyncCallback(string readFileAsyncCallback)
+        
+        public static bool PlatformReadFileMarshalledAsyncCallback(string readFileAsyncCallback)
         {
             var args = Json.Deserialize<ReadFileMarshalledAsyncCallbackParams>(readFileAsyncCallback);
+
+            return ReadFileMarshalledAsyncCallback(args);
+        }
+
+
+        [JSInvokable(nameof(ReadFileMarshalledAsyncCallback))]
+        public static bool ReadFileMarshalledAsyncCallback(ReadFileMarshalledAsyncCallbackParams args)
+        {
+
             if (!readFileMarshalledAsyncCalls.TryRemove(args.CallBackId, out TaskCompletionSource<ReadFileMarshalledAsyncCallbackParams> taskCompletionSource))
             {
                 return false;
@@ -147,11 +160,14 @@ namespace Blazor.FileReader
             public string Exception { get; set; }
         }
 
-        private static bool ReadFileAsyncError(string readFileAsyncError)
+        public static bool PlatformReadFileAsyncError(string readFileAsyncError)
         {
             var args = Json.Deserialize<ReadFileAsyncErrorParams>(readFileAsyncError);
-            //Console.WriteLine($"ReadFileAsyncCallback({readFileAsyncError})");
-            
+            return ReadFileAsyncError(args);
+        }
+
+        [JSInvokable(nameof(ReadFileAsyncError))]
+        public static bool ReadFileAsyncError(ReadFileAsyncErrorParams args) { 
             if (!readFileAsyncCalls.TryRemove(args.CallBackId, out TaskCompletionSource<long> taskCompletionSource))
             {
                 return false;
@@ -160,6 +176,7 @@ namespace Blazor.FileReader
             taskCompletionSource.SetException(new BrowserFileReaderException(args.Exception));
             return true;
         }
+
         private class InteropFileStream : Stream
         {
             private readonly int fileRef;
