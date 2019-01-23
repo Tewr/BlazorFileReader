@@ -5,7 +5,7 @@ using System;
 using Blazor.FileReader;
 
 
-namespace Blazor.FileReader.Demo
+namespace Blazor.FileReader.Wasm.Demo
 {
     public class Program
     {

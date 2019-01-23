@@ -120,24 +120,10 @@ var FileReaderInteropMethods = /** @class */ (function () {
         this.CallMethod("ReadFileMarshalledAsyncCallback", { callBackId: callBackId, data: data });
     };
     FileReaderInteropMethods.CallMethod = function (name, params) {
-        if (this.dotNet) {
-            console.debug("using 'dotnet' callback method");
-            this.dotNet.invokeMethodAsync(this.assemblyName, name, params);
-        }
-        else {
-            console.debug("using 'platform' callback method");
-            this.platform.callMethod(this.GetExport("Platform" + name), null, [this.platform.toDotNetString(JSON.stringify(params))]);
-        }
-    };
-    FileReaderInteropMethods.GetExport = function (name) {
-        return this.methods[name] = this.methods[name] ||
-            this.platform.findMethod(this.assemblyName, this.namespace, this.type, name);
+        this.dotNet.invokeMethodAsync(this.assemblyName, name, params);
     };
     FileReaderInteropMethods.assemblyName = "Blazor.FileReader";
-    FileReaderInteropMethods.namespace = "Blazor.FileReader";
-    FileReaderInteropMethods.type = "FileReaderJsInterop";
     FileReaderInteropMethods.methods = {};
-    FileReaderInteropMethods.platform = Blazor.platform;
     FileReaderInteropMethods.dotNet = DotNet;
     return FileReaderInteropMethods;
 }());

@@ -6,8 +6,6 @@ interface IBlazor {
 }
 
 interface IBlazorPlatform {
-  callMethod(methodPointer: IBlazorMethodPointer, instancePointer: any, arguments: any[]);
-  findMethod(assembly: string, namespace: string, typeName: string, methodName: string): IBlazorMethodPointer;
   toJavaScriptString(pointer: any): string;
   toDotNetString(jsString: string): any;
   toUint8Array(pointer: any): Uint8Array;
@@ -156,10 +154,7 @@ class FileReaderComponent {
 class FileReaderInteropMethods {
 
   private static assemblyName: string = "Blazor.FileReader";
-  private static namespace: string = "Blazor.FileReader";
-  private static type: string = "FileReaderJsInterop";
   private static methods: { [key: string]: any } = {};
-  private static platform: IBlazorPlatform = Blazor.platform;
   private static dotNet: IDotNet = DotNet;
 
   public static ReadFileAsyncError(callBackId: number, exception: string) {
@@ -175,18 +170,7 @@ class FileReaderInteropMethods {
   }
 
   private static CallMethod(name: string, params: any): any {
-    if (this.dotNet) {
-      console.debug("using 'dotnet' callback method");
-      this.dotNet.invokeMethodAsync(this.assemblyName, name, params)
-    } else {
-      console.debug("using 'platform' callback method");
-      this.platform.callMethod(this.GetExport("Platform" + name), null, [this.platform.toDotNetString(JSON.stringify(params))]);
-    }
-  }
-
-  private static GetExport(name: string): any {
-    return this.methods[name] = this.methods[name] ||
-      this.platform.findMethod(this.assemblyName, this.namespace, this.type, name);
+    this.dotNet.invokeMethodAsync(this.assemblyName, name, params);
   }
 }
 
