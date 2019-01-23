@@ -89,7 +89,7 @@ namespace Blazor.FileReader
             cancellationToken.Register(() => taskCompletionSource.TrySetCanceled());
             var callBackId = Interlocked.Increment(ref nextPendingTaskId);
             readFileMarshalledAsyncCalls[callBackId] = taskCompletionSource;
-            var startCallBack = JSRuntime.Current.InvokeAsync<long>(
+            var startCallBack = await JSRuntime.Current.InvokeAsync<long>(
                 $"FileReaderComponent.ReadFileMarshalledAsync",
                 new { position, count, callBackId, fileRef });
 
