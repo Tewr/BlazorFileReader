@@ -2,7 +2,7 @@
 [![NuGet](https://img.shields.io/nuget/v/Tewr.Blazor.FileReader.svg)](https://www.nuget.org/packages/Tewr.Blazor.FileReader)
 
 # BlazorFileReader
-Blazor library and Demo of read-only file streams in client-side [Blazor](https://github.com/aspnet/Blazor). Server-side blazor is currently not supported.
+Blazor library and Demo of read-only file streams in [Blazor](https://github.com/aspnet/Blazor). Server-side blazor is supported as of version 0.7.1.
 
 This demo exposes read-only streams using ```<input type="file" />```
 and [FileReader](https://developer.mozilla.org/en-US/docs/Web/API/FileReader).
@@ -82,4 +82,5 @@ When using this project outside of a runtime in the browser, you may encounter t
 [System.PlatformNotSupportedException] Requires MonoWebAssemblyJSRuntime as the JSRuntime
 ```
 
-For now, platforms other than the browser runtime are not supported (ex Server-side Blazor is not supported).
+This problem has been fixed as of version 0.7.1.
+
