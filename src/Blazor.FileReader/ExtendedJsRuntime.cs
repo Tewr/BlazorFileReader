@@ -17,6 +17,8 @@ namespace Blazor.FileReader
 
         public static IExtendedJSRuntime Current => extendedJSRuntimeWrapper.Value;
 
+        public static bool IsAvailable { get; } = JSRuntime.Current is MonoWebAssemblyJSRuntime;
+
         private class ExtendedJSRuntimeWrapper : IExtendedJSRuntime
         {
             private MonoWebAssemblyJSRuntime current;

@@ -5,7 +5,7 @@ using System;
 using Blazor.FileReader;
 
 
-namespace Blazor.FileReader.Demo
+namespace Blazor.FileReader.Wasm.Demo
 {
     public class Program
     {
@@ -21,7 +21,7 @@ namespace Blazor.FileReader.Demo
         {
             var serviceProvider = new BrowserServiceProvider(services =>
             {
-                services.AddSingleton<IFileReaderService>(sp => new FileReaderService());
+                services.AddSingleton<IFileReaderService, FileReaderService>();
             });
 
             new BrowserRenderer(serviceProvider).AddComponent<App>("app");
