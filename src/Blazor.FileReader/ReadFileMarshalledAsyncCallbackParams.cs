@@ -4,7 +4,7 @@
     {
         public class ReadFileMarshalledAsyncCallbackParams
         {
-            public long CallBackId { get; set; }
+            public string CallBackId { get; set; }
 
             public string Data { get; set; }
         }

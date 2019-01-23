@@ -1,6 +1,5 @@
 ;
 ;
-;
 var FileReaderComponent = /** @class */ (function () {
     function FileReaderComponent() {
         var _this = this;

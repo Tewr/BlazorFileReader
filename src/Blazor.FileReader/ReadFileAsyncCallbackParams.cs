@@ -4,7 +4,7 @@
     {
         public class ReadFileAsyncCallbackParams
         {
-            public long CallBackId { get; set; }
+            public string CallBackId { get; set; }
             public long BytesRead { get; set; }
         }
     }

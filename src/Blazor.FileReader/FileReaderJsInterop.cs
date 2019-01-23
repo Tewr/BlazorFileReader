@@ -1,21 +1,17 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Threading.Tasks;
-using System.IO;
-using Microsoft.AspNetCore.Blazor;
-using System.Threading;
+﻿using Microsoft.AspNetCore.Blazor;
 using Microsoft.JSInterop;
+using System;
+using System.Collections.Concurrent;
+using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Blazor.FileReader
 {
     public partial class FileReaderJsInterop
     {
-        private class TaskList<T> : ConcurrentDictionary<long, TaskCompletionSource<T>> {}
-
-        private static long nextPendingTaskId = 1; // Start at 1 because zero signals "no response needed"
-        private static readonly TaskList<long> readFileAsyncCalls =
-            new TaskList<long>();
-
+        private static long nextPendingTaskId = 1;
+        private static readonly TaskList<long> readFileAsyncCalls = new TaskList<long>();
         private static readonly TaskList<ReadFileMarshalledAsyncCallbackParams> readFileMarshalledAsyncCalls =
             new TaskList<ReadFileMarshalledAsyncCallbackParams>();
 
@@ -69,7 +65,7 @@ namespace Blazor.FileReader
         {
             var taskCompletionSource = new TaskCompletionSource<long>();
             cancellationToken.Register(() => taskCompletionSource.TrySetCanceled());
-            var callBackId = Interlocked.Increment(ref nextPendingTaskId);
+            var callBackId = Interlocked.Increment(ref nextPendingTaskId).ToString();
             readFileAsyncCalls[callBackId] = taskCompletionSource;
 
             var startCallBack = ExtendedJSRuntime.Current.InvokeUnmarshalled<byte[], string, bool>(
@@ -87,7 +83,7 @@ namespace Blazor.FileReader
         {
             var taskCompletionSource = new TaskCompletionSource<ReadFileMarshalledAsyncCallbackParams>();
             cancellationToken.Register(() => taskCompletionSource.TrySetCanceled());
-            var callBackId = Interlocked.Increment(ref nextPendingTaskId);
+            var callBackId = Guid.NewGuid().ToString("N");
             readFileMarshalledAsyncCalls[callBackId] = taskCompletionSource;
             var startCallBack = await JSRuntime.Current.InvokeAsync<long>(
                 $"FileReaderComponent.ReadFileMarshalledAsync",
@@ -120,7 +116,6 @@ namespace Blazor.FileReader
         [JSInvokable(nameof(ReadFileMarshalledAsyncCallback))]
         public static bool ReadFileMarshalledAsyncCallback(ReadFileMarshalledAsyncCallbackParams args)
         {
-
             if (!readFileMarshalledAsyncCalls.TryRemove(args.CallBackId, out TaskCompletionSource<ReadFileMarshalledAsyncCallbackParams> taskCompletionSource))
             {
                 return false;
@@ -140,5 +135,7 @@ namespace Blazor.FileReader
             taskCompletionSource.SetException(new BrowserFileReaderException(args.Exception));
             return true;
         }
+
+        private class TaskList<TValue> : ConcurrentDictionary<string, TaskCompletionSource<TValue>> { }
     }
 }

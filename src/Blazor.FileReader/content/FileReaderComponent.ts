@@ -11,8 +11,6 @@ interface IBlazorPlatform {
   toUint8Array(pointer: any): Uint8Array;
 }
 
-interface IBlazorMethodPointer { };
-
 interface IDotNet {
   invokeMethodAsync<T>(assemblyName: string, methodIdentifier: string, ...args: any[]): Promise<T>
 }
@@ -21,7 +19,7 @@ interface IReadFileParams {
   fileRef: number;
   position: number;
   count: number;
-  callBackId: number;
+  callBackId: string;
 };
 
 interface IFileInfo {
@@ -157,15 +155,15 @@ class FileReaderInteropMethods {
   private static methods: { [key: string]: any } = {};
   private static dotNet: IDotNet = DotNet;
 
-  public static ReadFileAsyncError(callBackId: number, exception: string) {
+  public static ReadFileAsyncError(callBackId: string, exception: string) {
     this.CallMethod("ReadFileAsyncError", { callBackId, exception });
   }
 
-  public static ReadFileAsyncCallback(callBackId: number, bytesRead: number) {
+  public static ReadFileAsyncCallback(callBackId: string, bytesRead: number) {
     this.CallMethod("ReadFileAsyncCallback", { callBackId, bytesRead });
   }
 
-  public static ReadFileMarshalledAsyncCallback(callBackId: number, data: string) {
+  public static ReadFileMarshalledAsyncCallback(callBackId: string, data: string) {
     this.CallMethod("ReadFileMarshalledAsyncCallback", { callBackId, data });
   }
 

@@ -4,7 +4,7 @@
     {
         public class ReadFileAsyncErrorParams
         {
-            public long CallBackId { get; set; }
+            public string CallBackId { get; set; }
             public string Exception { get; set; }
         }
     }
