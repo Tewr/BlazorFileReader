@@ -16,7 +16,7 @@ Use [Nuget](https://www.nuget.org/packages/Tewr.Blazor.FileReader): ```Install-P
 ## Usage
 
 ### Client-side / Wasm
-Setup IoC for ```IFileReaderService``` in ([Program.cs](src/Blazor.FileReader.Demo/Program.cs#L24)):
+Setup IoC for ```IFileReaderService``` in ([Program.cs](src/Blazor.FileReader.Wasm.Demo/Program.cs#L24)):
 
 ```cs
    using Blazor.FileReader;
@@ -31,8 +31,10 @@ Setup IoC for ```IFileReaderService``` in ([Program.cs](src/Blazor.FileReader.De
 ```
 
 ### Server-side / asp.net core
+Setup IoC for  ```IFileReaderService``` in ([Startup.cs](src/Blazor.FileReader.AspNetCore.Demo.App/Startup.cs#L10)):
 
 ```cs
+using Blazor.FileReader;
 
     public class Startup
     {
