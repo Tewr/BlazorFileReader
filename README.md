@@ -2,19 +2,20 @@
 [![NuGet](https://img.shields.io/nuget/v/Tewr.Blazor.FileReader.svg)](https://www.nuget.org/packages/Tewr.Blazor.FileReader)
 
 # BlazorFileReader
-Blazor library and Demo of read-only file streams in [Blazor](https://github.com/aspnet/Blazor). Server-side blazor is supported as of version 0.7.1.
+Blazor library and Demo of read-only file streams in [Blazor](https://github.com/aspnet/Blazor). Originally built for wasm, server-side Blazor is also supported as of version 0.7.1.
 
-This demo exposes read-only streams using ```<input type="file" />```
+This library exposes read-only streams using ```<input type="file" />```
 and [FileReader](https://developer.mozilla.org/en-US/docs/Web/API/FileReader).
 
-Here is a [Live demo](https://tewr.github.io/BlazorFileReader/) that contains the output of [the demo project](src/Blazor.FileReader.Demo). Currently, its a build based on ```v0.5.1```.
+Here is a [Live demo](https://tewr.github.io/BlazorFileReader/) that contains the output of [the wasm demo project](src/Blazor.FileReader.Wasm.Demo). Currently, its a build based on ```v0.5.1```.
 
 ## Installation
 
-Use [Nuget](https://www.nuget.org/packages/Tewr.Blazor.FileReader): ```Tewr.Blazor.FileReader```
+Use [Nuget](https://www.nuget.org/packages/Tewr.Blazor.FileReader): ```Install-Paackage Tewr.Blazor.FileReader```
 
 ## Usage
 
+### Client-side / Wasm
 Setup IoC for ```IFileReaderService``` in ([Program.cs](src/Blazor.FileReader.Demo/Program.cs#L24)):
 
 ```cs
@@ -23,13 +24,26 @@ Setup IoC for ```IFileReaderService``` in ([Program.cs](src/Blazor.FileReader.De
    {
        var serviceProvider = new BrowserServiceProvider(services =>
        {
-            services.AddSingleton<IFileReaderService>(sp => new FileReaderService());
+            services.AddSingleton<IFileReaderService, FileReaderService>();
        });
        new BrowserRenderer(serviceProvider).AddComponent<App>("app");
        (...)
 ```
 
-And then use in a view:
+### Server-side / asp.net core
+
+```cs
+
+    public class Startup
+    {
+        public void ConfigureServices(IServiceCollection services)
+        {
+            services.AddSingleton<IFileReaderService, FileReaderService>();
+        }
+	(...)
+```
+
+And then use in a view (same for client or server-side):
 
 ```cs
 @page "/MyPage"
@@ -47,16 +61,16 @@ And then use in a view:
         {
             // Read into buffer and act (uses less memory)
             using(Stream stream = await file.OpenReadAsync()) {
-			  // Do stuff with stream...
-			  await stream.ReadAsync(buffer, ...);
-			  // This following will fail. Only async read is allowed.
-			  stream.Read(buffer, ...)
+                // Do stuff with stream...
+                await stream.ReadAsync(buffer, ...);
+		// This following will fail. Only async read is allowed.
+		stream.Read(buffer, ...)
             }
 
             // Read into memory and act
             using(MemoryStream memoryStream = await file.CreateMemoryStreamAsync(4096)) {
-			  // Sync calls are ok once file is in memory
-			  memoryStream.Read(buffer, ...)
+	    	// Sync calls are ok once file is in memory
+		memoryStream.Read(buffer, ...)
             }
         }
     }
@@ -68,19 +82,12 @@ And then use in a view:
 To use the code in this demo in your own project you need to use at least version 
 ```0.4.0``` of blazor (branch 0.4.0). 
 
-The ```master``` branch uses ```0.7.0``` of Blazor.
+The ```master``` branch uses ```0.7.1``` of Blazor.
 
 Blazor is an experimental project, not ready for production use. Just as Blazor frequently has breaking changes, so does the API of this library.
 
+### Version notes
+
 Versions previous to ```0.5.1``` wrapped the input element in a Blazor Component, this has been removed for better configurability and general lack of value.
 
-## Troubleshooting
-
-When using this project outside of a runtime in the browser, you may encounter the [following](src/Blazor.FileReader/ExtendedJsRuntime.cs#L26) exception when trying to invoke ```ReadAsync()```:
-
-```
-[System.PlatformNotSupportedException] Requires MonoWebAssemblyJSRuntime as the JSRuntime
-```
-
-This problem has been fixed as of version 0.7.1.
-
+Versions previous to ```0.7.1``` did not support server-side Blazor and would throw ```[System.PlatformNotSupportedException] Requires MonoWebAssemblyJSRuntime as the JSRuntime```.
