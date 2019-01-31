@@ -11,7 +11,7 @@ Here is a [Live demo](https://tewr.github.io/BlazorFileReader/) that contains th
 
 ## Installation
 
-Use [Nuget](https://www.nuget.org/packages/Tewr.Blazor.FileReader): ```Install-Paackage Tewr.Blazor.FileReader```
+Use [Nuget](https://www.nuget.org/packages/Tewr.Blazor.FileReader): ```Install-Package Tewr.Blazor.FileReader```
 
 ## Usage
 
@@ -90,6 +90,8 @@ Blazor is an experimental project, not ready for production use. Just as Blazor 
 
 ### Version notes
 
+Versions previous to ```0.7.1``` did not support server-side Blazor and would throw ```[System.PlatformNotSupportedException] Requires MonoWebAssemblyJSRuntime as the JSRuntime```.
+
 Versions previous to ```0.5.1``` wrapped the input element in a Blazor Component, this has been removed for better configurability and general lack of value.
 
-Versions previous to ```0.7.1``` did not support server-side Blazor and would throw ```[System.PlatformNotSupportedException] Requires MonoWebAssemblyJSRuntime as the JSRuntime```.
+
