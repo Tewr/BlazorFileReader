@@ -2,7 +2,7 @@
 [![NuGet](https://img.shields.io/nuget/v/Tewr.Blazor.FileReader.svg)](https://www.nuget.org/packages/Tewr.Blazor.FileReader)
 
 # BlazorFileReader
-Blazor library and Demo of read-only file streams in [Blazor](https://github.com/aspnet/Blazor). Originally built for wasm, server-side Blazor is also supported as of version 0.7.1.
+Blazor library and Demo of read-only file streams in [Blazor](https://github.com/aspnet/Blazor). Originally built for Wasm ("Client-side" Blazor), Server-side Blazor is also supported as of version 0.7.1.
 
 This library exposes read-only streams using ```<input type="file" />```
 and [FileReader](https://developer.mozilla.org/en-US/docs/Web/API/FileReader).
@@ -15,7 +15,9 @@ Use [Nuget](https://www.nuget.org/packages/Tewr.Blazor.FileReader): ```Install-P
 
 ## Usage
 
-### Client-side / Wasm
+Depending on your [project type](https://docs.microsoft.com/en-us/aspnet/core/razor-components/faq?view=aspnetcore-3.0), use one of the two examples below.
+
+### Client-side / Wasm Project type
 Setup IoC for ```IFileReaderService``` in ([Program.cs](src/Blazor.FileReader.Wasm.Demo/Program.cs#L24)):
 
 ```cs
@@ -30,7 +32,8 @@ Setup IoC for ```IFileReaderService``` in ([Program.cs](src/Blazor.FileReader.Wa
        (...)
 ```
 
-### Server-side / asp.net core
+### Server-side / asp.net core Project type
+
 Setup IoC for  ```IFileReaderService``` in ([Startup.cs](src/Blazor.FileReader.AspNetCore.Demo.App/Startup.cs#L10)):
 
 ```cs
@@ -45,7 +48,9 @@ using Blazor.FileReader;
 	(...)
 ```
 
-And then use in a view (same for client or server-side):
+### Blazor View
+
+The code for views looks the same for both client- and server-side projects
 
 ```cs
 @page "/MyPage"
