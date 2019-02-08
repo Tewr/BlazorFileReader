@@ -4,7 +4,7 @@
     <TargetFramework>netcoreapp3.0</TargetFramework>
     <OutputType>library</OutputType>
     <IsPackable>true</IsPackable>
-    <BlazorLinkOnBuild>true</BlazorLinkOnBuild>
+    <BlazorLinkOnBuild>false</BlazorLinkOnBuild>
     <TypeScriptToolsVersion>2.8</TypeScriptToolsVersion>
     <LangVersion>latest</LangVersion>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
