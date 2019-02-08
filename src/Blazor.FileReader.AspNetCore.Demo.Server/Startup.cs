@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Blazor.Server;
+using Microsoft.AspNetCore.Components.Server;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.ResponseCompression;
@@ -15,7 +15,7 @@ namespace Blazor.FileReader.AspNetCore.Demo.Server
         public void ConfigureServices(IServiceCollection services)
         {
             // Adds the Server-Side Blazor services, and those registered by the app project's startup.
-            services.AddServerSideBlazor<App.Startup>();
+            services.AddRazorComponents<App.Startup>();
 
             services.AddResponseCompression(options =>
             {
@@ -38,7 +38,7 @@ namespace Blazor.FileReader.AspNetCore.Demo.Server
             }
 
             // Use component registrations and static files from the app project.
-            app.UseServerSideBlazor<App.Startup>();
+            app.UseRazorComponents<App.Startup>();
         }
     }
 }

@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Components.Builder;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Blazor.FileReader.AspNetCore.Demo.App
+namespace Blazor.FileReader.Wasm.Demo
 {
     public class Startup
     {

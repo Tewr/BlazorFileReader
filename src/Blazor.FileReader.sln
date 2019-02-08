@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27705.0
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28531.58
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blazor.FileReader", "Blazor.FileReader\Blazor.FileReader.csproj", "{5F8084DD-9D88-4407-BCFC-15C71C5AF11E}"
 EndProject
@@ -10,6 +10,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blazor.FileReader.AspNetCore.Demo.App", "Blazor.FileReader.AspNetCore.Demo.App\Blazor.FileReader.AspNetCore.Demo.App.csproj", "{EB8D9B98-1596-4504-B19A-DA090CC8AC76}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blazor.FileReader.Wasm.Demo", "Blazor.FileReader.Wasm.Demo\Blazor.FileReader.Wasm.Demo.csproj", "{9FA01C57-BBB5-420E-AA9B-AD22F39B77ED}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Blazor.FileReader.Wasm.Demo080", "Blazor.FileReader.Wasm.Demo080\Blazor.FileReader.Wasm.Demo080.csproj", "{145A90E4-D38E-48AA-907F-4CF55536B327}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,6 +43,12 @@ Global
 		{9FA01C57-BBB5-420E-AA9B-AD22F39B77ED}.Ghpages|Any CPU.Build.0 = Ghpages|Any CPU
 		{9FA01C57-BBB5-420E-AA9B-AD22F39B77ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9FA01C57-BBB5-420E-AA9B-AD22F39B77ED}.Release|Any CPU.Build.0 = Release|Any CPU
+		{145A90E4-D38E-48AA-907F-4CF55536B327}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{145A90E4-D38E-48AA-907F-4CF55536B327}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{145A90E4-D38E-48AA-907F-4CF55536B327}.Ghpages|Any CPU.ActiveCfg = Debug|Any CPU
+		{145A90E4-D38E-48AA-907F-4CF55536B327}.Ghpages|Any CPU.Build.0 = Debug|Any CPU
+		{145A90E4-D38E-48AA-907F-4CF55536B327}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{145A90E4-D38E-48AA-907F-4CF55536B327}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
