@@ -17,7 +17,7 @@
     <PackageTags>blazor blazor-component stream filestream file-stream read-file</PackageTags>
     <Configurations>Debug;Release;Ghpages</Configurations>
     <PackageId>Tewr.Blazor.FileReader</PackageId>
-    <PackageReleaseNotes>Adds support for Server-side Blazor.
+    <PackageReleaseNotes>
 </PackageReleaseNotes>
     
   </PropertyGroup>
