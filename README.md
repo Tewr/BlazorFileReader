@@ -18,17 +18,43 @@ Use [Nuget](https://www.nuget.org/packages/Tewr.Blazor.FileReader): ```Install-P
 Depending on your [project type](https://docs.microsoft.com/en-us/aspnet/core/razor-components/faq?view=aspnetcore-3.0), use one of the two examples below.
 
 ### Client-side / Wasm Project type
-Setup IoC for ```IFileReaderService``` in ([Program.cs](src/Blazor.FileReader.Wasm.Demo/Program.cs#L24)):
+Setup IoC for ```IFileReaderService``` and Implement ```WasmJsRuntimeInvokeProvider``` in ([Startup.cs](src/Blazor.FileReader.Wasm.Demo/Startup.cs#L10)):
 
 ```cs
-   using Blazor.FileReader;
-   static void Main(string[] args)
-   {
-       var serviceProvider = new BrowserServiceProvider(services =>
-       {
+   using Microsoft.AspNetCore.Components.Builder;
+   using Microsoft.Extensions.DependencyInjection;
+   using Microsoft.JSInterop;
+   using Mono.WebAssembly.Interop;
+   
+    public class Startup
+    {
+        public void ConfigureServices(IServiceCollection services)
+        {
+            services.AddSingleton<IInvokeUnmarshalled, WasmJsRuntimeInvokeProvider>();
             services.AddSingleton<IFileReaderService, FileReaderService>();
-       });
-       new BrowserRenderer(serviceProvider).AddComponent<App>("app");
+        }
+
+        /// <summary>
+        /// Provides an optional bridge for unmarshalled calls
+        /// </summary>
+        private class WasmJsRuntimeInvokeProvider : IInvokeUnmarshalled
+        {
+            private static MonoWebAssemblyJSRuntime MonoWebAssemblyJSRuntime = 
+                JSRuntime.Current as MonoWebAssemblyJSRuntime;
+
+            public static bool IsAvailable { get; } = 
+                MonoWebAssemblyJSRuntime != null;
+
+            public TRes InvokeUnmarshalled<T1, T2, TRes>(string identifier, T1 arg1, T2 arg2)
+            {
+                return MonoWebAssemblyJSRuntime.InvokeUnmarshalled<T1, T2, TRes>(identifier, arg1, arg2);
+            }
+        }
+
+        public void Configure(IComponentsApplicationBuilder app)
+        {
+            app.AddComponent<App>("app");
+        }
        (...)
 ```
 
