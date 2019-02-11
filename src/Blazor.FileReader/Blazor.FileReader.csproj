@@ -1,14 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <OutputType>library</OutputType>
     <IsPackable>true</IsPackable>
     <BlazorLinkOnBuild>false</BlazorLinkOnBuild>
     <TypeScriptToolsVersion>2.8</TypeScriptToolsVersion>
     <LangVersion>latest</LangVersion>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>0.8.0-preview-080219</Version>
+    <Version>0.8.0-preview-110219</Version>
     <Authors>Tor Knutsson</Authors>
     <PackageProjectUrl>https://github.com/Tewr/BlazorFileReader</PackageProjectUrl>
     <PackageLicenseUrl>https://github.com/Tewr/BlazorFileReader/blob/master/LICENSE</PackageLicenseUrl>
@@ -30,10 +30,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Blazor" Version="0.8.0-preview-19104-04" />
     <PackageReference Include="Microsoft.AspNetCore.Components.Browser" Version="3.0.0-preview-19075-0444" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.Build" Version="3.0.0-preview-19075-0444" />
-    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.Build" Version="3.0.0-preview-19075-0444" PrivateAssets="all" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="content\FileReaderComponent.ts" />

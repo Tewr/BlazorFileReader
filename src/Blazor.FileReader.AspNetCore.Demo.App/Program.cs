@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Blazor.Hosting;
+﻿using Microsoft.AspNetCore.Components.Builder;
 
 namespace Blazor.FileReader.AspNetCore.Demo.App
 {
@@ -9,7 +9,7 @@ namespace Blazor.FileReader.AspNetCore.Demo.App
             CreateHostBuilder(args).Build().Run();
         }
 
-        public static IWebAssemblyHostBuilder CreateHostBuilder(string[] args) =>
+        public static IComponentsApplicationBuilder CreateHostBuilder(string[] args) =>
             BlazorWebAssemblyHost.CreateDefaultBuilder()
                 .UseBlazorStartup<Startup>();
     }

@@ -66,19 +66,6 @@ namespace Blazor.FileReader
         /// </summary>
         DateTime? LastModifiedDate { get; }
     }
-
-    public interface IFileReaderService
-    {
-        IFileReaderRef CreateReference(ElementRef inputFileElement);
-    }
-
-    public class FileReaderService : IFileReaderService
-    {
-        public IFileReaderRef CreateReference(ElementRef inputFileElement)
-        {
-            return new FileReaderRef(inputFileElement);
-        }
-    }
     
     internal class FileReaderRef : IFileReaderRef
     {
@@ -88,9 +75,12 @@ namespace Blazor.FileReader
 
         public ElementRef ElementRef { get; private set; }
 
-        internal FileReaderRef(ElementRef elementRef)
+        public IInvokeUnmarshalled InvokeUnmarshalled { get; private set; }
+
+        internal FileReaderRef(ElementRef elementRef, IInvokeUnmarshalled invokeUnmarshalled)
         {
             this.ElementRef = elementRef;
+            this.InvokeUnmarshalled = invokeUnmarshalled;
         }
     }
 
@@ -144,7 +134,7 @@ namespace Blazor.FileReader
 
         public Task<Stream> OpenReadAsync()
         {
-            return FileReaderJsInterop.OpenFileStream(fileLoaderRef.ElementRef, index);
+            return FileReaderJsInterop.OpenFileStream(fileLoaderRef.ElementRef, fileLoaderRef.InvokeUnmarshalled, index);
         }
 
         public async Task<IFileInfo> ReadFileInfoAsync()

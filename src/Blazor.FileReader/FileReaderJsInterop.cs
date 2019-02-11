@@ -15,10 +15,10 @@ namespace Blazor.FileReader
         private static readonly TaskList<ReadFileMarshalledAsyncCallbackParams> readFileMarshalledAsyncCalls =
             new TaskList<ReadFileMarshalledAsyncCallbackParams>();
 
-        public static async Task<Stream> OpenFileStream(ElementRef elementReference, int index)
+        public static async Task<Stream> OpenFileStream(ElementRef elementReference, IInvokeUnmarshalled invokeUnmarshalled, int index)
         {
             var fileInfo = await GetFileInfoFromElement(elementReference, index);
-            return new InteropFileStream(await OpenReadAsync(elementReference, index), fileInfo.Size);
+            return new InteropFileStream(await OpenReadAsync(elementReference, index), fileInfo.Size, invokeUnmarshalled);
         }
         
         public static async Task<int> GetFileCount(ElementRef elementReference)
@@ -46,11 +46,11 @@ namespace Blazor.FileReader
             return JSRuntime.Current.InvokeAsync<bool>($"FileReaderComponent.Dispose", fileRef);
         }
 
-        private static async Task<int> ReadFileAsync(int fileRef, byte[] buffer, long position, int count, CancellationToken cancellationToken)
+        private static async Task<int> ReadFileAsync(int fileRef, IInvokeUnmarshalled invokeUnmarshalled, byte[] buffer, long position, int count, CancellationToken cancellationToken)
         {
-            if (ExtendedJSRuntime.IsAvailable)
+            if (invokeUnmarshalled != null)
             {
-                return await ReadFileUnmarshalledAsync(fileRef, buffer, position, count, cancellationToken);
+                return await ReadFileUnmarshalledAsync(fileRef, invokeUnmarshalled, buffer, position, count, cancellationToken);
             }
             else
             {
@@ -59,8 +59,9 @@ namespace Blazor.FileReader
             }
         }
 
+
         private static async Task<int> ReadFileUnmarshalledAsync(
-            int fileRef, byte[] buffer, long position, int count,
+            int fileRef, IInvokeUnmarshalled invokeUnmarshalled, byte[] buffer, long position, int count,
             CancellationToken cancellationToken)
         {
             var taskCompletionSource = new TaskCompletionSource<long>();
@@ -68,7 +69,7 @@ namespace Blazor.FileReader
             var callBackId = Interlocked.Increment(ref nextPendingTaskId).ToString();
             readFileAsyncCalls[callBackId] = taskCompletionSource;
 
-            var startCallBack = ExtendedJSRuntime.Current.InvokeUnmarshalled<byte[], string, bool>(
+            var startCallBack = invokeUnmarshalled.InvokeUnmarshalled<byte[], string, bool>(
                 $"FileReaderComponent.ReadFileUnmarshalledAsync",
                 buffer, Json.Serialize(new {position, count, callBackId, fileRef}));
             
