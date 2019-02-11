@@ -18,9 +18,10 @@ Use [Nuget](https://www.nuget.org/packages/Tewr.Blazor.FileReader): ```Install-P
 Depending on your [project type](https://docs.microsoft.com/en-us/aspnet/core/razor-components/faq?view=aspnetcore-3.0), use one of the two examples below.
 
 ### Client-side / Wasm Project type
-Setup IoC for ```IFileReaderService``` and Implement ```WasmJsRuntimeInvokeProvider``` in ([Startup.cs](src/Blazor.FileReader.Wasm.Demo/Startup.cs#L10)):
+Setup IoC for ```IFileReaderService``` and Implement ```IInvokeUnmarshalled``` in ([Startup.cs](src/Blazor.FileReader.Wasm.Demo/Startup.cs#L10)):
 
 ```cs
+   using Blazor.FileReader
    using Microsoft.AspNetCore.Components.Builder;
    using Microsoft.Extensions.DependencyInjection;
    using Microsoft.JSInterop;
@@ -42,13 +43,8 @@ Setup IoC for ```IFileReaderService``` and Implement ```WasmJsRuntimeInvokeProvi
             private static MonoWebAssemblyJSRuntime MonoWebAssemblyJSRuntime = 
                 JSRuntime.Current as MonoWebAssemblyJSRuntime;
 
-            public static bool IsAvailable { get; } = 
-                MonoWebAssemblyJSRuntime != null;
-
-            public TRes InvokeUnmarshalled<T1, T2, TRes>(string identifier, T1 arg1, T2 arg2)
-            {
+            public TRes InvokeUnmarshalled<T1, T2, TRes>(string identifier, T1 arg1, T2 arg2) =>
                 return MonoWebAssemblyJSRuntime.InvokeUnmarshalled<T1, T2, TRes>(identifier, arg1, arg2);
-            }
         }
 
         public void Configure(IComponentsApplicationBuilder app)
