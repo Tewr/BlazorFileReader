@@ -11,7 +11,7 @@ Here is a [Live demo](https://tewr.github.io/BlazorFileReader/) that contains th
 
 ## Installation
 
-Use [Nuget](https://www.nuget.org/packages/Tewr.Blazor.FileReader): ```Install-Package Tewr.Blazor.FileReader```
+Use [Nuget](https://www.nuget.org/packages/Tewr.Blazor.FileReader): ```Install-Package Tewr.Blazor.FileReader -Version 0.8.0-preview-120219```
 
 ## Usage
 
@@ -56,6 +56,7 @@ Setup IoC for ```IFileReaderService``` and Implement ```IInvokeUnmarshalled``` i
 
 ### Server-side / asp.net core Project type
 
+**Currently unstable**
 Setup IoC for  ```IFileReaderService``` in ([Startup.cs](src/Blazor.FileReader.AspNetCore.Demo.App/Startup.cs#L10)):
 
 ```cs
