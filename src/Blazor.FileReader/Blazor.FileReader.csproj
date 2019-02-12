@@ -8,10 +8,10 @@
     <TypeScriptToolsVersion>2.8</TypeScriptToolsVersion>
     <LangVersion>latest</LangVersion>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>0.8.0-preview-110219</Version>
+    <Version>0.8.0-preview-120219</Version>
     <Authors>Tor Knutsson</Authors>
     <PackageProjectUrl>https://github.com/Tewr/BlazorFileReader</PackageProjectUrl>
-    <PackageLicense>https://github.com/Tewr/BlazorFileReader/blob/master/LICENSE</PackageLicense>
+    <PackageLicenseUrl>https://github.com/Tewr/BlazorFileReader/blob/master/LICENSE</PackageLicenseUrl>
     <RepositoryUrl>https://github.com/Tewr/BlazorFileReader</RepositoryUrl>
     <Description>Read-Only File streams in blazor</Description>
     <PackageTags>blazor blazor-component stream filestream file-stream read-file</PackageTags>
