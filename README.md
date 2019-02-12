@@ -44,7 +44,7 @@ Setup IoC for ```IFileReaderService``` and Implement ```IInvokeUnmarshalled``` i
                 JSRuntime.Current as MonoWebAssemblyJSRuntime;
 
             public TRes InvokeUnmarshalled<T1, T2, TRes>(string identifier, T1 arg1, T2 arg2) =>
-                return MonoWebAssemblyJSRuntime.InvokeUnmarshalled<T1, T2, TRes>(identifier, arg1, arg2);
+                MonoWebAssemblyJSRuntime.InvokeUnmarshalled<T1, T2, TRes>(identifier, arg1, arg2);
         }
 
         public void Configure(IComponentsApplicationBuilder app)
