@@ -21,7 +21,7 @@ Depending on your [project type](https://docs.microsoft.com/en-us/aspnet/core/ra
 Setup IoC for ```IFileReaderService``` and Implement ```IInvokeUnmarshalled``` in ([Startup.cs](src/Blazor.FileReader.Wasm.Demo/Startup.cs#L10)):
 
 ```cs
-   using Blazor.FileReader
+   using Blazor.FileReader;
    using Microsoft.AspNetCore.Components.Builder;
    using Microsoft.Extensions.DependencyInjection;
    using Microsoft.JSInterop;
