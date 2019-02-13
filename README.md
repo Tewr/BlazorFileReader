@@ -14,7 +14,7 @@ Here is a [Live demo](https://tewr.github.io/BlazorFileReader/) that contains th
 
 Use [Nuget](https://www.nuget.org/packages/Tewr.Blazor.FileReader): ```Install-Package Tewr.Blazor.FileReader -Version 0.7.1```
 
-The installation guide below concerns ```v0.7.1```. For use with [0.8.0](https://blogs.msdn.microsoft.com/webdev/2019/02/05/blazor-0-8-0-experimental-release-now-available/), see branch [release/0.8.0-preview](../../tree/release/0.8.0-preview)
+The installation guide below concerns ```v0.7.1```. For use with [Blazor 0.8.0](https://blogs.msdn.microsoft.com/webdev/2019/02/05/blazor-0-8-0-experimental-release-now-available/), see branch [release/0.8.0-preview](../../tree/release/0.8.0-preview)
 
 ## Usage
 
