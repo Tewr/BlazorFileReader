@@ -1,8 +1,9 @@
 [![Build status](https://ci.appveyor.com/api/projects/status/rr7pchwk7wbc3mn1/branch/master?svg=true)](https://ci.appveyor.com/project/Tewr/blazorfilereader/branch/master)
 [![NuGet](https://img.shields.io/nuget/v/Tewr.Blazor.FileReader.svg)](https://www.nuget.org/packages/Tewr.Blazor.FileReader)
+[![NuGet](https://img.shields.io/nuget/vpre/Tewr.Blazor.FileReader.svg)](https://www.nuget.org/packages/Tewr.Blazor.FileReader/0.8.0-preview-120219)
 
 # BlazorFileReader
-Blazor library and Demo of read-only file streams in [Blazor](https://github.com/aspnet/Blazor). Originally built for Wasm ("Client-side" Blazor), Server-side Blazor is also supported as of version 0.7.1.
+Blazor library and Demo of read-only file streams in [Blazor](https://github.com/aspnet/Blazor).
 
 This library exposes read-only streams using ```<input type="file" />```
 and [FileReader](https://developer.mozilla.org/en-US/docs/Web/API/FileReader).
@@ -11,7 +12,9 @@ Here is a [Live demo](https://tewr.github.io/BlazorFileReader/) that contains th
 
 ## Installation
 
-Use [Nuget](https://www.nuget.org/packages/Tewr.Blazor.FileReader): ```Install-Package Tewr.Blazor.FileReader```
+Use [Nuget](https://www.nuget.org/packages/Tewr.Blazor.FileReader): ```Install-Package Tewr.Blazor.FileReader -Version 0.7.1```
+
+The installation guide below concerns ```v0.7.1```. For use with [0.8.0](https://blogs.msdn.microsoft.com/webdev/2019/02/05/blazor-0-8-0-experimental-release-now-available/), see branch [release/0.8.0-preview](../../tree/release/0.8.0-preview)
 
 ## Usage
 
@@ -33,6 +36,8 @@ Setup IoC for ```IFileReaderService``` in ([Program.cs](src/Blazor.FileReader.Wa
 ```
 
 ### Server-side / asp.net core Project type
+
+**Functionality only available in v0.7.1**
 
 Setup IoC for  ```IFileReaderService``` in ([Startup.cs](src/Blazor.FileReader.AspNetCore.Demo.App/Startup.cs#L10)):
 
