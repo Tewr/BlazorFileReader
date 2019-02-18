@@ -1,5 +1,5 @@
 [![Build status](https://ci.appveyor.com/api/projects/status/rr7pchwk7wbc3mn1/branch/master?svg=true)](https://ci.appveyor.com/project/Tewr/blazorfilereader/branch/master)
-[![NuGet](https://img.shields.io/nuget/v/Tewr.Blazor.FileReader.svg)](https://www.nuget.org/packages/Tewr.Blazor.FileReader)
+[![NuGet](https://img.shields.io/nuget/vpre/Tewr.Blazor.FileReader.svg)](https://www.nuget.org/packages/Tewr.Blazor.FileReader)
 
 # BlazorFileReader
 Blazor library and Demo of read-only file streams in [Blazor](https://github.com/aspnet/Blazor). Originally built for Wasm ("Client-side" Blazor), Server-side Blazor is also supported as of version 0.7.1.
@@ -11,7 +11,7 @@ Here is a [Live demo](https://tewr.github.io/BlazorFileReader/) that contains th
 
 ## Installation
 
-Use [Nuget](https://www.nuget.org/packages/Tewr.Blazor.FileReader): ```Install-Package Tewr.Blazor.FileReader```
+Use [Nuget](https://www.nuget.org/packages/Tewr.Blazor.FileReader): ```Install-Package Tewr.Blazor.FileReader -Version 0.8.0-preview-120219```
 
 ## Usage
 
@@ -21,7 +21,7 @@ Depending on your [project type](https://docs.microsoft.com/en-us/aspnet/core/ra
 Setup IoC for ```IFileReaderService``` and Implement ```IInvokeUnmarshalled``` in ([Startup.cs](src/Blazor.FileReader.Wasm.Demo/Startup.cs#L10)):
 
 ```cs
-   using Blazor.FileReader
+   using Blazor.FileReader;
    using Microsoft.AspNetCore.Components.Builder;
    using Microsoft.Extensions.DependencyInjection;
    using Microsoft.JSInterop;
@@ -44,7 +44,7 @@ Setup IoC for ```IFileReaderService``` and Implement ```IInvokeUnmarshalled``` i
                 JSRuntime.Current as MonoWebAssemblyJSRuntime;
 
             public TRes InvokeUnmarshalled<T1, T2, TRes>(string identifier, T1 arg1, T2 arg2) =>
-                return MonoWebAssemblyJSRuntime.InvokeUnmarshalled<T1, T2, TRes>(identifier, arg1, arg2);
+                MonoWebAssemblyJSRuntime.InvokeUnmarshalled<T1, T2, TRes>(identifier, arg1, arg2);
         }
 
         public void Configure(IComponentsApplicationBuilder app)
@@ -55,6 +55,8 @@ Setup IoC for ```IFileReaderService``` and Implement ```IInvokeUnmarshalled``` i
 ```
 
 ### Server-side / asp.net core Project type
+
+**Currently unstable**
 
 Setup IoC for  ```IFileReaderService``` in ([Startup.cs](src/Blazor.FileReader.AspNetCore.Demo.App/Startup.cs#L10)):
 
