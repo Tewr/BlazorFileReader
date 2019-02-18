@@ -11,6 +11,8 @@ Here is a [Live demo](https://tewr.github.io/BlazorFileReader/) that contains th
 
 ## Installation
 
+```0.8.0``` is a pre-release version. First of all, make sure your environment is up to date with the appropriate SDK and VS2019 preview. See [this article](https://blogs.msdn.microsoft.com/webdev/2019/02/05/blazor-0-8-0-experimental-release-now-available/ ) for more details.
+
 Use [Nuget](https://www.nuget.org/packages/Tewr.Blazor.FileReader): ```Install-Package Tewr.Blazor.FileReader -Version 0.8.0-preview-120219```
 
 ## Usage
@@ -71,6 +73,14 @@ using Blazor.FileReader;
         }
 	(...)
 ```
+
+You must manually include the javascript required due to a [missing](https://github.com/Tewr/BlazorFileReader/issues/13) [feature](https://github.com/aspnet/AspNetCore/issues/7300) in Server components (thanks [@springy76](https://github.com/springy76)): Download [FileReaderComponent.js](/src/Blazor.FileReader/content/FileReaderComponent.js) and reference it in [index.html](/src/Blazor.FileReader.AspNetCore.Demo/Blazor.FileReader.AspNetCore.Demo.Server/wwwroot/index.html) after the line
+```html
+<script src="_framework/components.server.js"></script>
+
+```
+
+
 
 ### Blazor View
 
