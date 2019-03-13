@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
+using System;
 
 namespace Blazor.FileReader
 {
@@ -18,9 +19,7 @@ namespace Blazor.FileReader
             this._fileReaderJsInterop = new FileReaderJsInterop(jsRuntime, invokeUnmarshalled);
         }
 
-        public FileReaderService()
-        {
-        }
+        public FileReaderService(IJSRuntime jsRuntime) : this(jsRuntime, null) { }
 
         public IFileReaderRef CreateReference(ElementRef inputFileElement)
         {

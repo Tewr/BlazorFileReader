@@ -9,7 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
-namespace Blazor.FileReader.AspNetCore.Demo.Server
+namespace Blazor.FileReader.RazorComponents.Demo
 {
     public class Program
     {

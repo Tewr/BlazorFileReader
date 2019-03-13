@@ -31,7 +31,7 @@ For any API accepting a stream but not supporting ReadAsync, the full-ram versio
 
 @functions {
     ElementRef inputElement;
-    
+
 
     string Output { get; set; }
 
@@ -91,7 +91,7 @@ For any API accepting a stream but not supporting ReadAsync, the full-ram versio
                 }
                 else
                 {
-                    using (var fs =  await file.OpenReadAsync())
+                    using (var fs = await file.OpenReadAsync())
                     {
                         var bufferSize = UseBufferSize ? BufferSize : 4096 * 8;
                         if (DebugOutput)
