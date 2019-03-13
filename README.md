@@ -2,7 +2,8 @@
 [![NuGet](https://img.shields.io/nuget/vpre/Tewr.Blazor.FileReader.svg)](https://www.nuget.org/packages/Tewr.Blazor.FileReader)
 
 # BlazorFileReader
-Blazor library and Demo of read-only file streams in [Blazor](https://github.com/aspnet/Blazor). Originally built for Wasm ("Client-side" Blazor), Server-side Blazor is also supported as of version 0.7.1.
+Blazor library and Demo of read-only file streams in [Blazor](https://github.com/aspnet/Blazor). 
+Originally built for Wasm ("Client-side" Blazor), Server-side Blazor (Aka RazorComponents) is also supported as of version 0.7.1.
 
 This library exposes read-only streams using ```<input type="file" />```
 and [FileReader](https://developer.mozilla.org/en-US/docs/Web/API/FileReader).
@@ -34,7 +35,7 @@ Download [FileReaderComponent.js](/src/Blazor.FileReader/content/FileReaderCompo
 
 ### Server-side / asp.net core Project type
 
-Setup IoC for  ```IFileReaderService``` as in the example ([Startup.cs](src/Blazor.FileReader.RazorComponents.Demo/Startup.cs#L27)) as a scpoed dependency.
+Setup IoC for  ```IFileReaderService``` as in the example ([Startup.cs](src/Blazor.FileReader.RazorComponents.Demo/Startup.cs#L27)) as a scoped dependency.
 
 You must manually include the javascript required due to a [missing](https://github.com/Tewr/BlazorFileReader/issues/13) 
 [feature](https://github.com/aspnet/AspNetCore/issues/7300) in Server components 
@@ -64,16 +65,16 @@ The code for views looks the same for both client- and server-side projects
         {
             // Read into buffer and act (uses less memory)
             using(Stream stream = await file.OpenReadAsync()) {
-                // Do stuff with stream...
+                // Do (async) stuff with stream...
                 await stream.ReadAsync(buffer, ...);
-		// This following will fail. Only async read is allowed.
-		stream.Read(buffer, ...)
+                // The following will fail. Only async read is allowed.
+                stream.Read(buffer, ...)
             }
 
             // Read into memory and act
             using(MemoryStream memoryStream = await file.CreateMemoryStreamAsync(4096)) {
-	    	// Sync calls are ok once file is in memory
-		memoryStream.Read(buffer, ...)
+                // Sync calls are ok once file is in memory
+                memoryStream.Read(buffer, ...)
             }
         }
     }
