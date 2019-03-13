@@ -69,7 +69,6 @@ namespace Blazor.FileReader
             }
         }
 
-
         private static async Task<int> ReadFileUnmarshalledAsync(
             int fileRef, IInvokeUnmarshalled invokeUnmarshalled, byte[] buffer, long position, int count,
             CancellationToken cancellationToken)
