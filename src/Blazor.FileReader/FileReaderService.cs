@@ -11,23 +11,18 @@ namespace Blazor.FileReader
 
     public class FileReaderService : IFileReaderService
     {
-        /// <summary>
-        /// May be null.
-        /// </summary>
-        private readonly IInvokeUnmarshalled _invokeUnmarshalled;
+        private readonly FileReaderJsInterop _fileReaderJsInterop;
 
-        public FileReaderService(IInvokeUnmarshalled invokeUnmarshalled)
+        public FileReaderService(IJSRuntime jsRuntime, IInvokeUnmarshalled invokeUnmarshalled)
         {
-            this._invokeUnmarshalled = invokeUnmarshalled;
+            this._fileReaderJsInterop = new FileReaderJsInterop(jsRuntime, invokeUnmarshalled);
         }
 
-        public FileReaderService()
-        {
-        }
+        public FileReaderService(IJSRuntime jsRuntime) : this(jsRuntime, null) { }
 
         public IFileReaderRef CreateReference(ElementRef inputFileElement)
         {
-            return new FileReaderRef(inputFileElement, this._invokeUnmarshalled);
+            return new FileReaderRef(inputFileElement, this._fileReaderJsInterop);
         }
     }
 }
