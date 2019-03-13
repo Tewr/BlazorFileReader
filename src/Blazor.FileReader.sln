@@ -7,10 +7,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blazor.FileReader", "Blazor
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blazor.FileReader.Wasm.Demo", "Blazor.FileReader.Wasm.Demo\Blazor.FileReader.Wasm.Demo.csproj", "{9FA01C57-BBB5-420E-AA9B-AD22F39B77ED}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blazor.FileReader.AspNetCore.Demo.Server", "Blazor.FileReader.AspNetCore.Demo\Blazor.FileReader.AspNetCore.Demo.Server\Blazor.FileReader.AspNetCore.Demo.Server.csproj", "{6F0A5396-809D-42A9-83DE-444CB8B61E55}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blazor.FileReader.AspNetCore.Demo.App", "Blazor.FileReader.AspNetCore.Demo\Blazor.FileReader.AspNetCore.Demo.App\Blazor.FileReader.AspNetCore.Demo.App.csproj", "{F7508738-7FCD-4A88-AE25-B6A94AAD17CA}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blazor.FileReader.RazorComponents.Demo", "Blazor.FileReader.RazorComponents.Demo\Blazor.FileReader.RazorComponents.Demo.csproj", "{A6533EFA-499A-4EB6-8021-45AD43614265}"
 EndProject
 Global
@@ -31,18 +27,6 @@ Global
 		{9FA01C57-BBB5-420E-AA9B-AD22F39B77ED}.Ghpages|Any CPU.Build.0 = Ghpages|Any CPU
 		{9FA01C57-BBB5-420E-AA9B-AD22F39B77ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9FA01C57-BBB5-420E-AA9B-AD22F39B77ED}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6F0A5396-809D-42A9-83DE-444CB8B61E55}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6F0A5396-809D-42A9-83DE-444CB8B61E55}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6F0A5396-809D-42A9-83DE-444CB8B61E55}.Ghpages|Any CPU.ActiveCfg = Debug|Any CPU
-		{6F0A5396-809D-42A9-83DE-444CB8B61E55}.Ghpages|Any CPU.Build.0 = Debug|Any CPU
-		{6F0A5396-809D-42A9-83DE-444CB8B61E55}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6F0A5396-809D-42A9-83DE-444CB8B61E55}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F7508738-7FCD-4A88-AE25-B6A94AAD17CA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F7508738-7FCD-4A88-AE25-B6A94AAD17CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F7508738-7FCD-4A88-AE25-B6A94AAD17CA}.Ghpages|Any CPU.ActiveCfg = Debug|Any CPU
-		{F7508738-7FCD-4A88-AE25-B6A94AAD17CA}.Ghpages|Any CPU.Build.0 = Debug|Any CPU
-		{F7508738-7FCD-4A88-AE25-B6A94AAD17CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F7508738-7FCD-4A88-AE25-B6A94AAD17CA}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A6533EFA-499A-4EB6-8021-45AD43614265}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A6533EFA-499A-4EB6-8021-45AD43614265}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A6533EFA-499A-4EB6-8021-45AD43614265}.Ghpages|Any CPU.ActiveCfg = Debug|Any CPU
