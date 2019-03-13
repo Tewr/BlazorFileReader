@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Blazor.Builder;
+using Microsoft.AspNetCore.Components.Builder;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Blazor.FileReader.AspNetCore.Demo.App
@@ -10,7 +10,7 @@ namespace Blazor.FileReader.AspNetCore.Demo.App
             services.AddSingleton<IFileReaderService, FileReaderService>();
         }
 
-        public void Configure(IBlazorApplicationBuilder app)
+        public void Configure(IComponentsApplicationBuilder app)
         {
             app.AddComponent<App>("app");
         }

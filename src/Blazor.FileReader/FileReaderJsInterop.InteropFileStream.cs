@@ -12,13 +12,15 @@ namespace Blazor.FileReader
         {
             private readonly int fileRef;
             private readonly long length;
+            private readonly IInvokeUnmarshalled invokeUnmarshalled;
             private bool isDisposed;
             private long _position;
 
-            public InteropFileStream(int fileReference, long length)
+            public InteropFileStream(int fileReference, long length, IInvokeUnmarshalled invokeUnmarshalled)
             {
                 this.fileRef = fileReference;
                 this.length = length;
+                this.invokeUnmarshalled = invokeUnmarshalled;
             }
 
             public override bool CanRead => ThrowIfDisposedOrReturn(true);
@@ -46,7 +48,7 @@ namespace Blazor.FileReader
             {
                 ThrowIfDisposed();
                 //Console.WriteLine($"{nameof(InteropFileStream)}.{nameof(ReadAsync)}({nameof(buffer)}=byte[{buffer.Length}], {nameof(offset)}={offset}, {nameof(count)}={count})");
-                var bytesRead = await FileReaderJsInterop.ReadFileAsync(fileRef, buffer, Position + offset, count, cancellationToken);
+                var bytesRead = await FileReaderJsInterop.ReadFileAsync(fileRef, invokeUnmarshalled, buffer, Position + offset, count, cancellationToken);
                 Position += bytesRead;
                 return bytesRead;
             }

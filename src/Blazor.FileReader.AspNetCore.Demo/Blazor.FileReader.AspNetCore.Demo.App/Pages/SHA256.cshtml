@@ -31,7 +31,7 @@ For any API accepting a stream but not supporting ReadAsync, the full-ram versio
 
 @functions {
     ElementRef inputElement;
-
+    
 
     string Output { get; set; }
 
@@ -46,27 +46,14 @@ For any API accepting a stream but not supporting ReadAsync, the full-ram versio
     }
 
     public async Task HashFile()
+
     {
-        try
-        {
-            await HashFile(false);
-        }
-        catch (Exception e)
-        {
-            Output += e.ToString();
-            this.StateHasChanged();
-        }
+        await HashFile(false);
     }
 
     public async Task HashFileRam()
     {
-        try {
-            await HashFile(true);
-        }
-        catch (Exception e) {
-            Output += e.ToString();
-            this.StateHasChanged();
-        }
+        await HashFile(true);
     }
 
     public async Task HashFile(bool useMemoryStream)

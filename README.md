@@ -1,9 +1,8 @@
-[![Build status](https://ci.appveyor.com/api/projects/status/rr7pchwk7wbc3mn1/branch/master?svg=true)](https://ci.appveyor.com/project/Tewr/blazorfilereader/branch/master)
-[![NuGet](https://img.shields.io/nuget/v/Tewr.Blazor.FileReader.svg)](https://www.nuget.org/packages/Tewr.Blazor.FileReader)
-[![NuGet](https://img.shields.io/nuget/vpre/Tewr.Blazor.FileReader.svg)](https://www.nuget.org/packages/Tewr.Blazor.FileReader/0.8.0-preview-120219)
+[![Build status](https://ci.appveyor.com/api/projects/status/rr7pchwk7wbc3mn1/branch/release/0.8.0-preview?svg=true)](https://ci.appveyor.com/project/Tewr/blazorfilereader/branch/master)
+[![NuGet](https://img.shields.io/nuget/vpre/Tewr.Blazor.FileReader.svg)](https://www.nuget.org/packages/Tewr.Blazor.FileReader)
 
 # BlazorFileReader
-Blazor library and Demo of read-only file streams in [Blazor](https://github.com/aspnet/Blazor).
+Blazor library and Demo of read-only file streams in [Blazor](https://github.com/aspnet/Blazor). Originally built for Wasm ("Client-side" Blazor), Server-side Blazor is also supported as of version 0.7.1.
 
 This library exposes read-only streams using ```<input type="file" />```
 and [FileReader](https://developer.mozilla.org/en-US/docs/Web/API/FileReader).
@@ -12,32 +11,54 @@ Here is a [Live demo](https://tewr.github.io/BlazorFileReader/) that contains th
 
 ## Installation
 
-Use [Nuget](https://www.nuget.org/packages/Tewr.Blazor.FileReader): ```Install-Package Tewr.Blazor.FileReader -Version 0.7.1```
+```0.8.0``` is a pre-release version. First of all, make sure your environment is up to date with the appropriate SDK and VS2019 preview. See [this article](https://blogs.msdn.microsoft.com/webdev/2019/02/05/blazor-0-8-0-experimental-release-now-available/ ) for more details.
 
-The installation guide below concerns ```v0.7.1```. For use with [Blazor 0.8.0](https://blogs.msdn.microsoft.com/webdev/2019/02/05/blazor-0-8-0-experimental-release-now-available/), see branch [release/0.8.0-preview](../../tree/release/0.8.0-preview)
+Use [Nuget](https://www.nuget.org/packages/Tewr.Blazor.FileReader): ```Install-Package Tewr.Blazor.FileReader -Version 0.8.0-preview-120219```
 
 ## Usage
 
 Depending on your [project type](https://docs.microsoft.com/en-us/aspnet/core/razor-components/faq?view=aspnetcore-3.0), use one of the two examples below.
 
 ### Client-side / Wasm Project type
-Setup IoC for ```IFileReaderService``` in ([Program.cs](src/Blazor.FileReader.Wasm.Demo/Program.cs#L24)):
+Setup IoC for ```IFileReaderService``` and Implement ```IInvokeUnmarshalled``` in ([Startup.cs](src/Blazor.FileReader.Wasm.Demo/Startup.cs#L10)):
 
 ```cs
    using Blazor.FileReader;
-   static void Main(string[] args)
-   {
-       var serviceProvider = new BrowserServiceProvider(services =>
-       {
+   using Microsoft.AspNetCore.Components.Builder;
+   using Microsoft.Extensions.DependencyInjection;
+   using Microsoft.JSInterop;
+   using Mono.WebAssembly.Interop;
+   
+    public class Startup
+    {
+        public void ConfigureServices(IServiceCollection services)
+        {
+            services.AddSingleton<IInvokeUnmarshalled, WasmJsRuntimeInvokeProvider>();
             services.AddSingleton<IFileReaderService, FileReaderService>();
-       });
-       new BrowserRenderer(serviceProvider).AddComponent<App>("app");
+        }
+
+        /// <summary>
+        /// Provides an optional bridge for unmarshalled calls
+        /// </summary>
+        private class WasmJsRuntimeInvokeProvider : IInvokeUnmarshalled
+        {
+            private static MonoWebAssemblyJSRuntime MonoWebAssemblyJSRuntime = 
+                JSRuntime.Current as MonoWebAssemblyJSRuntime;
+
+            public TRes InvokeUnmarshalled<T1, T2, TRes>(string identifier, T1 arg1, T2 arg2) =>
+                MonoWebAssemblyJSRuntime.InvokeUnmarshalled<T1, T2, TRes>(identifier, arg1, arg2);
+        }
+
+        public void Configure(IComponentsApplicationBuilder app)
+        {
+            app.AddComponent<App>("app");
+        }
        (...)
 ```
 
 ### Server-side / asp.net core Project type
 
-**Functionality only available in v0.7.1**
+**Currently unstable**
 
 Setup IoC for  ```IFileReaderService``` in ([Startup.cs](src/Blazor.FileReader.AspNetCore.Demo.App/Startup.cs#L10)):
 
@@ -52,6 +73,14 @@ using Blazor.FileReader;
         }
 	(...)
 ```
+
+You must manually include the javascript required due to a [missing](https://github.com/Tewr/BlazorFileReader/issues/13) [feature](https://github.com/aspnet/AspNetCore/issues/7300) in Server components (thanks [@springy76](https://github.com/springy76)): Download [FileReaderComponent.js](/src/Blazor.FileReader/content/FileReaderComponent.js) and reference it in [index.html](/src/Blazor.FileReader.AspNetCore.Demo/Blazor.FileReader.AspNetCore.Demo.Server/wwwroot/index.html) after the line
+```html
+<script src="_framework/components.server.js"></script>
+
+```
+
+
 
 ### Blazor View
 
