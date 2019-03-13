@@ -15,42 +15,52 @@ namespace Blazor.FileReader
         private static readonly TaskList<ReadFileMarshalledAsyncCallbackParams> readFileMarshalledAsyncCalls =
             new TaskList<ReadFileMarshalledAsyncCallbackParams>();
 
-        public static async Task<Stream> OpenFileStream(ElementRef elementReference, IInvokeUnmarshalled invokeUnmarshalled, int index)
+        internal IJSRuntime CurrentJSRuntime { get; }
+
+        internal IInvokeUnmarshalled InvokeUnmarshalled { get; }
+
+        public FileReaderJsInterop(IJSRuntime jsRuntime, IInvokeUnmarshalled invokeUnmarshalled)
+        {
+            CurrentJSRuntime = jsRuntime;
+            InvokeUnmarshalled = invokeUnmarshalled;
+        }
+
+        public async Task<Stream> OpenFileStream(ElementRef elementReference, int index)
         {
             var fileInfo = await GetFileInfoFromElement(elementReference, index);
-            return new InteropFileStream(await OpenReadAsync(elementReference, index), fileInfo.Size, invokeUnmarshalled);
+            return new InteropFileStream(await OpenReadAsync(elementReference, index), fileInfo.Size, this);
         }
         
-        public static async Task<int> GetFileCount(ElementRef elementReference)
+        public async Task<int> GetFileCount(ElementRef elementReference)
         {
-            return (int)await JSRuntime.Current.InvokeAsync<long>($"FileReaderComponent.GetFileCount", elementReference);
+            return (int)await CurrentJSRuntime.InvokeAsync<long>($"FileReaderComponent.GetFileCount", elementReference);
         }
 
-        public static async Task<FileInfo> GetFileInfoFromElement(ElementRef elementReference, int index)
+        public async Task<FileInfo> GetFileInfoFromElement(ElementRef elementReference, int index)
         {
-            return Json.Deserialize<FileInfo>(await JSRuntime.Current.InvokeAsync<string>($"FileReaderComponent.GetFileInfoFromElement", elementReference, index));
+            return Json.Deserialize<FileInfo>(await CurrentJSRuntime.InvokeAsync<string>($"FileReaderComponent.GetFileInfoFromElement", elementReference, index));
         }
 
-        public static async Task<FileInfo> GetFileInfoFromReference(int fileRef)
+        public async Task<FileInfo> GetFileInfoFromReference(int fileRef)
         {
-            return Json.Deserialize<FileInfo>(await JSRuntime.Current.InvokeAsync<string>($"FileReaderComponent.GetFileInfoFromReference", fileRef));
+            return Json.Deserialize<FileInfo>(await CurrentJSRuntime.InvokeAsync<string>($"FileReaderComponent.GetFileInfoFromReference", fileRef));
         }
 
-        private static async Task<int> OpenReadAsync(ElementRef elementReference, int fileIndex)
+        private async Task<int> OpenReadAsync(ElementRef elementReference, int fileIndex)
         {
-            return (int)await JSRuntime.Current.InvokeAsync<long>($"FileReaderComponent.OpenRead", elementReference, fileIndex);
+            return (int)await CurrentJSRuntime.InvokeAsync<long>($"FileReaderComponent.OpenRead", elementReference, fileIndex);
         }
 
-        private static Task<bool> Dispose(int fileRef)
+        private Task<bool> DisposeStream(int fileRef)
         {
-            return JSRuntime.Current.InvokeAsync<bool>($"FileReaderComponent.Dispose", fileRef);
+            return CurrentJSRuntime.InvokeAsync<bool>($"FileReaderComponent.Dispose", fileRef);
         }
 
-        private static async Task<int> ReadFileAsync(int fileRef, IInvokeUnmarshalled invokeUnmarshalled, byte[] buffer, long position, int count, CancellationToken cancellationToken)
+        private async Task<int> ReadFileAsync(int fileRef, byte[] buffer, long position, int count, CancellationToken cancellationToken)
         {
-            if (invokeUnmarshalled != null)
+            if (InvokeUnmarshalled != null)
             {
-                return await ReadFileUnmarshalledAsync(fileRef, invokeUnmarshalled, buffer, position, count, cancellationToken);
+                return await ReadFileUnmarshalledAsync(fileRef, InvokeUnmarshalled, buffer, position, count, cancellationToken);
             }
             else
             {
@@ -78,7 +88,7 @@ namespace Blazor.FileReader
             return (int) longResult;
         }
 
-        private static async Task<int> ReadFileMarshalledAsync(
+        private async Task<int> ReadFileMarshalledAsync(
             int fileRef, byte[] buffer, long position, int count,
             CancellationToken cancellationToken)
         {
@@ -86,7 +96,7 @@ namespace Blazor.FileReader
             cancellationToken.Register(() => taskCompletionSource.TrySetCanceled());
             var callBackId = Guid.NewGuid().ToString("N");
             readFileMarshalledAsyncCalls[callBackId] = taskCompletionSource;
-            var startCallBack = await JSRuntime.Current.InvokeAsync<long>(
+            var startCallBack = await CurrentJSRuntime.InvokeAsync<long>(
                 $"FileReaderComponent.ReadFileMarshalledAsync",
                 new { position, count, callBackId, fileRef });
 

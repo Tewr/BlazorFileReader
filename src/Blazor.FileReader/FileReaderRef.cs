@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
+using Microsoft.JSInterop;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -70,17 +71,16 @@ namespace Blazor.FileReader
     internal class FileReaderRef : IFileReaderRef
     {
         public async Task<IEnumerable<IFileReference>> EnumerateFilesAsync() => 
-            Enumerable.Range(0, await FileReaderJsInterop.GetFileCount(ElementRef))
+            Enumerable.Range(0, await this.FileReaderJsInterop.GetFileCount(this.ElementRef))
                 .Select(index => (IFileReference)new FileReference(this, index));
 
         public ElementRef ElementRef { get; private set; }
+        public FileReaderJsInterop FileReaderJsInterop { get; }
 
-        public IInvokeUnmarshalled InvokeUnmarshalled { get; private set; }
-
-        internal FileReaderRef(ElementRef elementRef, IInvokeUnmarshalled invokeUnmarshalled)
+        internal FileReaderRef(ElementRef elementRef, FileReaderJsInterop fileReaderJsInterop)
         {
             this.ElementRef = elementRef;
-            this.InvokeUnmarshalled = invokeUnmarshalled;
+            this.FileReaderJsInterop = fileReaderJsInterop;
         }
     }
 
@@ -134,14 +134,14 @@ namespace Blazor.FileReader
 
         public Task<Stream> OpenReadAsync()
         {
-            return FileReaderJsInterop.OpenFileStream(fileLoaderRef.ElementRef, fileLoaderRef.InvokeUnmarshalled, index);
+            return this.fileLoaderRef.FileReaderJsInterop.OpenFileStream(this.fileLoaderRef.ElementRef, index);
         }
 
         public async Task<IFileInfo> ReadFileInfoAsync()
         {
             if (fileInfo == null)
             {
-                fileInfo = await FileReaderJsInterop.GetFileInfoFromElement(fileLoaderRef.ElementRef, index); ;
+                fileInfo = await this.fileLoaderRef.FileReaderJsInterop.GetFileInfoFromElement(fileLoaderRef.ElementRef, index); ;
             }
 
             return fileInfo;

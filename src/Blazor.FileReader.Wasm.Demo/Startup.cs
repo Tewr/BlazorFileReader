@@ -18,9 +18,16 @@ namespace Blazor.FileReader.Wasm.Demo
         /// </summary>
         private class WasmJsRuntimeInvokeProvider : IInvokeUnmarshalled
         {
-            private static MonoWebAssemblyJSRuntime MonoWebAssemblyJSRuntime = 
-                JSRuntime.Current as MonoWebAssemblyJSRuntime;
-            
+            public IJSRuntime CurrentJSRuntime { get; }
+
+            public WasmJsRuntimeInvokeProvider(IJSRuntime currentJSRuntime)
+            {
+                CurrentJSRuntime = currentJSRuntime;
+            }
+
+            private MonoWebAssemblyJSRuntime MonoWebAssemblyJSRuntime =>
+                CurrentJSRuntime as MonoWebAssemblyJSRuntime;
+
             public TRes InvokeUnmarshalled<T1, T2, TRes>(string identifier, T1 arg1, T2 arg2) =>
                 MonoWebAssemblyJSRuntime.InvokeUnmarshalled<T1, T2, TRes>(identifier, arg1, arg2);
         }
