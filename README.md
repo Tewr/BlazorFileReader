@@ -3,7 +3,7 @@
 
 # BlazorFileReader
 Blazor library and Demo of read-only file streams in [Blazor](https://github.com/aspnet/Blazor). 
-Originally built for Wasm ("Client-side" Blazor), Server-side Blazor (Aka RazorComponents) is also supported as of version 0.7.1.
+Originally built for Wasm ("Client-side" Blazor), Server-side Blazor (aka RazorComponents) is also supported as of version 0.7.1.
 
 This library exposes read-only streams using ```<input type="file" />```
 and [FileReader](https://developer.mozilla.org/en-US/docs/Web/API/FileReader).
@@ -12,9 +12,9 @@ Here is a [Live demo](https://tewr.github.io/BlazorFileReader/) that contains th
 
 ## Installation
 
-```0.8.0``` is a pre-release version. First of all, make sure your environment is up to date with the appropriate SDK and VS2019 preview. See [this article](https://blogs.msdn.microsoft.com/webdev/2019/02/05/blazor-0-8-0-experimental-release-now-available/ ) for more details.
+```0.9.0``` is a pre-release version. First of all, make sure your environment is up to date with the appropriate SDK and VS2019 preview 4. See [this article](https://devblogs.microsoft.com/aspnet/blazor-0-9-0-experimental-release-now-available/ ) for more details.
 
-Use [Nuget](https://www.nuget.org/packages/Tewr.Blazor.FileReader): ```Install-Package Tewr.Blazor.FileReader -Version 0.8.0-preview-120219```
+Use [Nuget](https://www.nuget.org/packages/Tewr.Blazor.FileReader): ```Install-Package Tewr.Blazor.FileReader -Version 0.9.0-preview-13032019```
 
 ## Usage
 
@@ -91,6 +91,8 @@ The ```master``` branch uses ```0.7.1``` of Blazor.
 Blazor is an experimental project, not ready for production use. Just as Blazor frequently has breaking changes, so does the API of this library.
 
 ### Version notes
+
+Versions greater than to ```0.8.0``` requires copy-paste implementation of ```IInvokeUnmarshalled```.
 
 Versions previous to ```0.7.1``` did not support server-side Blazor and would throw ```[System.PlatformNotSupportedException] Requires MonoWebAssemblyJSRuntime as the JSRuntime```.
 
