@@ -1,4 +1,4 @@
-[![Build status](https://ci.appveyor.com/api/projects/status/rr7pchwk7wbc3mn1/branch/release/0.8.0-preview?svg=true)](https://ci.appveyor.com/project/Tewr/blazorfilereader/branch/master)
+[![Build status](https://ci.appveyor.com/api/projects/status/rr7pchwk7wbc3mn1/branch/release/0.9.0-preview?svg=true)](https://ci.appveyor.com/project/Tewr/blazorfilereader/branch/master)
 [![NuGet](https://img.shields.io/nuget/vpre/Tewr.Blazor.FileReader.svg)](https://www.nuget.org/packages/Tewr.Blazor.FileReader)
 
 # BlazorFileReader
@@ -20,68 +20,30 @@ Use [Nuget](https://www.nuget.org/packages/Tewr.Blazor.FileReader): ```Install-P
 Depending on your [project type](https://docs.microsoft.com/en-us/aspnet/core/razor-components/faq?view=aspnetcore-3.0), use one of the two examples below.
 
 ### Client-side / Wasm Project type
-Setup IoC for ```IFileReaderService``` and Implement ```IInvokeUnmarshalled``` in ([Startup.cs](src/Blazor.FileReader.Wasm.Demo/Startup.cs#L10)):
+Setup IoC for ```IFileReaderService``` and Implement ```IInvokeUnmarshalled``` 
+as in ([Startup.cs](src/Blazor.FileReader.Wasm.Demo/Startup.cs#L10)).
 
-```cs
-   using Blazor.FileReader;
-   using Microsoft.AspNetCore.Components.Builder;
-   using Microsoft.Extensions.DependencyInjection;
-   using Microsoft.JSInterop;
-   using Mono.WebAssembly.Interop;
-   
-    public class Startup
-    {
-        public void ConfigureServices(IServiceCollection services)
-        {
-            services.AddSingleton<IInvokeUnmarshalled, WasmJsRuntimeInvokeProvider>();
-            services.AddSingleton<IFileReaderService, FileReaderService>();
-        }
-
-        /// <summary>
-        /// Provides an optional bridge for unmarshalled calls
-        /// </summary>
-        private class WasmJsRuntimeInvokeProvider : IInvokeUnmarshalled
-        {
-            private static MonoWebAssemblyJSRuntime MonoWebAssemblyJSRuntime = 
-                JSRuntime.Current as MonoWebAssemblyJSRuntime;
-
-            public TRes InvokeUnmarshalled<T1, T2, TRes>(string identifier, T1 arg1, T2 arg2) =>
-                MonoWebAssemblyJSRuntime.InvokeUnmarshalled<T1, T2, TRes>(identifier, arg1, arg2);
-        }
-
-        public void Configure(IComponentsApplicationBuilder app)
-        {
-            app.AddComponent<App>("app");
-        }
-       (...)
-```
-
-### Server-side / asp.net core Project type
-
-**Currently unstable**
-
-Setup IoC for  ```IFileReaderService``` in ([Startup.cs](src/Blazor.FileReader.AspNetCore.Demo.App/Startup.cs#L10)):
-
-```cs
-using Blazor.FileReader;
-
-    public class Startup
-    {
-        public void ConfigureServices(IServiceCollection services)
-        {
-            services.AddSingleton<IFileReaderService, FileReaderService>();
-        }
-	(...)
-```
-
-You must manually include the javascript required due to a [missing](https://github.com/Tewr/BlazorFileReader/issues/13) [feature](https://github.com/aspnet/AspNetCore/issues/7300) in Server components (thanks [@springy76](https://github.com/springy76)): Download [FileReaderComponent.js](/src/Blazor.FileReader/content/FileReaderComponent.js) and reference it in [index.html](/src/Blazor.FileReader.AspNetCore.Demo/Blazor.FileReader.AspNetCore.Demo.Server/wwwroot/index.html) after the line
+You must manually include the javascript required due to a [missing](https://github.com/Tewr/BlazorFileReader/issues/13) 
+[feature](https://github.com/aspnet/AspNetCore/issues/7300) in Server components 
+Download [FileReaderComponent.js](/src/Blazor.FileReader/content/FileReaderComponent.js) and reference it in 
+[index.html](src/Blazor.FileReader.Wasm.Demo/wwwroot/index.html#153) after the line
 ```html
 <script src="_framework/components.server.js"></script>
 
 ```
 
+### Server-side / asp.net core Project type
 
+Setup IoC for  ```IFileReaderService``` as in the example ([Startup.cs](src/Blazor.FileReader.RazorComponents.Demo/Startup.cs#L27)) as a scpoed dependency.
 
+You must manually include the javascript required due to a [missing](https://github.com/Tewr/BlazorFileReader/issues/13) 
+[feature](https://github.com/aspnet/AspNetCore/issues/7300) in Server components 
+Download [FileReaderComponent.js](/src/Blazor.FileReader/content/FileReaderComponent.js) and reference it in 
+[index.cshtml](src/Blazor.FileReader.RazorComponents.Demo/Pages/Index.cshtml#25) after the line
+```html
+<script src="_framework/components.server.js"></script>
+
+```
 ### Blazor View
 
 The code for views looks the same for both client- and server-side projects
