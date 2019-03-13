@@ -1,4 +1,4 @@
-[![Build status](https://ci.appveyor.com/api/projects/status/rr7pchwk7wbc3mn1/branch/release/0.9.0-preview?svg=true)](https://ci.appveyor.com/project/Tewr/blazorfilereader/branch/master)
+[![Build status](https://ci.appveyor.com/api/projects/status/rr7pchwk7wbc3mn1/branch/release/master?svg=true)](https://ci.appveyor.com/project/Tewr/blazorfilereader/branch/master)
 [![NuGet](https://img.shields.io/nuget/vpre/Tewr.Blazor.FileReader.svg)](https://www.nuget.org/packages/Tewr.Blazor.FileReader)
 
 # BlazorFileReader
