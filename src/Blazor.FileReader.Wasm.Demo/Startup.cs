@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Components.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.JSInterop;
 using Mono.WebAssembly.Interop;
+using Blazor.FileReader.Wasm;
 
 namespace Blazor.FileReader.Wasm.Demo
 {
