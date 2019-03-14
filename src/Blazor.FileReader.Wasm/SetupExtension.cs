@@ -7,8 +7,8 @@ namespace Blazor.FileReader.Wasm
     public static class SetupExtension
     {
         /// <summary>
-        /// Adds <see cref="IFileReaderService"/> as a singleton service
-        /// to the specified <see cref="IServiceCollection"/>
+        /// Adds <see cref="IFileReaderService"/> and necessary dependencies as a singleton service
+        /// to the specified <see cref="IServiceCollection"/>. Should only be used with Blazor WebAssembly Projects.
         /// </summary>
         /// <param name="services"></param>
         public static void AddFileReader(this IServiceCollection services)

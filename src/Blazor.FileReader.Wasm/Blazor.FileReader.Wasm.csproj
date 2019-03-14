@@ -5,7 +5,9 @@
     <Version>0.9.0-preview-13032019</Version>
     <PackageId>Tewr.Blazor.FileReader.Wasm</PackageId>
     <Authors>Tor Knutsson</Authors>
-    <Description>Small helper library that helps setting up IoC for BlazorFileReader by exposing the extension method AddFileReader on Microsoft.Extensions.DependencyInjection.IServiceCollection.</Description>
+    <Description>Small helper library that helps setting up IoC for BlazorFileReader by exposing the extension method AddFileReader on Microsoft.Extensions.DependencyInjection.IServiceCollection.
+
+For use with Blazor WebAssembly projects only. Not necessary nor compatible with Server-side / RazorComponents projects.</Description>
     <PackageProjectUrl>https://github.com/Tewr/BlazorFileReader</PackageProjectUrl>
     <RepositoryUrl>https://github.com/Tewr/BlazorFileReader</RepositoryUrl>
     <PackageTags>blazor blazor-component stream filestream file-stream read-file</PackageTags>
