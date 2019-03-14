@@ -2,7 +2,7 @@
 using Microsoft.JSInterop;
 using Mono.WebAssembly.Interop;
 
-namespace Blazor.FileReader.Wasm
+namespace Blazor.FileReader
 {
     public static class SetupExtension
     {
@@ -11,7 +11,7 @@ namespace Blazor.FileReader.Wasm
         /// to the specified <see cref="IServiceCollection"/>. Should only be used with Blazor WebAssembly Projects.
         /// </summary>
         /// <param name="services"></param>
-        public static void AddFileReader(this IServiceCollection services)
+        public static void AddFileReaderService(this IServiceCollection services)
         {
             services.AddSingleton<IInvokeUnmarshalled, WasmJsRuntimeInvokeProvider>();
             services.AddSingleton<IFileReaderService, FileReaderService>();

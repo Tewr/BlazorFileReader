@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Components.Builder;
 using Microsoft.Extensions.DependencyInjection;
+using Blazor.FileReader;
 
 namespace Blazor.FileReader.Wasm.Demo
 {
@@ -7,7 +8,7 @@ namespace Blazor.FileReader.Wasm.Demo
     {
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddFileReader();
+            services.AddFileReaderService();
         }
 
         public void Configure(IComponentsApplicationBuilder app)
