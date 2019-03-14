@@ -1,5 +1,6 @@
 [![Build status](https://ci.appveyor.com/api/projects/status/rr7pchwk7wbc3mn1/branch/release/master?svg=true)](https://ci.appveyor.com/project/Tewr/blazorfilereader/branch/master)
 [![NuGet](https://img.shields.io/nuget/vpre/Tewr.Blazor.FileReader.svg)](https://www.nuget.org/packages/Tewr.Blazor.FileReader)
+[![NuGet](https://img.shields.io/nuget/vpre/Tewr.Blazor.FileReader.Wasm.svg)](https://www.nuget.org/packages/Tewr.Blazor.FileReader.Wasm)
 
 # BlazorFileReader
 Blazor library and Demo of read-only file streams in [Blazor](https://github.com/aspnet/Blazor). 
@@ -21,13 +22,20 @@ Use [Nuget](https://www.nuget.org/packages/Tewr.Blazor.FileReader): ```Install-P
 Depending on your [project type](https://docs.microsoft.com/en-us/aspnet/core/razor-components/faq?view=aspnetcore-3.0), use one of the two examples below.
 
 ### Client-side / Wasm Project type
-Setup IoC for ```IFileReaderService``` and Implement ```IInvokeUnmarshalled``` 
-as in ([Startup.cs](src/Blazor.FileReader.Wasm.Demo/Startup.cs#L10)).
+Use [Nuget](https://www.nuget.org/packages/Tewr.Blazor.FileReader.Wasm): ```Install-Package Tewr.Blazor.FileReader.Wasm -Version 0.9.0-preview-13032019```
+
+Setup IoC for ```IFileReaderService```as in ([Startup.cs](src/Blazor.FileReader.Wasm.Demo/Startup.cs#L11)):
+
+```cs
+services.AddFileReaderService();
+
+```
+
 
 You must manually include the javascript required due to a [missing](https://github.com/Tewr/BlazorFileReader/issues/13) 
 [feature](https://github.com/aspnet/AspNetCore/issues/7300) in Server components 
 Download [FileReaderComponent.js](/src/Blazor.FileReader/content/FileReaderComponent.js) and reference it in 
-[index.html](src/Blazor.FileReader.Wasm.Demo/wwwroot/index.html#153) after the line
+[wwwroot/index.html](src/Blazor.FileReader.Wasm.Demo/wwwroot/index.html#153) after the line
 ```html
 <script src="_framework/components.server.js"></script>
 
@@ -35,19 +43,26 @@ Download [FileReaderComponent.js](/src/Blazor.FileReader/content/FileReaderCompo
 
 ### Server-side / asp.net core Project type
 
-Setup IoC for  ```IFileReaderService``` as in the example ([Startup.cs](src/Blazor.FileReader.RazorComponents.Demo/Startup.cs#L27)) as a scoped dependency.
+Use [Nuget](https://www.nuget.org/packages/Tewr.Blazor.FileReader): ```Install-Package Tewr.Blazor.FileReader -Version 0.9.0-preview-13032019```
+
+Setup IoC for  ```IFileReaderService``` as in the example ([Startup.cs](src/Blazor.FileReader.RazorComponents.Demo/Startup.cs#L27)) as a scoped dependency:
+
+```cs
+services.AddScoped<IFileReaderService, FileReaderService>();
+
+```
 
 You must manually include the javascript required due to a [missing](https://github.com/Tewr/BlazorFileReader/issues/13) 
 [feature](https://github.com/aspnet/AspNetCore/issues/7300) in Server components 
 Download [FileReaderComponent.js](/src/Blazor.FileReader/content/FileReaderComponent.js) and reference it in 
-[index.cshtml](src/Blazor.FileReader.RazorComponents.Demo/Pages/Index.cshtml#25) after the line
+[Pages/index.cshtml](src/Blazor.FileReader.RazorComponents.Demo/Pages/Index.cshtml#25) after the line
 ```html
 <script src="_framework/components.server.js"></script>
 
 ```
 ### Blazor View
 
-The code for views looks the same for both client- and server-side projects
+The code for views looks the same for both client- and server-side projects.
 
 ```cs
 @page "/MyPage"
@@ -92,7 +107,9 @@ Blazor is an experimental project, not ready for production use. Just as Blazor 
 
 ### Version notes
 
-Versions greater than to ```0.8.0``` requires copy-paste implementation of ```IInvokeUnmarshalled```.
+Versions ```0.9.0``` introduces a small helper-package for the IoC setup of Wasm, injecting ```IInvokeUnmarshalled```.
+
+Versions ```0.8.0``` requires copy-paste implementation of ```IInvokeUnmarshalled```.
 
 Versions previous to ```0.7.1``` did not support server-side Blazor and would throw ```[System.PlatformNotSupportedException] Requires MonoWebAssemblyJSRuntime as the JSRuntime```.
 
