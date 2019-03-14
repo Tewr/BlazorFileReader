@@ -107,7 +107,7 @@ Blazor is an experimental project, not ready for production use. Just as Blazor 
 
 ### Version notes
 
-Versions ```0.9.0``` introduces a small helper-package for the IoC setup of Wasm, injecting ```IInvokeUnmarshalled```.
+Versions ```0.9.0``` introduces a small helper-package for the IoC setup of Wasm, injecting an implementation of ```IInvokeUnmarshalled```.
 
 Versions ```0.8.0``` requires copy-paste implementation of ```IInvokeUnmarshalled```.
 
