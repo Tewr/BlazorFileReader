@@ -1,6 +1,6 @@
 [![Build status](https://ci.appveyor.com/api/projects/status/rr7pchwk7wbc3mn1/branch/release/master?svg=true)](https://ci.appveyor.com/project/Tewr/blazorfilereader/branch/master)
-[![NuGet](https://img.shields.io/nuget/vpre/Tewr.Blazor.FileReader.svg)](https://www.nuget.org/packages/Tewr.Blazor.FileReader)
-[![NuGet](https://img.shields.io/nuget/vpre/Tewr.Blazor.FileReader.Wasm.svg)](https://www.nuget.org/packages/Tewr.Blazor.FileReader.Wasm)
+[![NuGet](https://img.shields.io/nuget/vpre/Tewr.Blazor.FileReader.svg?label=Tewr.Blazor.FileReader)](https://www.nuget.org/packages/Tewr.Blazor.FileReader)
+[![NuGet](https://img.shields.io/nuget/vpre/Tewr.Blazor.FileReader.Wasm.svg?label=Tewr.Blazor.FileReader.Wasm)](https://www.nuget.org/packages/Tewr.Blazor.FileReader.Wasm)
 
 # BlazorFileReader
 Blazor library and Demo of read-only file streams in [Blazor](https://github.com/aspnet/Blazor). 
@@ -14,8 +14,6 @@ Here is a [Live demo](https://tewr.github.io/BlazorFileReader/) that contains th
 ## Installation
 
 ```0.9.0``` is a pre-release version. First of all, make sure your environment is up to date with the appropriate SDK and VS2019 preview 4. See [this article](https://devblogs.microsoft.com/aspnet/blazor-0-9-0-experimental-release-now-available/ ) for more details.
-
-Use [Nuget](https://www.nuget.org/packages/Tewr.Blazor.FileReader): ```Install-Package Tewr.Blazor.FileReader -Version 0.9.0-preview-13032019```
 
 ## Usage
 
@@ -31,10 +29,9 @@ services.AddFileReaderService();
 
 ```
 
-
 You must manually include the javascript required due to a [missing](https://github.com/Tewr/BlazorFileReader/issues/13) 
 [feature](https://github.com/aspnet/AspNetCore/issues/7300) in Server components 
-Download [FileReaderComponent.js](/src/Blazor.FileReader/content/FileReaderComponent.js) and reference it in 
+Download [FileReaderComponent.js](src/Blazor.FileReader/content/FileReaderComponent.js) (or extract it from the nuget package content folder) and reference it in 
 [wwwroot/index.html](src/Blazor.FileReader.Wasm.Demo/wwwroot/index.html#153) after the line
 ```html
 <script src="_framework/components.server.js"></script>
@@ -54,7 +51,7 @@ services.AddScoped<IFileReaderService, FileReaderService>();
 
 You must manually include the javascript required due to a [missing](https://github.com/Tewr/BlazorFileReader/issues/13) 
 [feature](https://github.com/aspnet/AspNetCore/issues/7300) in Server components 
-Download [FileReaderComponent.js](/src/Blazor.FileReader/content/FileReaderComponent.js) and reference it in 
+Download [FileReaderComponent.js](/src/Blazor.FileReader/content/FileReaderComponent.js) (or extract it from the nuget package content folder) and reference it in 
 [Pages/index.cshtml](src/Blazor.FileReader.RazorComponents.Demo/Pages/Index.cshtml#25) after the line
 ```html
 <script src="_framework/components.server.js"></script>
