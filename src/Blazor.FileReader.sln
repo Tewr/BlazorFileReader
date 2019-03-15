@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blazor.FileReader.Wasm.Demo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blazor.FileReader.RazorComponents.Demo", "Blazor.FileReader.RazorComponents.Demo\Blazor.FileReader.RazorComponents.Demo.csproj", "{A6533EFA-499A-4EB6-8021-45AD43614265}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Blazor.FileReader.Wasm", "Blazor.FileReader.Wasm\Blazor.FileReader.Wasm.csproj", "{56526936-86B6-4156-B655-51A7B5E6FF3D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,12 @@ Global
 		{A6533EFA-499A-4EB6-8021-45AD43614265}.Ghpages|Any CPU.Build.0 = Debug|Any CPU
 		{A6533EFA-499A-4EB6-8021-45AD43614265}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A6533EFA-499A-4EB6-8021-45AD43614265}.Release|Any CPU.Build.0 = Release|Any CPU
+		{56526936-86B6-4156-B655-51A7B5E6FF3D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{56526936-86B6-4156-B655-51A7B5E6FF3D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{56526936-86B6-4156-B655-51A7B5E6FF3D}.Ghpages|Any CPU.ActiveCfg = Debug|Any CPU
+		{56526936-86B6-4156-B655-51A7B5E6FF3D}.Ghpages|Any CPU.Build.0 = Debug|Any CPU
+		{56526936-86B6-4156-B655-51A7B5E6FF3D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{56526936-86B6-4156-B655-51A7B5E6FF3D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
