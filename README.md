@@ -14,9 +14,6 @@ Here is a [Live demo](https://tewr.github.io/BlazorFileReader/) that contains th
 ## Installation
 
 ```0.9.0``` is a pre-release version. First of all, make sure your environment is up to date with the appropriate SDK and VS2019 preview 4. See [this article](https://devblogs.microsoft.com/aspnet/blazor-0-9-0-experimental-release-now-available/ ) for more details.
-
-## Usage
-
 Depending on your [project type](https://docs.microsoft.com/en-us/aspnet/core/razor-components/faq?view=aspnetcore-3.0), use one of the two examples below.
 
 ### Client-side / Wasm Project type
