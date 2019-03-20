@@ -1,6 +1,6 @@
 [![Build status](https://ci.appveyor.com/api/projects/status/rr7pchwk7wbc3mn1/branch/master?svg=true)](https://ci.appveyor.com/project/Tewr/blazorfilereader/branch/master)
-[![NuGet](https://img.shields.io/nuget/vpre/Tewr.Blazor.FileReader.svg?label=Tewr.Blazor.FileReader)](https://www.nuget.org/packages/Tewr.Blazor.FileReader)
 [![NuGet](https://img.shields.io/nuget/vpre/Tewr.Blazor.FileReader.Wasm.svg?label=Tewr.Blazor.FileReader.Wasm)](https://www.nuget.org/packages/Tewr.Blazor.FileReader.Wasm)
+[![NuGet](https://img.shields.io/nuget/vpre/Tewr.Blazor.FileReader.svg?label=Tewr.Blazor.FileReader)](https://www.nuget.org/packages/Tewr.Blazor.FileReader)
 
 # BlazorFileReader
 Blazor library and Demo of read-only file streams in [Blazor](https://github.com/aspnet/Blazor). 
@@ -54,7 +54,7 @@ Download [FileReaderComponent.js](/src/Blazor.FileReader/content/FileReaderCompo
 <script src="_framework/components.server.js"></script>
 
 ```
-### Blazor View
+## Usage in a Blazor View
 
 The code for views looks the same for both client- and server-side projects.
 
@@ -93,9 +93,9 @@ The code for views looks the same for both client- and server-side projects.
 ## Notes
 
 To use the code in this demo in your own project you need to use at least version 
-```0.4.0``` of blazor (branch 0.4.0). 
+```0.4.0``` of blazor (see branch 0.4.0). 
 
-The ```master``` branch uses ```0.7.1``` of Blazor.
+The ```master``` branch uses ```v0.9.0``` of Blazor.
 
 Blazor is an experimental project, not ready for production use. Just as Blazor frequently has breaking changes, so does the API of this library.
 
