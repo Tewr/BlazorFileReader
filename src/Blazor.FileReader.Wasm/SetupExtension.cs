@@ -11,10 +11,11 @@ namespace Blazor.FileReader
         /// to the specified <see cref="IServiceCollection"/>. Should only be used with Blazor WebAssembly Projects.
         /// </summary>
         /// <param name="services"></param>
-        public static void AddFileReaderService(this IServiceCollection services)
+        public static IServiceCollection AddFileReaderService(this IServiceCollection services)
         {
             services.AddSingleton<IInvokeUnmarshalled, WasmJsRuntimeInvokeProvider>();
             services.AddSingleton<IFileReaderService, FileReaderService>();
+            return services;
         }
 
         /// <summary>
@@ -29,11 +30,8 @@ namespace Blazor.FileReader
                 CurrentJSRuntime = currentJSRuntime;
             }
 
-            private MonoWebAssemblyJSRuntime MonoWebAssemblyJSRuntime =>
-                CurrentJSRuntime as MonoWebAssemblyJSRuntime;
-
-            public TRes InvokeUnmarshalled<T1, T2, TRes>(string identifier, T1 arg1, T2 arg2) =>
-                MonoWebAssemblyJSRuntime.InvokeUnmarshalled<T1, T2, TRes>(identifier, arg1, arg2);
+            private MonoWebAssemblyJSRuntime MonoWebAssemblyJSRuntime => CurrentJSRuntime as MonoWebAssemblyJSRuntime;
+            public TRes InvokeUnmarshalled<T1, T2, TRes>(string identifier, T1 arg1, T2 arg2) => MonoWebAssemblyJSRuntime.InvokeUnmarshalled<T1, T2, TRes>(identifier, arg1, arg2);
         }
     }
 }
