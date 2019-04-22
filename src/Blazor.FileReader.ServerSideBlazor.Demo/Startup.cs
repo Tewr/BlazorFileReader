@@ -39,14 +39,16 @@ namespace Blazor.FileReader.ServerSideBlazor.Demo
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
-
+            app.UseRouting();
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
-            app.UseRouting(routes =>
+            app.UseEndpoints(routes =>
             {
                 routes.MapRazorPages();
-                routes.MapComponentHub<App>("app");
+                routes.MapBlazorHub<App>("app");
+                routes.MapFallbackToPage("/");
+                routes.MapDefaultControllerRoute();
             });
         }
     }
