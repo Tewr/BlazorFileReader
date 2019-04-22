@@ -8,10 +8,10 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Blazor.FileReader.RazorComponents.Demo.Components;
-using Blazor.FileReader.RazorComponents.Demo.Services;
+using Blazor.FileReader.ServerSideBlazor.Demo.Components;
+using Blazor.FileReader.ServerSideBlazor.Demo.Services;
 
-namespace Blazor.FileReader.RazorComponents.Demo
+namespace Blazor.FileReader.ServerSideBlazor.Demo
 {
     public class Startup
     {
@@ -22,7 +22,7 @@ namespace Blazor.FileReader.RazorComponents.Demo
             services.AddMvc()
                 .AddNewtonsoftJson();
 
-            services.AddRazorComponents();
+            services.AddServerSideBlazor();
 
             services.AddScoped<IFileReaderService, FileReaderService>();
         }
