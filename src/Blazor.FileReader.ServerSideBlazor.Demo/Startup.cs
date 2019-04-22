@@ -22,6 +22,7 @@ namespace Blazor.FileReader.ServerSideBlazor.Demo
             services.AddMvc()
                 .AddNewtonsoftJson();
 
+            services.AddRazorPages();
             services.AddServerSideBlazor();
 
             services.AddScoped<IFileReaderService, FileReaderService>();
@@ -43,12 +44,14 @@ namespace Blazor.FileReader.ServerSideBlazor.Demo
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
-            app.UseEndpoints(routes =>
+            app.UseEndpoints(endpoints =>
             {
-                routes.MapRazorPages();
-                routes.MapBlazorHub<App>("app");
-                routes.MapFallbackToPage("/");
-                routes.MapDefaultControllerRoute();
+                //routes.MapRazorPages();
+                //routes.MapBlazorHub<App>("app");
+                //routes.MapFallbackToPage("/");
+                endpoints.MapBlazorHub();
+                endpoints.MapFallbackToPage("/_Host");
+                //routes.MapDefaultControllerRoute();
             });
         }
     }
