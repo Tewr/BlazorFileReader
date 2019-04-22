@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <Version>3.0.19112</Version>
+    <Version>0.9.19112</Version>
     <PackageId>Tewr.Blazor.FileReader.Wasm</PackageId>
     <Authors>Tor Knutsson</Authors>
     <Description>Small helper library that helps setting up IoC for BlazorFileReader by exposing the extension method AddFileReader on Microsoft.Extensions.DependencyInjection.IServiceCollection.
