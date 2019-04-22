@@ -7,9 +7,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blazor.FileReader", "Blazor
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blazor.FileReader.Wasm.Demo", "Blazor.FileReader.Wasm.Demo\Blazor.FileReader.Wasm.Demo.csproj", "{9FA01C57-BBB5-420E-AA9B-AD22F39B77ED}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blazor.FileReader.RazorComponents.Demo", "Blazor.FileReader.RazorComponents.Demo\Blazor.FileReader.RazorComponents.Demo.csproj", "{A6533EFA-499A-4EB6-8021-45AD43614265}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blazor.FileReader.ServerSideBlazor.Demo", "Blazor.FileReader.ServerSideBlazor.Demo\Blazor.FileReader.ServerSideBlazor.Demo.csproj", "{A6533EFA-499A-4EB6-8021-45AD43614265}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Blazor.FileReader.Wasm", "Blazor.FileReader.Wasm\Blazor.FileReader.Wasm.csproj", "{56526936-86B6-4156-B655-51A7B5E6FF3D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blazor.FileReader.Wasm", "Blazor.FileReader.Wasm\Blazor.FileReader.Wasm.csproj", "{56526936-86B6-4156-B655-51A7B5E6FF3D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

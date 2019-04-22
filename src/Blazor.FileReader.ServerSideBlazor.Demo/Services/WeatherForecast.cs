@@ -1,6 +1,6 @@
 using System;
 
-namespace Blazor.FileReader.RazorComponents.Demo.Services
+namespace Blazor.FileReader.ServerSideBlazor.Demo.Services
 {
     public class WeatherForecast
     {
