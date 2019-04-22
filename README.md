@@ -4,7 +4,7 @@
 
 # BlazorFileReader
 Blazor library and Demo of read-only file streams in [Blazor](https://github.com/aspnet/Blazor). 
-Originally built for Wasm ("Client-side" Blazor), Server-side Blazor (aka RazorComponents) is also supported as of version 0.7.1.
+Originally built for Wasm ("Client-side" Blazor), Server-side Blazor (previously aka RazorComponents) is also supported as of version 0.7.1.
 
 This library exposes read-only streams using ```<input type="file" />```
 and [FileReader](https://developer.mozilla.org/en-US/docs/Web/API/FileReader).
