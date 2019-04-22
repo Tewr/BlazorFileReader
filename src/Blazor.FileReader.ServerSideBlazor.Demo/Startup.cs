@@ -8,8 +8,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Blazor.FileReader.ServerSideBlazor.Demo.Components;
-using Blazor.FileReader.ServerSideBlazor.Demo.Services;
 
 namespace Blazor.FileReader.ServerSideBlazor.Demo
 {
