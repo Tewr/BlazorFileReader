@@ -98,8 +98,17 @@ namespace Blazor.FileReader
             var startCallBack = await CurrentJSRuntime.InvokeAsync<long>(
                 $"FileReaderComponent.ReadFileMarshalledAsync",
                 new { position, count, callBackId, fileRef });
-
-            var longResult = await taskCompletionSource.Task;
+            ReadFileMarshalledAsyncCallbackParams longResult;
+            try
+            {
+                longResult = await taskCompletionSource.Task;
+            }
+            catch(Exception e)
+            {
+                var x = e;
+                throw;
+            }
+            
             var bytesRead = 0;
             if (!string.IsNullOrEmpty(longResult.Data?.Trim()))
             {

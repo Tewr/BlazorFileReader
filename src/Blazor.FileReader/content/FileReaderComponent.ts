@@ -167,7 +167,7 @@ class FileReaderInteropMethods {
     this.CallMethod("ReadFileMarshalledAsyncCallback", { callBackId, data });
   }
 
-  private static CallMethod(name: string, params: any): any {
+  private static CallMethod(name: string, ...params: any[]): any {
     this.dotNet.invokeMethodAsync(this.assemblyName, name, params);
   }
 }
