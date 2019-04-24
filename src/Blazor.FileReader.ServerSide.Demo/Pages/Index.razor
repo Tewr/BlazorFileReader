@@ -33,7 +33,7 @@ There are other demos in the menu.<br /><br />
 
             using (var fs = await file.OpenReadAsync())
             {
-                var bufferSize = 4096;
+                var bufferSize = 2895;
                 var buffer = new byte[bufferSize];
                 int count;
                 while ((count = await fs.ReadAsync(buffer, 0, buffer.Length)) != 0)
