@@ -9,7 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
-namespace Blazor.FileReader.ServerSideBlazor.Demo
+namespace Blazor.FileReader.ServerSide.Demo
 {
     public class Program
     {
