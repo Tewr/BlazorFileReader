@@ -8,7 +8,7 @@
     <TypeScriptToolsVersion>2.8</TypeScriptToolsVersion>
     <LangVersion>latest</LangVersion>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>0.10.19114</Version>
+    <Version>0.10.19116</Version>
     <Authors>Tor Knutsson</Authors>
     <PackageProjectUrl>https://github.com/Tewr/BlazorFileReader</PackageProjectUrl>
     <PackageLicenseUrl></PackageLicenseUrl>
@@ -18,7 +18,7 @@
     <Configurations>Debug;Release;Ghpages</Configurations>
     <PackageId>Tewr.Blazor.FileReader</PackageId>
     <PackageReleaseNotes></PackageReleaseNotes>
-    <AssemblyVersion>0.10.19114.0</AssemblyVersion>
+    <AssemblyVersion>0.10.19116.0</AssemblyVersion>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     
   </PropertyGroup>
