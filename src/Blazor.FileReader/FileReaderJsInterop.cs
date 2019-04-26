@@ -155,6 +155,18 @@ namespace Blazor.FileReader
             return true;
         }
 
+        [JSInvokable(nameof(ReadFileMarshalledAsyncError))]
+        public static bool ReadFileMarshalledAsyncError(ReadFileAsyncErrorParams args)
+        {
+            if (!readFileMarshalledAsyncCalls.TryRemove(args.CallBackId, out TaskCompletionSource<ReadFileMarshalledAsyncCallbackParams> taskCompletionSource))
+            {
+                return false;
+            }
+
+            taskCompletionSource.SetException(new BrowserFileReaderException(args.Exception));
+            return true;
+        }
+
         private class TaskList<TValue> : ConcurrentDictionary<string, TaskCompletionSource<TValue>> { }
     }
 }
