@@ -1,6 +1,6 @@
 [![Build status](https://ci.appveyor.com/api/projects/status/rr7pchwk7wbc3mn1/branch/master?svg=true)](https://ci.appveyor.com/project/Tewr/blazorfilereader/branch/master)
-[![NuGet](https://img.shields.io/nuget/vpre/Tewr.Blazor.FileReader.Wasm.svg?label=Tewr.Blazor.FileReader.Wasm)](https://www.nuget.org/packages/Tewr.Blazor.FileReader.Wasm)
-[![NuGet](https://img.shields.io/nuget/vpre/Tewr.Blazor.FileReader.svg?label=Tewr.Blazor.FileReader)](https://www.nuget.org/packages/Tewr.Blazor.FileReader)
+[![NuGet](https://img.shields.io/nuget/dt/Tewr.Blazor.FileReader.Wasm.svg?label=Tewr.Blazor.FileReader.Wasm)](https://www.nuget.org/packages/Tewr.Blazor.FileReader.Wasm)
+[![NuGet](https://img.shields.io/nuget/dt/Tewr.Blazor.FileReader.svg?label=Tewr.Blazor.FileReader)](https://www.nuget.org/packages/Tewr.Blazor.FileReader)
 
 # BlazorFileReader
 Blazor library and Demo of read-only file streams in [Blazor](https://github.com/aspnet/Blazor). 
@@ -13,11 +13,11 @@ Here is a [Live demo](https://tewr.github.io/BlazorFileReader/) that contains th
 
 ## Installation
 
-```0.9.0``` is a pre-release version. First of all, make sure your environment is up to date with the appropriate SDK and VS2019 preview 4. See [this article](https://devblogs.microsoft.com/aspnet/blazor-0-9-0-experimental-release-now-available/ ) for more details.
+```0.10.0``` is a pre-release version. First of all, make sure your environment is up to date with the appropriate SDK and VS2019 preview 4. See [this article](https://devblogs.microsoft.com/aspnet/blazor-now-in-official-preview/) for more details.
 Depending on your [project type](https://docs.microsoft.com/en-us/aspnet/core/razor-components/faq?view=aspnetcore-3.0), use one of the two examples below.
 
 ### Client-side / Wasm Project type
-Use [Nuget](https://www.nuget.org/packages/Tewr.Blazor.FileReader.Wasm): ```Install-Package Tewr.Blazor.FileReader.Wasm -Version 0.9.0-preview-13032019```
+Use [Nuget](https://www.nuget.org/packages/Tewr.Blazor.FileReader.Wasm): ```Install-Package Tewr.Blazor.FileReader.Wasm```
 
 Setup IoC for ```IFileReaderService```as in ([Startup.cs](src/Blazor.FileReader.Wasm.Demo/Startup.cs#L11)):
 
@@ -37,7 +37,7 @@ Download [FileReaderComponent.js](src/Blazor.FileReader/content/FileReaderCompon
 
 ### Server-side / asp.net core Project type
 
-Use [Nuget](https://www.nuget.org/packages/Tewr.Blazor.FileReader): ```Install-Package Tewr.Blazor.FileReader -Version 0.9.0-preview-13032019```
+Use [Nuget](https://www.nuget.org/packages/Tewr.Blazor.FileReader): ```Install-Package Tewr.Blazor.FileReader```
 
 Setup IoC for  ```IFileReaderService``` as in the example ([Startup.cs](src/Blazor.FileReader.ServerSideBlazor.Demo/Startup.cs#L27)) as a scoped dependency:
 
@@ -56,7 +56,7 @@ Download [FileReaderComponent.js](/src/Blazor.FileReader/content/FileReaderCompo
 ```
 ## Usage in a Blazor View
 
-The code for views looks the same for both client- and server-side projects.
+The code for views looks the same for both client- and server-side projects, but take a look at [known issues](README.md#known-issues) for server-side projects.
 
 ```cs
 @page "/MyPage"
@@ -90,14 +90,18 @@ The code for views looks the same for both client- and server-side projects.
 }
 ```
 
+## Known issues
+
+As of dotnet sdk 3.0.100-preview4, Server-side blazor has [a problem with "big" messages](#24). For now, buffersize must be set, and must be set to something quite low for this to work without crashes. 2k bytes seems to work alright in chrome, YMMV.
+
 ## Notes
 
 To use the code in this demo in your own project you need to use at least version 
 ```0.4.0``` of blazor (see branch 0.4.0). 
 
-The ```master``` branch uses ```v0.9.0``` of Blazor.
+The ```master``` branch uses ```v3.0.0-preview-4-19216-03``` of Blazor.
 
-Blazor is an experimental project, not ready for production use. Just as Blazor frequently has breaking changes, so does the API of this library.
+Blazor is an ~~experimental~~ preview project, not ready for production use. Just as Blazor API frequently has breaking changes, so does the API of this library.
 
 ### Version notes
 
