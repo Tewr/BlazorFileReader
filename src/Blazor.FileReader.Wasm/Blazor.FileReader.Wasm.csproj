@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <Version>0.10.19114</Version>
+    <Version>0.10.19116</Version>
     <PackageId>Tewr.Blazor.FileReader.Wasm</PackageId>
     <Authors>Tor Knutsson</Authors>
     <Description>Small helper library that helps setting up IoC for BlazorFileReader by exposing the extension method AddFileReader on Microsoft.Extensions.DependencyInjection.IServiceCollection.
@@ -14,7 +14,7 @@ For use with Blazor WebAssembly projects only. Not necessary nor compatible with
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <RootNamespace>Blazor.FileReader</RootNamespace>
-    <AssemblyVersion>0.10.19114.0</AssemblyVersion>
+    <AssemblyVersion>0.10.19116.0</AssemblyVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">

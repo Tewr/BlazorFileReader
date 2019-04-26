@@ -42,7 +42,7 @@ class FileReaderComponent {
     if (!element.files) {
       return -1;
     }
-    var result = element.files.length;
+    const result = element.files.length;
     return result;
   }
 
@@ -51,7 +51,7 @@ class FileReaderComponent {
       return null;
     }
 
-    let file = element.files.item(index);
+    const file = element.files.item(index);
     if (!file) {
       return null;
     }
@@ -72,14 +72,13 @@ class FileReaderComponent {
   }
 
   public GetFileInfoFromFile(file: File): string {
-    var result = JSON.stringify({
+    const result = JSON.stringify({
       lastModified: file.lastModified,
       name: file.name,
       size: file.size,
       type: file.type
     });
 
-    //console.debug("GetFileInfoFromFile", result);
     return result;
   }
 
@@ -101,7 +100,9 @@ class FileReaderComponent {
   public ReadFileUnmarshalledAsync = (dotNetArrayPtr: any, readFileParamsPtr: any): boolean => {
     const readFileParams: IReadFileParams = JSON.parse(Blazor.platform.toJavaScriptString(readFileParamsPtr));
     const dotNetBuffer: DotNetBuffer = { toUint8Array: (): Uint8Array => Blazor.platform.toUint8Array(dotNetArrayPtr) };
-    
+    const onError = (e: Error) =>
+      FileReaderInteropMethods.ReadFileMarshalledAsyncError(readFileParams.callBackId, e.message)
+        .catch(err2level => console.error(e, err2level));
     const file: File = this.fileStreams[readFileParams.fileRef];
     try {
       const reader = new FileReader();
@@ -111,15 +112,16 @@ class FileReaderComponent {
             const contents: ArrayBuffer = <ArrayBuffer>r.result;
             const dotNetBufferView: Uint8Array = dotNetBuffer.toUint8Array();
             dotNetBufferView.set(new Uint8Array(contents));
-            FileReaderInteropMethods.ReadFileAsyncCallback(readFileParams.callBackId, contents.byteLength);
+            FileReaderInteropMethods.ReadFileAsyncCallback(readFileParams.callBackId, contents.byteLength)
+              .catch(onError);
           } catch (e) {
-            FileReaderInteropMethods.ReadFileAsyncError(readFileParams.callBackId, e.message);
+            onError(e);
           }
         }
       })(reader);
       reader.readAsArrayBuffer(file.slice(readFileParams.position, readFileParams.position + readFileParams.count));
     } catch (e) {
-      FileReaderInteropMethods.ReadFileAsyncError(readFileParams.callBackId, e.message);
+      onError(e);
     }
 
     return true;
@@ -127,6 +129,9 @@ class FileReaderComponent {
 
   public ReadFileMarshalledAsync = (readFileParams: IReadFileParams): number => {
     const file: File = this.fileStreams[readFileParams.fileRef];
+    const onError = (e: Error) =>
+      FileReaderInteropMethods.ReadFileMarshalledAsyncError(readFileParams.callBackId, e.message)
+        .catch(err2level => console.error(e, err2level));
     try {
       const reader = new FileReader();
       reader.onload = ((r) => {
@@ -134,15 +139,17 @@ class FileReaderComponent {
           try {
             const contents = r.result as string;
             const data = contents.split(";base64,")[1];
-            FileReaderInteropMethods.ReadFileMarshalledAsyncCallback(readFileParams.callBackId, data);
-          } catch (e) {
-            FileReaderInteropMethods.ReadFileAsyncError(readFileParams.callBackId, e.message);
+              FileReaderInteropMethods.ReadFileMarshalledAsyncCallback(readFileParams.callBackId, data)
+                .catch(onError);
+            } catch (e) {
+              onError(e);
           }
         }
-      })(reader);
+        })(reader);
+
       reader.readAsDataURL(file.slice(readFileParams.position, readFileParams.position + readFileParams.count));
     } catch (e) {
-      FileReaderInteropMethods.ReadFileAsyncError(readFileParams.callBackId, e.message);
+      onError(e);
     }
 
     return 0;
@@ -152,23 +159,26 @@ class FileReaderComponent {
 class FileReaderInteropMethods {
 
   private static assemblyName: string = "Blazor.FileReader";
-  private static methods: { [key: string]: any } = {};
   private static dotNet: IDotNet = DotNet;
 
-  public static ReadFileAsyncError(callBackId: string, exception: string) {
-    this.CallMethod("ReadFileAsyncError", { callBackId, exception });
+  public static ReadFileAsyncError(callBackId: string, exception: string): Promise<{}> {
+      return this.CallMethod("ReadFileAsyncError", { callBackId, exception });
   }
 
-  public static ReadFileAsyncCallback(callBackId: string, bytesRead: number) {
-    this.CallMethod("ReadFileAsyncCallback", { callBackId, bytesRead });
+  public static ReadFileMarshalledAsyncError(callBackId: string, exception: string): Promise<{}> {
+    return this.CallMethod("ReadFileMarshalledAsyncError", { callBackId, exception });
   }
 
-  public static ReadFileMarshalledAsyncCallback(callBackId: string, data: string) {
-    this.CallMethod("ReadFileMarshalledAsyncCallback", { callBackId, data });
+  public static ReadFileAsyncCallback(callBackId: string, bytesRead: number): Promise<{}> {
+    return this.CallMethod("ReadFileAsyncCallback", { callBackId, bytesRead });
   }
 
-  private static CallMethod(name: string, ...params: any[]): any {
-    this.dotNet.invokeMethodAsync(this.assemblyName, name, params);
+  public static ReadFileMarshalledAsyncCallback(callBackId: string, data: string): Promise<{}> {
+    return this.CallMethod("ReadFileMarshalledAsyncCallback", { callBackId, data });
+  }
+
+  private static CallMethod(name: string, params: any): Promise<{}> {
+    return this.dotNet.invokeMethodAsync(this.assemblyName, name, params);
   }
 }
 

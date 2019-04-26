@@ -40,6 +40,10 @@ var FileReaderComponent = /** @class */ (function () {
         this.ReadFileUnmarshalledAsync = function (dotNetArrayPtr, readFileParamsPtr) {
             var readFileParams = JSON.parse(Blazor.platform.toJavaScriptString(readFileParamsPtr));
             var dotNetBuffer = { toUint8Array: function () { return Blazor.platform.toUint8Array(dotNetArrayPtr); } };
+            var onError = function (e) {
+                return FileReaderInteropMethods.ReadFileMarshalledAsyncError(readFileParams.callBackId, e.message)
+                    .catch(function (err2level) { return console.error(e, err2level); });
+            };
             var file = _this.fileStreams[readFileParams.fileRef];
             try {
                 var reader = new FileReader();
@@ -49,22 +53,27 @@ var FileReaderComponent = /** @class */ (function () {
                             var contents = r.result;
                             var dotNetBufferView = dotNetBuffer.toUint8Array();
                             dotNetBufferView.set(new Uint8Array(contents));
-                            FileReaderInteropMethods.ReadFileAsyncCallback(readFileParams.callBackId, contents.byteLength);
+                            FileReaderInteropMethods.ReadFileAsyncCallback(readFileParams.callBackId, contents.byteLength)
+                                .catch(onError);
                         }
                         catch (e) {
-                            FileReaderInteropMethods.ReadFileAsyncError(readFileParams.callBackId, e.message);
+                            onError(e);
                         }
                     };
                 })(reader);
                 reader.readAsArrayBuffer(file.slice(readFileParams.position, readFileParams.position + readFileParams.count));
             }
             catch (e) {
-                FileReaderInteropMethods.ReadFileAsyncError(readFileParams.callBackId, e.message);
+                onError(e);
             }
             return true;
         };
         this.ReadFileMarshalledAsync = function (readFileParams) {
             var file = _this.fileStreams[readFileParams.fileRef];
+            var onError = function (e) {
+                return FileReaderInteropMethods.ReadFileMarshalledAsyncError(readFileParams.callBackId, e.message)
+                    .catch(function (err2level) { return console.error(e, err2level); });
+            };
             try {
                 var reader = new FileReader();
                 reader.onload = (function (r) {
@@ -72,17 +81,18 @@ var FileReaderComponent = /** @class */ (function () {
                         try {
                             var contents = r.result;
                             var data = contents.split(";base64,")[1];
-                            FileReaderInteropMethods.ReadFileMarshalledAsyncCallback(readFileParams.callBackId, data);
+                            FileReaderInteropMethods.ReadFileMarshalledAsyncCallback(readFileParams.callBackId, data)
+                                .catch(onError);
                         }
                         catch (e) {
-                            FileReaderInteropMethods.ReadFileAsyncError(readFileParams.callBackId, e.message);
+                            onError(e);
                         }
                     };
                 })(reader);
                 reader.readAsDataURL(file.slice(readFileParams.position, readFileParams.position + readFileParams.count));
             }
             catch (e) {
-                FileReaderInteropMethods.ReadFileAsyncError(readFileParams.callBackId, e.message);
+                onError(e);
             }
             return 0;
         };
@@ -101,7 +111,6 @@ var FileReaderComponent = /** @class */ (function () {
             size: file.size,
             type: file.type
         });
-        //console.debug("GetFileInfoFromFile", result);
         return result;
     };
     return FileReaderComponent;
@@ -110,19 +119,21 @@ var FileReaderInteropMethods = /** @class */ (function () {
     function FileReaderInteropMethods() {
     }
     FileReaderInteropMethods.ReadFileAsyncError = function (callBackId, exception) {
-        this.CallMethod("ReadFileAsyncError", { callBackId: callBackId, exception: exception });
+        return this.CallMethod("ReadFileAsyncError", { callBackId: callBackId, exception: exception });
+    };
+    FileReaderInteropMethods.ReadFileMarshalledAsyncError = function (callBackId, exception) {
+        return this.CallMethod("ReadFileMarshalledAsyncError", { callBackId: callBackId, exception: exception });
     };
     FileReaderInteropMethods.ReadFileAsyncCallback = function (callBackId, bytesRead) {
-        this.CallMethod("ReadFileAsyncCallback", { callBackId: callBackId, bytesRead: bytesRead });
+        return this.CallMethod("ReadFileAsyncCallback", { callBackId: callBackId, bytesRead: bytesRead });
     };
     FileReaderInteropMethods.ReadFileMarshalledAsyncCallback = function (callBackId, data) {
-        this.CallMethod("ReadFileMarshalledAsyncCallback", { callBackId: callBackId, data: data });
+        return this.CallMethod("ReadFileMarshalledAsyncCallback", { callBackId: callBackId, data: data });
     };
     FileReaderInteropMethods.CallMethod = function (name, params) {
-        this.dotNet.invokeMethodAsync(this.assemblyName, name, params);
+        return this.dotNet.invokeMethodAsync(this.assemblyName, name, params);
     };
     FileReaderInteropMethods.assemblyName = "Blazor.FileReader";
-    FileReaderInteropMethods.methods = {};
     FileReaderInteropMethods.dotNet = DotNet;
     return FileReaderInteropMethods;
 }());
