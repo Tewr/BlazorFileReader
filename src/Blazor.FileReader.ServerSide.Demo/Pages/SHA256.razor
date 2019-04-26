@@ -35,10 +35,10 @@ For any API accepting a stream but not supporting ReadAsync, the full-ram versio
 
     string Output { get; set; }
 
-    bool UseBufferSize { get; set; } = false;
+    bool UseBufferSize { get; set; } = true;
     bool DebugOutput { get; set; } = true;
 
-    int BufferSize { get; set; } = 2895;
+    int BufferSize { get; set; } = 2000;
 
     protected override void OnInit()
     {
