@@ -101,7 +101,7 @@ class FileReaderComponent {
     const readFileParams: IReadFileParams = JSON.parse(Blazor.platform.toJavaScriptString(readFileParamsPtr));
     const dotNetBuffer: DotNetBuffer = { toUint8Array: (): Uint8Array => Blazor.platform.toUint8Array(dotNetArrayPtr) };
     const onError = (e: Error) =>
-      FileReaderInteropMethods.ReadFileMarshalledAsyncError(readFileParams.callBackId, e.message)
+      FileReaderInteropMethods.ReadFileAsyncError(readFileParams.callBackId, e.message)
         .catch(err2level => console.error(e, err2level));
     const file: File = this.fileStreams[readFileParams.fileRef];
     try {

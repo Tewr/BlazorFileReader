@@ -41,7 +41,7 @@ var FileReaderComponent = /** @class */ (function () {
             var readFileParams = JSON.parse(Blazor.platform.toJavaScriptString(readFileParamsPtr));
             var dotNetBuffer = { toUint8Array: function () { return Blazor.platform.toUint8Array(dotNetArrayPtr); } };
             var onError = function (e) {
-                return FileReaderInteropMethods.ReadFileMarshalledAsyncError(readFileParams.callBackId, e.message)
+                return FileReaderInteropMethods.ReadFileAsyncError(readFileParams.callBackId, e.message)
                     .catch(function (err2level) { return console.error(e, err2level); });
             };
             var file = _this.fileStreams[readFileParams.fileRef];
