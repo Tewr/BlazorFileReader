@@ -138,9 +138,9 @@ class FileReaderComponent {
         return () => {
           try {
             const contents = r.result as string;
-            const data = contents.split(";base64,")[1];
-              FileReaderInteropMethods.ReadFileMarshalledAsyncCallback(readFileParams.callBackId, data)
-                .catch(onError);
+            const data = contents ? contents.split(";base64,")[1] : null;
+            FileReaderInteropMethods.ReadFileMarshalledAsyncCallback(readFileParams.callBackId, data)
+              .catch(onError);
             } catch (e) {
               onError(e);
           }
