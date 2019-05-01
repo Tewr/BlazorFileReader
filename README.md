@@ -92,7 +92,7 @@ The code for views looks the same for both client- and server-side projects, but
 
 ## Known issues
 
-As of dotnet sdk 3.0.100-preview4, Server-side blazor has [a problem with "big" messages](#24). For now, buffersize must be set, and must be set to something quite low for this to work without crashes. 2k bytes seems to work alright in chrome, YMMV.
+As of dotnet sdk 3.0.100-preview4, Server-side blazor has [a problem with "big" messages](https://github.com/Tewr/BlazorFileReader/issues/24). For now, buffersize must be set, and must be set to something quite low for this to work without crashes. 2k bytes seems to work alright in chrome, YMMV.
 
 ## Notes
 
@@ -104,6 +104,8 @@ The ```master``` branch uses ```v3.0.0-preview-4-19216-03``` of Blazor.
 Blazor is an ~~experimental~~ preview project, not ready for production use. Just as Blazor API frequently has breaking changes, so does the API of this library.
 
 ### Version notes
+
+Version ```0.10.0``` adds support for sdk ```v3.0.0-preview-4-19216-03```
 
 Versions ```0.9.0``` introduces a small helper-package for the IoC setup of Wasm, injecting an implementation of ```IInvokeUnmarshalled```.
 
