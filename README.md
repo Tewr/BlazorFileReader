@@ -49,7 +49,7 @@ services.AddScoped<IFileReaderService, FileReaderService>();
 You must manually include the javascript required due to a [missing](https://github.com/Tewr/BlazorFileReader/issues/13) 
 [feature](https://github.com/aspnet/AspNetCore/issues/7300) in Server components 
 Download [FileReaderComponent.js](/src/Blazor.FileReader/content/FileReaderComponent.js) (or extract it from the nuget package content folder) and reference it in 
-[Pages/index.cshtml](src/Blazor.FileReader.ServerSideBlazor.Demo/Pages/_Host.cshtml#L25) after the line
+[Pages/_Host.cshtml](src/Blazor.FileReader.ServerSide.Demo/Pages/_Host.cshtml#L25) after the line
 ```html
 <script src="_framework/components.server.js"></script>
 
