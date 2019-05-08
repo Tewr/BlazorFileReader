@@ -35,9 +35,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Components.Browser" Version="3.0.0-preview4-19216-03" />
-    <PackageReference Include="Microsoft.AspNetCore.Blazor.Build" Version="3.0.0-preview4-19216-03" PrivateAssets="all" />
-    <PackageReference Include="Microsoft.TypeScript.Msbuild" Version="3.4.4">
+    <PackageReference Include="Microsoft.AspNetCore.Components.Browser" Version="3.0.0-preview5-19227-01" />
+    <PackageReference Include="Microsoft.AspNetCore.Blazor.Build" Version="3.0.0-preview5-19227-01" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.TypeScript.Msbuild" Version="3.4.5">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
