@@ -104,6 +104,10 @@ var FileReaderComponent = /** @class */ (function () {
         var result = element.files.length;
         return result;
     };
+    FileReaderComponent.prototype.ClearValue = function (input) {
+        input.value = null;
+    };
+    ;
     FileReaderComponent.prototype.GetFileInfoFromFile = function (file) {
         var result = JSON.stringify({
             lastModified: file.lastModified,

@@ -9,12 +9,19 @@ There are other demos in the menu.<br /><br />
 
 <input type="file" ref="inputElement" />
 <button onclick="@ReadFile" class="btn btn-primary">Read file</button>
+<button onclick="@ClearFile" class="btn btn-primary">Clear</button>
+
 <br /><br />
 <textarea style="max-width: 100%;" cols="50" rows="20">@Output</textarea>
 @functions {
     ElementRef inputElement;
 
     string Output { get; set; }
+
+    public async Task ClearFile()
+    {
+        await fileReaderService.CreateReference(inputElement).ClearValue();
+    }
 
     public async Task ReadFile()
     {

@@ -8,8 +8,8 @@
     <TypeScriptToolsVersion>2.8</TypeScriptToolsVersion>
     <LangVersion>latest</LangVersion>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>0.10.19116</Version>
-    <Authors>Tor Knutsson</Authors>
+    <Version>0.11.19128</Version>
+    <Authors>Tor Knutsson (Tewr)</Authors>
     <PackageProjectUrl>https://github.com/Tewr/BlazorFileReader</PackageProjectUrl>
     <PackageLicenseUrl></PackageLicenseUrl>
     <RepositoryUrl>https://github.com/Tewr/BlazorFileReader</RepositoryUrl>
@@ -18,7 +18,7 @@
     <Configurations>Debug;Release;Ghpages</Configurations>
     <PackageId>Tewr.Blazor.FileReader</PackageId>
     <PackageReleaseNotes></PackageReleaseNotes>
-    <AssemblyVersion>0.10.19116.0</AssemblyVersion>
+    <AssemblyVersion>0.11.19128.0</AssemblyVersion>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     
   </PropertyGroup>
@@ -27,7 +27,7 @@
     <!-- .js/.css files will be referenced via <script>/<link> tags; other content files will just be included in the app's 'dist' directory without any tags referencing them -->
     <EmbeddedResource Include="content\**\*.js" LogicalName="blazor:js:%(RecursiveDir)%(Filename)%(Extension)" />
     <EmbeddedResource Include="content\**\*.css" LogicalName="blazor:css:%(RecursiveDir)%(Filename)%(Extension)" />
-    <EmbeddedResource Include="content\**" Exclude="**\*.js;**\*.css" LogicalName="blazor:file:%(RecursiveDir)%(Filename)%(Extension)" />
+    <!--EmbeddedResource Include="content\**" Exclude="**\*.js;**\*.css" LogicalName="blazor:file:%(RecursiveDir)%(Filename)%(Extension)" />-->
   </ItemGroup>
 
   <ItemGroup>
@@ -46,5 +46,11 @@
   <ItemGroup>
     <Folder Include="Properties\" />
   </ItemGroup>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="xcopy &quot;$(ProjectDir)content\*.*&quot; &quot;$(ProjectDir)..\Blazor.FileReader.ServerSide.Demo\wwwroot&quot; /y /s" />
+    <Exec Command="xcopy &quot;$(ProjectDir)content\*.*&quot; &quot;$(ProjectDir)..\Blazor.FileReader.Wasm.Demo\wwwroot&quot; /y /s" />
+  </Target>
+
 
 </Project>
