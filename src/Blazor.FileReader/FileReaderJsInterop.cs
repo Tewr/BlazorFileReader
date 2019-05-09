@@ -30,10 +30,15 @@ namespace Blazor.FileReader
             var fileInfo = await GetFileInfoFromElement(elementReference, index);
             return new InteropFileStream(await OpenReadAsync(elementReference, index), fileInfo.Size, this);
         }
-        
+
         public async Task<int> GetFileCount(ElementRef elementReference)
         {
             return (int)await CurrentJSRuntime.InvokeAsync<long>($"FileReaderComponent.GetFileCount", elementReference);
+        }
+
+        public async Task<int> ClearValue(ElementRef elementReference)
+        {
+            return (int)await CurrentJSRuntime.InvokeAsync<long>($"FileReaderComponent.ClearValue", elementReference);
         }
 
         public async Task<FileInfo> GetFileInfoFromElement(ElementRef elementReference, int index)

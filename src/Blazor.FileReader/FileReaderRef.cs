@@ -9,6 +9,16 @@ namespace Blazor.FileReader
 {
     public interface IFileReaderRef
     {
+        /// <summary>
+        /// Clears any value set on the source element
+        /// </summary>
+        /// <returns></returns>
+        Task ClearValue();
+
+        /// <summary>
+        /// Enumerates the currently selected file references
+        /// </summary>
+        /// <returns></returns>
         Task<IEnumerable<IFileReference>> EnumerateFilesAsync();
     }
 
@@ -72,6 +82,9 @@ namespace Blazor.FileReader
         public async Task<IEnumerable<IFileReference>> EnumerateFilesAsync() => 
             Enumerable.Range(0, await this.FileReaderJsInterop.GetFileCount(this.ElementRef))
                 .Select(index => (IFileReference)new FileReference(this, index));
+
+        public async Task ClearValue() 
+            => await this.FileReaderJsInterop.ClearValue(this.ElementRef);
 
         public ElementRef ElementRef { get; private set; }
         public FileReaderJsInterop FileReaderJsInterop { get; }

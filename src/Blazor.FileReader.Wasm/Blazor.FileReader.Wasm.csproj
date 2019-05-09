@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <Version>0.10.19116</Version>
+    <Version>0.11.19128</Version>
     <PackageId>Tewr.Blazor.FileReader.Wasm</PackageId>
     <Authors>Tor Knutsson</Authors>
     <Description>Small helper library that helps setting up IoC for BlazorFileReader by exposing the extension method AddFileReader on Microsoft.Extensions.DependencyInjection.IServiceCollection.
@@ -11,24 +11,20 @@ For use with Blazor WebAssembly projects only. Not necessary nor compatible with
     <PackageProjectUrl>https://github.com/Tewr/BlazorFileReader</PackageProjectUrl>
     <RepositoryUrl>https://github.com/Tewr/BlazorFileReader</RepositoryUrl>
     <PackageTags>blazor blazor-component stream filestream file-stream read-file</PackageTags>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <PackageLicenseFile></PackageLicenseFile>
     <RootNamespace>Blazor.FileReader</RootNamespace>
-    <AssemblyVersion>0.10.19116.0</AssemblyVersion>
+    <AssemblyVersion>0.11.19128.0</AssemblyVersion>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <DocumentationFile>C:\Users\Tor\source\repos\BlazorFileReader\src\Blazor.FileReader.Wasm\Blazor.FileReader.Wasm.xml</DocumentationFile>
+    <NoWarn>1701;1702;NU5104</NoWarn>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Blazor" Version="3.0.0-preview4-19216-03" />
     <PackageReference Include="Microsoft.AspNetCore.Blazor.Build" Version="3.0.0-preview4-19216-03" PrivateAssets="all" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\..\LICENSE">
-      <Pack>True</Pack>
-      <PackagePath></PackagePath>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Blazor.FileReader\Blazor.FileReader.csproj" />
