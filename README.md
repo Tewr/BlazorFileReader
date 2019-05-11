@@ -105,6 +105,8 @@ Blazor is an ~~experimental~~ preview project, not ready for production use. Jus
 
 ### Version notes
 
+Version ```0.11.0``` adds support for sdk ```3.0.0-preview5-19227-01```. It also introduces a tiny feature: The ```IFileReaderRef.ClearValue()``` method, used to clear the value of a referenced file input. Also, fixes a bug in Edge and a package issue.
+
 Version ```0.10.0``` adds support for sdk ```v3.0.0-preview-4-19216-03```
 
 Versions ```0.9.0``` introduces a small helper-package for the IoC setup of Wasm, injecting an implementation of ```IInvokeUnmarshalled```.
