@@ -5,15 +5,21 @@ using System.Collections.Concurrent;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace Blazor.FileReader
 {
     public partial class FileReaderJsInterop
     {
+        private static readonly IReadOnlyDictionary<string, string> escapeScriptTextReplacements =
+            new Dictionary<string, string> { { @"\", @"\\" }, { "\r", @"\r" }, { "\n", @"\n" }, { "'", @"\'" }, { "\"", @"\""" }};
+
         private static long nextPendingTaskId = 1;
         private static readonly TaskList<long> readFileAsyncCalls = new TaskList<long>();
         private static readonly TaskList<ReadFileMarshalledAsyncCallbackParams> readFileMarshalledAsyncCalls =
             new TaskList<ReadFileMarshalledAsyncCallbackParams>();
+        private static bool _needsInitialization;
 
         internal IJSRuntime CurrentJSRuntime { get; }
 
@@ -23,6 +29,7 @@ namespace Blazor.FileReader
         {
             CurrentJSRuntime = jsRuntime;
             InvokeUnmarshalled = invokeUnmarshalled;
+            _needsInitialization = invokeUnmarshalled == null;
         }
 
         public async Task<Stream> OpenFileStream(ElementRef elementReference, int index)
@@ -33,12 +40,26 @@ namespace Blazor.FileReader
 
         public async Task<int> GetFileCount(ElementRef elementReference)
         {
+            await EnsureInitialized();
             return (int)await CurrentJSRuntime.InvokeAsync<long>($"FileReaderComponent.GetFileCount", elementReference);
         }
 
         public async Task<int> ClearValue(ElementRef elementReference)
         {
+            await EnsureInitialized();
+
             return (int)await CurrentJSRuntime.InvokeAsync<long>($"FileReaderComponent.ClearValue", elementReference);
+        }
+
+        public async Task EnsureInitialized()
+        {
+            if (!_needsInitialization)
+            {
+                return;
+            }
+
+            await Initialize();
+            _needsInitialization = false;   
         }
 
         public async Task<FileInfo> GetFileInfoFromElement(ElementRef elementReference, int index)
@@ -170,6 +191,23 @@ namespace Blazor.FileReader
 
             taskCompletionSource.SetException(new BrowserFileReaderException(args.Exception));
             return true;
+        }
+
+        private async Task Initialize()
+        {
+            string scriptContent;
+            using (var stream = this.GetType().Assembly.GetManifestResourceStream("blazor:js:FileReaderComponent.js"))
+            {
+                using (var streamReader = new StreamReader(stream))
+                {
+                    scriptContent = await streamReader.ReadToEndAsync();
+                }
+            }
+
+            scriptContent = escapeScriptTextReplacements.Aggregate(scriptContent, (r, pair) => r.Replace(pair.Key, pair.Value));
+            var blob = $"URL.createObjectURL(new Blob([\"{scriptContent}\"],{{ \"type\": \"text/javascript\"}}))";
+            var bootStrapScript = $"(function(){{var d = document; var s = d.createElement('script'); s.src={blob}; d.head.appendChild(s); d.head.removeChild(s);}})();";
+            await CurrentJSRuntime.InvokeAsync<object>("eval", bootStrapScript);
         }
 
         private class TaskList<TValue> : ConcurrentDictionary<string, TaskCompletionSource<TValue>> { }
