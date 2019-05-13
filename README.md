@@ -30,7 +30,7 @@ services.AddFileReaderService();
 
 Use [Nuget](https://www.nuget.org/packages/Tewr.Blazor.FileReader): ```Install-Package Tewr.Blazor.FileReader```
 
-Setup IoC for  ```IFileReaderService``` as in the example ([Startup.cs](src/Blazor.FileReader.ServerSideBlazor.Demo/Startup.cs#L27)) as a scoped dependency:
+Setup IoC for  ```IFileReaderService``` as in the example ([Startup.cs](src/Blazor.FileReader.ServerSide.Demo/Startup.cs#L27)) as a scoped dependency:
 
 ```cs
 services.AddScoped<IFileReaderService, FileReaderService>();
@@ -39,7 +39,10 @@ services.AddScoped<IFileReaderService, FileReaderService>();
 
 Blazor View (.razor page)
 
-The code for views looks the same for both client- and server-side projects, but take a look at [known issues](README.md#known-issues) for server-side projects.
+Most use-cases are outline in the [example](src/Blazor.FileReader.Wasm.Demo/) [projects](src/Blazor.FileReader.ServerSide.Demo/).
+The code for views mostly looks the same for both client- and server-side projects, 
+but take a look at [known issues](README.md#known-issues) for server-side projects.
+
 
 ```cs
 @page "/MyPage"
