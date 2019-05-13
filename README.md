@@ -52,11 +52,10 @@ The code for views looks the same for both client- and server-side projects, but
 
 @functions {
     ElementRef myInput;
-	IFileReaderRef MyInputRef { get; }
 
     public async Task ReadFile()
     {
-        foreach (var file in await fileReaderService.CreateReference(inputTypeFileElement).EnumerateFilesAsync())
+        foreach (var file in await fileReaderService.CreateReference(myInput).EnumerateFilesAsync())
         {
             // Read into buffer and act (uses less memory)
             using(Stream stream = await file.OpenReadAsync()) {
