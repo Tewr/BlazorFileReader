@@ -40,18 +40,18 @@ namespace Blazor.FileReader
 
         public async Task<int> GetFileCount(ElementRef elementReference)
         {
-            await EnsureInitialized();
+            await EnsureInitializedAsync();
             return (int)await CurrentJSRuntime.InvokeAsync<long>($"FileReaderComponent.GetFileCount", elementReference);
         }
 
         public async Task<int> ClearValue(ElementRef elementReference)
         {
-            await EnsureInitialized();
+            await EnsureInitializedAsync();
 
             return (int)await CurrentJSRuntime.InvokeAsync<long>($"FileReaderComponent.ClearValue", elementReference);
         }
 
-        public async Task EnsureInitialized()
+        public async Task EnsureInitializedAsync()
         {
             if (!_needsInitialization)
             {

@@ -7,20 +7,27 @@ Welcome to your new filestreaming app.<br />
 This demo reads a file without doing anything particular with it.<br />
 There are other demos in the menu.<br /><br />
 
-<input type="file" ref="inputElement" />
+<input type="file" ref="input" />
 <button onclick="@ReadFile" class="btn btn-primary">Read file</button>
 <button onclick="@ClearFile" class="btn btn-primary">Clear</button>
 
 <br /><br />
 <textarea style="max-width: 100%;" cols="50" rows="20">@Output</textarea>
 @functions {
-    ElementRef inputElement;
+    ElementRef input;
+    IFileReaderRef myInput;
 
     string Output { get; set; }
 
+    protected override void OnAfterRender()
+    {
+        myInput = fileReaderService.CreateReference(input);
+        base.OnAfterRender();
+    }
+
     public async Task ClearFile()
     {
-        await fileReaderService.CreateReference(inputElement).ClearValue();
+        await myInput.ClearValue();
     }
 
     public async Task ReadFile()
@@ -28,7 +35,7 @@ There are other demos in the menu.<br /><br />
         Output = string.Empty;
         this.StateHasChanged();
         var nl = Environment.NewLine;
-        foreach (var file in await fileReaderService.CreateReference(inputElement).EnumerateFilesAsync())
+        foreach (var file in await myInput.EnumerateFilesAsync())
         {
             var fileInfo = await file.ReadFileInfoAsync();
             Output += $"{nameof(IFileInfo)}.{nameof(fileInfo.Name)}: {fileInfo.Name}{nl}";

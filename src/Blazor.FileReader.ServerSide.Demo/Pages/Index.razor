@@ -7,19 +7,28 @@ Welcome to your new filestreaming app.<br />
 This demo reads a file without doing anything particular with it.<br />
 There are other demos in the menu.<br /><br />
 
-<input type="file" ref="inputElement" />
+<input type="file" ref="input" />
 <button onclick="@ReadFile" class="btn btn-primary">Read file</button>
 <button onclick="@ClearFile" class="btn btn-primary">Clear</button>
+
 <br /><br />
 <textarea style="max-width: 100%;" cols="50" rows="20">@Output</textarea>
 @functions {
-    ElementRef inputElement;
+    ElementRef input;
+    IFileReaderRef myInput;
 
     string Output { get; set; }
 
+    protected override async Task OnAfterRenderAsync()
+    {
+        await fileReaderService.EnsureInitializedAsync();
+        myInput = fileReaderService.CreateReference(input);
+        await base.OnAfterRenderAsync();
+    }
+
     public async Task ClearFile()
     {
-        await fileReaderService.CreateReference(inputElement).ClearValue();
+        await myInput.ClearValue();
     }
 
     public async Task ReadFile()
@@ -27,7 +36,7 @@ There are other demos in the menu.<br /><br />
         Output = string.Empty;
         this.StateHasChanged();
         var nl = Environment.NewLine;
-        foreach (var file in await fileReaderService.CreateReference(inputElement).EnumerateFilesAsync())
+        foreach (var file in await myInput.EnumerateFilesAsync())
         {
             var fileInfo = await file.ReadFileInfoAsync();
             Output += $"{nameof(IFileInfo)}.{nameof(fileInfo.Name)}: {fileInfo.Name}{nl}";
@@ -39,7 +48,7 @@ There are other demos in the menu.<br /><br />
 
             using (var fs = await file.OpenReadAsync())
             {
-                var bufferSize = 2000;
+                var bufferSize = 4096;
                 var buffer = new byte[bufferSize];
                 int count;
                 while ((count = await fs.ReadAsync(buffer, 0, buffer.Length)) != 0)
