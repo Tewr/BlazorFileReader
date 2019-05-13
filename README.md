@@ -51,7 +51,6 @@ but take a look at [known issues](README.md#known-issues) for server-side projec
 
 <input type="file" ref="myInput" />
 <button onclick="@ReadFile">Read file</button>
-<button onclick="@Reset">Reset</button>
 
 @functions {
     ElementRef myInput;
@@ -93,7 +92,9 @@ Blazor is an ~~experimental~~ preview project. Just as Blazor API frequently has
 
 ### Version notes
 
-Version ```0.12.0``` Simplifies the setup experience. It is no longer neccessary to include the library js file. For WASM / Client side, the loading is supported our of the box by the blazor framework. For server-side, by default, the js code will be lazy-loaded, the first call doing any interop. The loading can optionally be forced preemptively using ```IFileReaderService.EnsureInitializedAsync()```
+Version ```0.12.0``` Simplifies the setup experience. It is no longer neccessary to include the library js file. For WASM / Client side, the loading is supported out of the box by the blazor framework. 
+For server-side, by default, the js code will be lazy-loaded, the first call doing any interop. 
+The loading can optionally be forced preemptively using ```IFileReaderService.EnsureInitializedAsync()```
 
 Version ```0.11.0``` adds support for sdk ```3.0.0-preview5-19227-01```. It also introduces a tiny feature: The ```IFileReaderRef.ClearValue()``` method, used to clear the value of a referenced file input. Also, fixes a bug in Edge and a package issue.
 
