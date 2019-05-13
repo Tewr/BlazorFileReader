@@ -53,11 +53,12 @@
     </Content>
   </ItemGroup>
 
+  <!--
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
     <Exec Command="xcopy &quot;$(ProjectDir)content\*.*&quot; &quot;$(ProjectDir)..\Blazor.FileReader.ServerSide.Demo\wwwroot&quot; /y /s" />
     <Exec Command="xcopy &quot;$(ProjectDir)content\*.*&quot; &quot;$(ProjectDir)..\Blazor.FileReader.Wasm.Demo\wwwroot&quot; /y /s" />
-    <!--<Exec Command="del /F /Q /S &quot;$(ProjectDir)content\*.js*&quot;" />-->
+    <Exec Command="del /F /Q /S &quot;$(ProjectDir)content\*.js*&quot;" />
   </Target>
-
+  -->
 
 </Project>
