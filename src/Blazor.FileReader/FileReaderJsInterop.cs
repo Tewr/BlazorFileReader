@@ -14,12 +14,9 @@ namespace Blazor.FileReader
     {
         internal IJSRuntime CurrentJSRuntime { get; }
 
-        internal IInvokeUnmarshalled InvokeUnmarshalled { get; }
-
-        public FileReaderJsInterop(IJSRuntime jsRuntime, IInvokeUnmarshalled invokeUnmarshalled)
+        public FileReaderJsInterop(IJSRuntime jsRuntime)
         {
             CurrentJSRuntime = jsRuntime;
-            InvokeUnmarshalled = invokeUnmarshalled;
         }
 
         public async Task<Stream> OpenFileStream(ElementRef elementReference, int index)

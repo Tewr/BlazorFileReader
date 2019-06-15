@@ -13,12 +13,10 @@ namespace Blazor.FileReader
     {
         private readonly FileReaderJsInterop _fileReaderJsInterop;
 
-        public FileReaderService(IJSRuntime jsRuntime, IInvokeUnmarshalled invokeUnmarshalled)
+        public FileReaderService(IJSRuntime jsRuntime)
         {
-            this._fileReaderJsInterop = new FileReaderJsInterop(jsRuntime, invokeUnmarshalled);
+            this._fileReaderJsInterop = new FileReaderJsInterop(jsRuntime);
         }
-
-        public FileReaderService(IJSRuntime jsRuntime) : this(jsRuntime, null) { }
 
         public IFileReaderRef CreateReference(ElementRef inputFileElement)
         {

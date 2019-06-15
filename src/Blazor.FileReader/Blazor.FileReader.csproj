@@ -8,7 +8,7 @@
     <TypeScriptToolsVersion>2.8</TypeScriptToolsVersion>
     <LangVersion>latest</LangVersion>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-    <Version>0.12.19165</Version>
+    <Version>0.12.19167</Version>
     <Authors>Tor Knutsson (Tewr)</Authors>
     <PackageProjectUrl>https://github.com/Tewr/BlazorFileReader</PackageProjectUrl>
     <RepositoryUrl>https://github.com/Tewr/BlazorFileReader</RepositoryUrl>
@@ -17,7 +17,7 @@
     <Configurations>Debug;Release;Ghpages</Configurations>
     <PackageId>Tewr.Blazor.FileReader</PackageId>
     <PackageReleaseNotes></PackageReleaseNotes>
-    <AssemblyVersion>0.12.19165.0</AssemblyVersion>
+    <AssemblyVersion>0.12.19167.0</AssemblyVersion>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     
   </PropertyGroup>
@@ -30,7 +30,6 @@
     <!-- .js/.css files will be referenced via <script>/<link> tags; other content files will just be included in the app's 'dist' directory without any tags referencing them -->
     <EmbeddedResource Include="wwwroot\**\*.js" LogicalName="blazor:js:%(RecursiveDir)%(Filename)%(Extension)" />
     
-    <!--EmbeddedResource Include="content\**" Exclude="**\*.js;**\*.css" LogicalName="blazor:file:%(RecursiveDir)%(Filename)%(Extension)" />-->
   </ItemGroup>
 
   <ItemGroup>
@@ -47,10 +46,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Properties\" />
+    <!-- 
+    <Folder Include="Properties\" />-->
     <Content Include="script\*.*">
       <Pack>false</Pack>
     </Content>
+    <!--
     <Folder Include="wwwroot\" />
+    -->
   </ItemGroup>
 </Project>
