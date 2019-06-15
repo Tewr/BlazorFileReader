@@ -14,16 +14,16 @@ In any case the full-ram version will use at least the same amount of ram as the
 For any API accepting a stream but not supporting ReadAsync, the full-ram version must be used.<br />
 
 <br /><br />
-<input type="file" ref="inputElement" />
+<input type="file" @ref="@inputElement" />
 <br /><br />
-<input type="checkbox" bind="@DebugOutput" id="useDebugOutput" />
+<input type="checkbox" @bind="@DebugOutput" id="useDebugOutput" />
 <label for="useDebugOutput">Debug output</label><br />
-<input type="checkbox" bind="@UseBufferSize" id="useBufferSizeCheck" />
+<input type="checkbox" @bind="@UseBufferSize" id="useBufferSizeCheck" />
 <label for="useBufferSizeCheck">Use buffer size</label>
-<input type="number" bind="@BufferSize" alt="buffersize" placeholder="Buffer size" />
+<input type="number" @bind="@BufferSize" alt="buffersize" placeholder="Buffer size" />
 <br /><br />
-<button onclick="@HashFile" class="btn btn-primary">Hash SHA256 of file - chunked</button>
-<button onclick="@HashFileRam" style="margin-left:20px;" class="btn btn-primary">Hash SHA256 of file - full-ram</button>
+<button @onclick="@HashFile" class="btn btn-primary">Hash SHA256 of file - chunked</button>
+<button @onclick="@HashFileRam" style="margin-left:20px;" class="btn btn-primary">Hash SHA256 of file - full-ram</button>
 <br /><br />
 
 <h3>Log output</h3>
@@ -31,7 +31,6 @@ For any API accepting a stream but not supporting ReadAsync, the full-ram versio
 
 @code {
     ElementRef inputElement;
-    
 
     string Output { get; set; }
 
