@@ -13,7 +13,7 @@ namespace Blazor.FileReader.ServerSide.Demo
         {
             services.AddRazorPages();
             services.AddServerSideBlazor();
-            services.AddFileReaderService();
+            services.AddFileReaderService(options => options.InitializeOnFirstCall = true);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
