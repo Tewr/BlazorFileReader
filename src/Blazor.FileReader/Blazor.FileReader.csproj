@@ -55,4 +55,12 @@
     <Folder Include="wwwroot\" />
     -->
   </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="tsconfig.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="tsconfig.json" />
+  </ItemGroup>
 </Project>

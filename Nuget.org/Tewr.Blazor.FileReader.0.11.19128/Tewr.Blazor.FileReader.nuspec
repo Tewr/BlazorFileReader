@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
+  <metadata>
+    <id>Tewr.Blazor.FileReader</id>
+    <version>0.11.19128</version>
+    <authors>Tor Knutsson (Tewr)</authors>
+    <owners>Tor Knutsson (Tewr)</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <license type="expression">MIT</license>
+    <licenseUrl>https://licenses.nuget.org/MIT</licenseUrl>
+    <projectUrl>https://github.com/Tewr/BlazorFileReader</projectUrl>
+    <description>Read-Only File streams in blazor</description>
+    <tags>blazor blazor-component stream filestream file-stream read-file</tags>
+    <repository url="https://github.com/Tewr/BlazorFileReader" />
+    <dependencies>
+      <group targetFramework=".NETStandard2.0">
+        <dependency id="Microsoft.AspNetCore.Components.Browser" version="3.0.0-preview5-19227-01" exclude="Build,Analyzers" />
+      </group>
+    </dependencies>
+  </metadata>
+</package>
