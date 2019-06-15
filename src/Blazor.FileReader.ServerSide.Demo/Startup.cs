@@ -30,14 +30,13 @@ namespace Blazor.FileReader.ServerSide.Demo
             }
 
             app.UseHttpsRedirection();
-            
             app.UseStaticFiles();
             
             app.UseRouting();
             
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapBlazorHub();
+                endpoints.MapBlazorHub<App>("app");
                 endpoints.MapFallbackToPage("/_Host");
             });
         }
