@@ -46,23 +46,14 @@
   </ItemGroup>
 
   <ItemGroup>
-    <!-- 
-    <Folder Include="Properties\" />-->
     <Content Include="script\*.*">
       <Pack>false</Pack>
     </Content>
-    <!--
-    <Folder Include="wwwroot\" />
-    -->
   </ItemGroup>
 
   <ItemGroup>
-    <Content Remove="tsconfig.json" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="tsconfig.json">
+    <Content Update="tsconfig.json">
       <Pack>false</Pack>
-    </None>
+    </Content>
   </ItemGroup>
 </Project>
