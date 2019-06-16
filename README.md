@@ -2,6 +2,10 @@
 [![NuGet](https://img.shields.io/nuget/dt/Tewr.Blazor.FileReader.svg?label=Tewr.Blazor.FileReader)](https://www.nuget.org/packages/Tewr.Blazor.FileReader)
 [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=AC77J8GFQ6LYA&item_name=Blazor+File+Reader+Project&currency_code=EUR&source=url)
 
+<p align="center">
+  <img width="150" height="150" src="icon.svg">
+</p>
+
 # BlazorFileReader
 Blazor library and Demo of read-only file streams in [Blazor](https://github.com/aspnet/Blazor). 
 Originally built for Wasm ("Client-side" Blazor), Server-side Blazor (previously aka RazorComponents) is also supported as of version 0.7.1.
@@ -78,7 +82,7 @@ The code for views looks the same for both client- and server-side projects, but
 To use the code in this demo in your own project you need to use at least version 
 ```0.4.0``` of blazor (see branch 0.4.0). 
 
-The ```master``` branch uses ```v3.0.0-preview-4-19216-03``` of Blazor.
+The ```master``` branch uses ```v3.0.0-preview6.19307.2``` of Blazor.
 
 Blazor is an ~~experimental~~ preview project, not ready for production use. Just as Blazor API frequently has breaking changes, so does the API of this library.
 
