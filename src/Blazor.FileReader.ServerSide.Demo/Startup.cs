@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
@@ -17,7 +13,7 @@ namespace Blazor.FileReader.ServerSide.Demo
         {
             services.AddRazorPages();
             services.AddServerSideBlazor();
-            services.AddScoped<IFileReaderService, FileReaderService>();
+            services.AddFileReaderService(options => options.InitializeOnFirstCall = true);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -34,14 +30,13 @@ namespace Blazor.FileReader.ServerSide.Demo
             }
 
             app.UseHttpsRedirection();
-
             app.UseStaticFiles();
-
+            
             app.UseRouting();
-
+            
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapBlazorHub();
+                endpoints.MapBlazorHub<App>("app");
                 endpoints.MapFallbackToPage("/_Host");
             });
         }

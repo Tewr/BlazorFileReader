@@ -80,7 +80,7 @@ namespace Blazor.FileReader
     internal class FileReaderRef : IFileReaderRef
     {
         public async Task<IEnumerable<IFileReference>> EnumerateFilesAsync() => 
-            Enumerable.Range(0, await this.FileReaderJsInterop.GetFileCount(this.ElementRef))
+            Enumerable.Range(0, Math.Max(0, await this.FileReaderJsInterop.GetFileCount(this.ElementRef)))
                 .Select(index => (IFileReference)new FileReference(this, index));
 
         public async Task ClearValue() 

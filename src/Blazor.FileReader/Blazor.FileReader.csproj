@@ -8,7 +8,7 @@
     <TypeScriptToolsVersion>2.8</TypeScriptToolsVersion>
     <LangVersion>latest</LangVersion>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-    <Version>0.11.19128</Version>
+    <Version>0.12.19167</Version>
     <Authors>Tor Knutsson (Tewr)</Authors>
     <PackageProjectUrl>https://github.com/Tewr/BlazorFileReader</PackageProjectUrl>
     <RepositoryUrl>https://github.com/Tewr/BlazorFileReader</RepositoryUrl>
@@ -17,7 +17,7 @@
     <Configurations>Debug;Release;Ghpages</Configurations>
     <PackageId>Tewr.Blazor.FileReader</PackageId>
     <PackageReleaseNotes></PackageReleaseNotes>
-    <AssemblyVersion>0.11.19128.0</AssemblyVersion>
+    <AssemblyVersion>0.12.19167.0</AssemblyVersion>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     
   </PropertyGroup>
@@ -28,18 +28,17 @@
 
   <ItemGroup>
     <!-- .js/.css files will be referenced via <script>/<link> tags; other content files will just be included in the app's 'dist' directory without any tags referencing them -->
-    <EmbeddedResource Include="content\**\*.js" LogicalName="blazor:js:%(RecursiveDir)%(Filename)%(Extension)" />
-    <EmbeddedResource Include="content\**\*.css" LogicalName="blazor:css:%(RecursiveDir)%(Filename)%(Extension)" />
-    <!--EmbeddedResource Include="content\**" Exclude="**\*.js;**\*.css" LogicalName="blazor:file:%(RecursiveDir)%(Filename)%(Extension)" />-->
+    <EmbeddedResource Include="wwwroot\**\*.js" LogicalName="blazor:js:%(RecursiveDir)%(Filename)%(Extension)" />
+    
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Remove="content\FileReaderComponent.ts" />
+    <EmbeddedResource Remove="script\FileReaderComponent.ts" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Components.Browser" Version="3.0.0-preview5-19227-01" />
-    <PackageReference Include="Microsoft.AspNetCore.Blazor.Build" Version="3.0.0-preview5-19227-01" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.Browser" Version="3.0.0-preview6.19307.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Blazor.Build" Version="3.0.0-preview6.19307.2" PrivateAssets="all" />
     <PackageReference Include="Microsoft.TypeScript.Msbuild" Version="3.4.5">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -47,17 +46,21 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Properties\" />
-    <Content Include="content\*.*">
+    <!-- 
+    <Folder Include="Properties\" />-->
+    <Content Include="script\*.*">
       <Pack>false</Pack>
     </Content>
+    <!--
+    <Folder Include="wwwroot\" />
+    -->
   </ItemGroup>
 
-  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="xcopy &quot;$(ProjectDir)content\*.*&quot; &quot;$(ProjectDir)..\Blazor.FileReader.ServerSide.Demo\wwwroot&quot; /y /s" />
-    <Exec Command="xcopy &quot;$(ProjectDir)content\*.*&quot; &quot;$(ProjectDir)..\Blazor.FileReader.Wasm.Demo\wwwroot&quot; /y /s" />
-    <!--<Exec Command="del /F /Q /S &quot;$(ProjectDir)content\*.js*&quot;" />-->
-  </Target>
+  <ItemGroup>
+    <Content Remove="tsconfig.json" />
+  </ItemGroup>
 
-
+  <ItemGroup>
+    <None Include="tsconfig.json" />
+  </ItemGroup>
 </Project>

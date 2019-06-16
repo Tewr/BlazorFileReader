@@ -1,6 +1,6 @@
 [![Build status](https://ci.appveyor.com/api/projects/status/rr7pchwk7wbc3mn1/branch/master?svg=true)](https://ci.appveyor.com/project/Tewr/blazorfilereader/branch/master)
-[![NuGet](https://img.shields.io/nuget/dt/Tewr.Blazor.FileReader.Wasm.svg?label=Tewr.Blazor.FileReader.Wasm)](https://www.nuget.org/packages/Tewr.Blazor.FileReader.Wasm)
 [![NuGet](https://img.shields.io/nuget/dt/Tewr.Blazor.FileReader.svg?label=Tewr.Blazor.FileReader)](https://www.nuget.org/packages/Tewr.Blazor.FileReader)
+[![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=AC77J8GFQ6LYA&item_name=Blazor+File+Reader+Project&currency_code=EUR&source=url)
 
 # BlazorFileReader
 Blazor library and Demo of read-only file streams in [Blazor](https://github.com/aspnet/Blazor). 
@@ -13,11 +13,11 @@ Here is a [Live demo](https://tewr.github.io/BlazorFileReader/) that contains th
 
 ## Installation
 
-```0.10.0``` is a pre-release version. First of all, make sure your environment is up to date with the appropriate SDK and VS2019 preview 4. See [this article](https://devblogs.microsoft.com/aspnet/blazor-now-in-official-preview/) for more details.
+```0.12.0``` is a pre-release version. First of all, make sure your environment is up to date with the appropriate SDK and VS2019 preview 4. See [this article](https://devblogs.microsoft.com/aspnet/asp-net-core-and-blazor-updates-in-net-core-3-0-preview-6/) for more details.
 Depending on your [project type](https://docs.microsoft.com/en-us/aspnet/core/razor-components/faq?view=aspnetcore-3.0), use one of the two examples below.
 
 ### Client-side / Wasm Project type
-Use [Nuget](https://www.nuget.org/packages/Tewr.Blazor.FileReader.Wasm): ```Install-Package Tewr.Blazor.FileReader.Wasm```
+Use [Nuget](https://www.nuget.org/packages/Tewr.Blazor.FileReader): ```Install-Package Tewr.Blazor.FileReader```
 
 Setup IoC for ```IFileReaderService```as in ([Startup.cs](src/Blazor.FileReader.Wasm.Demo/Startup.cs#L11)):
 
@@ -26,34 +26,17 @@ services.AddFileReaderService();
 
 ```
 
-You must manually include the javascript required due to a [missing](https://github.com/Tewr/BlazorFileReader/issues/13) 
-[feature](https://github.com/aspnet/AspNetCore/issues/7300) in Server components 
-Download [FileReaderComponent.js](src/Blazor.FileReader/content/FileReaderComponent.js) (or extract it from the nuget package content folder) and reference it in 
-[wwwroot/index.html](src/Blazor.FileReader.Wasm.Demo/wwwroot/index.html#L153) after the line
-```html
-<script src="_framework/components.server.js"></script>
-
-```
-
 ### Server-side / asp.net core Project type
 
 Use [Nuget](https://www.nuget.org/packages/Tewr.Blazor.FileReader): ```Install-Package Tewr.Blazor.FileReader```
 
-Setup IoC for  ```IFileReaderService``` as in the example ([Startup.cs](src/Blazor.FileReader.ServerSideBlazor.Demo/Startup.cs#L27)) as a scoped dependency:
+Setup IoC for  ```IFileReaderService``` as in the example ([Startup.cs](src/Blazor.FileReader.ServerSideBlazor.Demo/Startup.cs#L16)):
 
 ```cs
-services.AddScoped<IFileReaderService, FileReaderService>();
+services.AddFileReaderService(options => options.InitializeOnFirstCall = true);
 
 ```
 
-You must manually include the javascript required due to a [missing](https://github.com/Tewr/BlazorFileReader/issues/13) 
-[feature](https://github.com/aspnet/AspNetCore/issues/7300) in Server components 
-Download [FileReaderComponent.js](/src/Blazor.FileReader/content/FileReaderComponent.js) (or extract it from the nuget package content folder) and reference it in 
-[Pages/_Host.cshtml](src/Blazor.FileReader.ServerSide.Demo/Pages/_Host.cshtml#L25) after the line
-```html
-<script src="_framework/components.server.js"></script>
-
-```
 ## Usage in a Blazor View
 
 The code for views looks the same for both client- and server-side projects, but take a look at [known issues](README.md#known-issues) for server-side projects.
@@ -63,7 +46,7 @@ The code for views looks the same for both client- and server-side projects, but
 @using System.IO;
 @inject IFileReaderService fileReaderService;
 
-<input type="file" ref="inputTypeFileElement" /><button onclick="@ReadFile">Read file</button>
+<input type="file" @ref="@inputTypeFileElement" /><button @onclick="@ReadFile">Read file</button>
 
 @functions {
     ElementRef inputTypeFileElement;
@@ -90,10 +73,6 @@ The code for views looks the same for both client- and server-side projects, but
 }
 ```
 
-## Known issues
-
-As of dotnet sdk 3.0.100-preview4, Server-side blazor has [a problem with "big" messages](https://github.com/Tewr/BlazorFileReader/issues/24). For now, buffersize must be set, and must be set to something quite low for this to work without crashes. 2k bytes seems to work alright in chrome, YMMV.
-
 ## Notes
 
 To use the code in this demo in your own project you need to use at least version 
@@ -104,6 +83,8 @@ The ```master``` branch uses ```v3.0.0-preview-4-19216-03``` of Blazor.
 Blazor is an ~~experimental~~ preview project, not ready for production use. Just as Blazor API frequently has breaking changes, so does the API of this library.
 
 ### Version notes
+
+Version ```0.12.0``` adds support for sdk ```3.0.0-preview6.19307.2```, and several issues are resolved with this release, notably meticulous setup and issues with buffer size for server-side projects. Also, the Wasm helper package has been deprecated.
 
 Version ```0.11.0``` adds support for sdk ```3.0.0-preview5-19227-01```. It also introduces a tiny feature: The ```IFileReaderRef.ClearValue()``` method, used to clear the value of a referenced file input. Also, fixes a bug in Edge and a package issue.
 

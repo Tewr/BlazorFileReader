@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
+  <Relationship Type="http://schemas.microsoft.com/packaging/2010/07/manifest" Target="/Tewr.Blazor.FileReader.nuspec" Id="R2851aa58a60b4ca0" />
+  <Relationship Type="http://schemas.openxmlformats.org/package/2006/relationships/metadata/core-properties" Target="/package/services/metadata/core-properties/c097f4cfd21a4035936f897f3efe6e26.psmdcp" Id="R7a24dbf2dbe740f4" />
+</Relationships>

@@ -9,7 +9,7 @@ This demo reads a .net Standard assembly and takes a look inside.<br /><br />
 <button onclick="@ReadFile" class="btn btn-primary">Read assembly</button>
 <br /><br />
 <textarea style="max-width: 100%;" cols="60" rows="20">@Output</textarea>
-@functions {
+@code {
     ElementRef inputElement;
 
     string Output { get; set; }
