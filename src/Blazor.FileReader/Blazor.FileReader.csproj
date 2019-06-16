@@ -8,7 +8,7 @@
     <TypeScriptToolsVersion>2.8</TypeScriptToolsVersion>
     <LangVersion>latest</LangVersion>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-    <Version>0.12.19167</Version>
+    <Version>0.12.19168</Version>
     <Authors>Tor Knutsson (Tewr)</Authors>
     <PackageProjectUrl>https://github.com/Tewr/BlazorFileReader</PackageProjectUrl>
     <RepositoryUrl>https://github.com/Tewr/BlazorFileReader</RepositoryUrl>
@@ -17,9 +17,9 @@
     <Configurations>Debug;Release;Ghpages</Configurations>
     <PackageId>Tewr.Blazor.FileReader</PackageId>
     <PackageReleaseNotes></PackageReleaseNotes>
-    <AssemblyVersion>0.12.19167.0</AssemblyVersion>
+    <AssemblyVersion>0.12.19168.0</AssemblyVersion>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    
+    <PackageIconUrl>https://raw.githubusercontent.com/Tewr/BlazorFileReader/master/icon.png</PackageIconUrl>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
@@ -46,21 +46,14 @@
   </ItemGroup>
 
   <ItemGroup>
-    <!-- 
-    <Folder Include="Properties\" />-->
     <Content Include="script\*.*">
       <Pack>false</Pack>
     </Content>
-    <!--
-    <Folder Include="wwwroot\" />
-    -->
   </ItemGroup>
 
   <ItemGroup>
-    <Content Remove="tsconfig.json" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="tsconfig.json" />
+    <Content Update="tsconfig.json">
+      <Pack>false</Pack>
+    </Content>
   </ItemGroup>
 </Project>
