@@ -5,9 +5,29 @@ VisualStudioVersion = 16.0.28531.58
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blazor.FileReader", "Blazor.FileReader\Blazor.FileReader.csproj", "{5F8084DD-9D88-4407-BCFC-15C71C5AF11E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blazor.FileReader.Wasm.Demo", "Blazor.FileReader.Wasm.Demo\Blazor.FileReader.Wasm.Demo.csproj", "{9FA01C57-BBB5-420E-AA9B-AD22F39B77ED}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blazor.FileReader.Wasm.Demo", "Demo\Blazor.FileReader.Wasm.Demo\Blazor.FileReader.Wasm.Demo.csproj", "{9FA01C57-BBB5-420E-AA9B-AD22F39B77ED}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blazor.FileReader.ServerSide.Demo", "Blazor.FileReader.ServerSide.Demo\Blazor.FileReader.ServerSide.Demo.csproj", "{DD950FC8-40D7-46CE-8144-7D66B3A86286}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blazor.FileReader.ServerSide.Demo", "Demo\Blazor.FileReader.ServerSide.Demo\Blazor.FileReader.ServerSide.Demo.csproj", "{DD950FC8-40D7-46CE-8144-7D66B3A86286}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Demo", "Demo", "{8AA482CE-0130-43A1-84BC-92215AF25AED}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{C9B92F56-D84F-4DB7-B8B6-B93D76CE6BA1}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blazor.FileReader.E2ETestsShared", "Tests\Blazor.FileReader.E2ETestsShared\Blazor.FileReader.E2ETestsShared.csproj", "{33687379-9E64-48A3-B639-C4C68ED1E34C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blazor.FileReader.ServerSideE2ETests", "Tests\Blazor.FileReader.ServerSideE2ETests\Blazor.FileReader.ServerSideE2ETests.csproj", "{2739877D-DB94-4382-B591-BDC62975BCF5}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blazor.FileReader.WasmE2ETests", "Tests\Blazor.FileReader.WasmE2ETests\Blazor.FileReader.WasmE2ETests.csproj", "{2CF5D654-B4DB-41FA-B4B3-2C10E41A854D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "E2ETestApplications", "E2ETestApplications", "{3B98DC81-24B2-4EBF-A629-6A2D7948341C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blazor.FileReader.E2ETestAppShared", "Tests\E2ETestApplications\Blazor.FileReader.E2ETestAppShared\Blazor.FileReader.E2ETestAppShared.csproj", "{9ADAE778-C2E2-4EDB-9302-1F15B00454CB}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blazor.FileReader.ServerSideTestApp", "Tests\E2ETestApplications\Blazor.FileReader.ServerSideTestApp\Blazor.FileReader.ServerSideTestApp.csproj", "{20935500-FE99-4660-83F6-4F58D48E4464}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blazor.FileReader.WasmTestApp.Client", "Tests\E2ETestApplications\Blazor.FileReader.WasmTestApp.Client\Blazor.FileReader.WasmTestApp.Client.csproj", "{20017041-698E-4635-B193-5E2F8DB2121B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blazor.FileReader.WasmTestApp.Server", "Tests\E2ETestApplications\Blazor.FileReader.WasmTestApp.Server\Blazor.FileReader.WasmTestApp.Server.csproj", "{E071BF86-678D-45D2-B4D2-5414AAE6E734}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,9 +53,63 @@ Global
 		{DD950FC8-40D7-46CE-8144-7D66B3A86286}.Ghpages|Any CPU.Build.0 = Debug|Any CPU
 		{DD950FC8-40D7-46CE-8144-7D66B3A86286}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DD950FC8-40D7-46CE-8144-7D66B3A86286}.Release|Any CPU.Build.0 = Release|Any CPU
+		{33687379-9E64-48A3-B639-C4C68ED1E34C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{33687379-9E64-48A3-B639-C4C68ED1E34C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{33687379-9E64-48A3-B639-C4C68ED1E34C}.Ghpages|Any CPU.ActiveCfg = Debug|Any CPU
+		{33687379-9E64-48A3-B639-C4C68ED1E34C}.Ghpages|Any CPU.Build.0 = Debug|Any CPU
+		{33687379-9E64-48A3-B639-C4C68ED1E34C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{33687379-9E64-48A3-B639-C4C68ED1E34C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2739877D-DB94-4382-B591-BDC62975BCF5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2739877D-DB94-4382-B591-BDC62975BCF5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2739877D-DB94-4382-B591-BDC62975BCF5}.Ghpages|Any CPU.ActiveCfg = Debug|Any CPU
+		{2739877D-DB94-4382-B591-BDC62975BCF5}.Ghpages|Any CPU.Build.0 = Debug|Any CPU
+		{2739877D-DB94-4382-B591-BDC62975BCF5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2739877D-DB94-4382-B591-BDC62975BCF5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2CF5D654-B4DB-41FA-B4B3-2C10E41A854D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2CF5D654-B4DB-41FA-B4B3-2C10E41A854D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2CF5D654-B4DB-41FA-B4B3-2C10E41A854D}.Ghpages|Any CPU.ActiveCfg = Debug|Any CPU
+		{2CF5D654-B4DB-41FA-B4B3-2C10E41A854D}.Ghpages|Any CPU.Build.0 = Debug|Any CPU
+		{2CF5D654-B4DB-41FA-B4B3-2C10E41A854D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2CF5D654-B4DB-41FA-B4B3-2C10E41A854D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9ADAE778-C2E2-4EDB-9302-1F15B00454CB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9ADAE778-C2E2-4EDB-9302-1F15B00454CB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9ADAE778-C2E2-4EDB-9302-1F15B00454CB}.Ghpages|Any CPU.ActiveCfg = Debug|Any CPU
+		{9ADAE778-C2E2-4EDB-9302-1F15B00454CB}.Ghpages|Any CPU.Build.0 = Debug|Any CPU
+		{9ADAE778-C2E2-4EDB-9302-1F15B00454CB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9ADAE778-C2E2-4EDB-9302-1F15B00454CB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{20935500-FE99-4660-83F6-4F58D48E4464}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{20935500-FE99-4660-83F6-4F58D48E4464}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{20935500-FE99-4660-83F6-4F58D48E4464}.Ghpages|Any CPU.ActiveCfg = Debug|Any CPU
+		{20935500-FE99-4660-83F6-4F58D48E4464}.Ghpages|Any CPU.Build.0 = Debug|Any CPU
+		{20935500-FE99-4660-83F6-4F58D48E4464}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{20935500-FE99-4660-83F6-4F58D48E4464}.Release|Any CPU.Build.0 = Release|Any CPU
+		{20017041-698E-4635-B193-5E2F8DB2121B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{20017041-698E-4635-B193-5E2F8DB2121B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{20017041-698E-4635-B193-5E2F8DB2121B}.Ghpages|Any CPU.ActiveCfg = Debug|Any CPU
+		{20017041-698E-4635-B193-5E2F8DB2121B}.Ghpages|Any CPU.Build.0 = Debug|Any CPU
+		{20017041-698E-4635-B193-5E2F8DB2121B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{20017041-698E-4635-B193-5E2F8DB2121B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E071BF86-678D-45D2-B4D2-5414AAE6E734}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E071BF86-678D-45D2-B4D2-5414AAE6E734}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E071BF86-678D-45D2-B4D2-5414AAE6E734}.Ghpages|Any CPU.ActiveCfg = Debug|Any CPU
+		{E071BF86-678D-45D2-B4D2-5414AAE6E734}.Ghpages|Any CPU.Build.0 = Debug|Any CPU
+		{E071BF86-678D-45D2-B4D2-5414AAE6E734}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E071BF86-678D-45D2-B4D2-5414AAE6E734}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{9FA01C57-BBB5-420E-AA9B-AD22F39B77ED} = {8AA482CE-0130-43A1-84BC-92215AF25AED}
+		{DD950FC8-40D7-46CE-8144-7D66B3A86286} = {8AA482CE-0130-43A1-84BC-92215AF25AED}
+		{33687379-9E64-48A3-B639-C4C68ED1E34C} = {C9B92F56-D84F-4DB7-B8B6-B93D76CE6BA1}
+		{2739877D-DB94-4382-B591-BDC62975BCF5} = {C9B92F56-D84F-4DB7-B8B6-B93D76CE6BA1}
+		{2CF5D654-B4DB-41FA-B4B3-2C10E41A854D} = {C9B92F56-D84F-4DB7-B8B6-B93D76CE6BA1}
+		{3B98DC81-24B2-4EBF-A629-6A2D7948341C} = {C9B92F56-D84F-4DB7-B8B6-B93D76CE6BA1}
+		{9ADAE778-C2E2-4EDB-9302-1F15B00454CB} = {3B98DC81-24B2-4EBF-A629-6A2D7948341C}
+		{20935500-FE99-4660-83F6-4F58D48E4464} = {3B98DC81-24B2-4EBF-A629-6A2D7948341C}
+		{20017041-698E-4635-B193-5E2F8DB2121B} = {3B98DC81-24B2-4EBF-A629-6A2D7948341C}
+		{E071BF86-678D-45D2-B4D2-5414AAE6E734} = {3B98DC81-24B2-4EBF-A629-6A2D7948341C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7BCBB258-C07A-4039-838A-09F3B45F7E58}
