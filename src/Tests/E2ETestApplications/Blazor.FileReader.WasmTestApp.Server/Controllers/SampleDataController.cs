@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace BlazorContextMenu.Blazor.FileReader.WasmTestApp.Server.Controllers
+namespace BlazorFileReader.Blazor.FileReader.WasmTestApp.Server.Controllers
 {
     [Route("api/[controller]")]
     public class SampleDataController : Controller

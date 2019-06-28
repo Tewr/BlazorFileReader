@@ -1,5 +1,5 @@
-﻿using BlazorContextMenu.E2ETests.Tests;
-using BlazorContextMenu.Blazor.FileReader.ServerSideTestApp;
+﻿using BlazorFileReader.E2ETests.Tests;
+using BlazorFileReader.Blazor.FileReader.ServerSideTestApp;
 using Blazor.FileReader.E2ETestsShared.Infrastructure;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Interactions;

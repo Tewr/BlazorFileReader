@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 
-namespace BlazorContextMenu.Blazor.FileReader.WasmTestApp.Server
+namespace BlazorFileReader.Blazor.FileReader.WasmTestApp.Server
 {
     public class Program
     {

@@ -7,8 +7,8 @@ using Xunit.Abstractions;
 using System.Threading.Tasks;
 using OpenQA.Selenium.Interactions;
 using Blazor.FileReader.E2ETestsShared.Infrastructure;
-using BlazorContextMenu.E2ETests.Tests;
-using BlazorContextMenu.Blazor.FileReader.ServerSideTestApp;
+using BlazorFileReader.E2ETests.Tests;
+using BlazorFileReader.Blazor.FileReader.ServerSideTestApp;
 
 namespace Blazor.FileReader.ServerSideE2ETests.Tests
 {

@@ -11,9 +11,9 @@ using System.Threading.Tasks;
 using OpenQA.Selenium.Interactions;
 using Blazor.FileReader.E2ETestsShared.Infrastructure;
 using Blazor.FileReader.WasmE2ETests;
-using BlazorContextMenu.Blazor.FileReader.WasmTestApp.Server;
+using BlazorFileReader.Blazor.FileReader.WasmTestApp.Server;
 
-namespace BlazorContextMenu.E2ETests.Tests
+namespace BlazorFileReader.E2ETests.Tests
 {
     public class Blazor.FileReader.WasmTestAppIndexTests : TestAppIndexTests<Startup, BlazorE2EFixture>
     {

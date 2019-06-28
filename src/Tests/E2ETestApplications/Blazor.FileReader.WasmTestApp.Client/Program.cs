@@ -2,7 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using System;
 
-namespace BlazorContextMenu.Blazor.FileReader.WasmTestApp.Client
+namespace BlazorFileReader.Blazor.FileReader.WasmTestApp.Client
 {
     public class Program
     {

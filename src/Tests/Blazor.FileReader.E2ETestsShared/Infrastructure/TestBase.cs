@@ -26,26 +26,6 @@ namespace Blazor.FileReader.E2ETestsShared.Infrastructure
             _fixture = fixture;
             _browser.Value = fixture.Browser;
         }
-        protected async Task OpenContextMenuAt(string triggerElementId, MouseButtonTrigger mouseButton)
-        {
-            var element = Browser.FindElement(By.Id(triggerElementId));
-            var action = new Actions(Browser);
-            switch (mouseButton)
-            {
-                case MouseButtonTrigger.Left:
-                    action.Click(element).Perform();
-                    break;
-                case MouseButtonTrigger.DoubleClick:
-                    action.DoubleClick(element).Perform();
-                    break;
-                case MouseButtonTrigger.Right:
-                    action.ContextClick(element).Perform();
-                    break;
-            }
-            
-
-            await Task.Delay(500);
-        }
 
         protected void MouseOverElement(string elementId)
         {

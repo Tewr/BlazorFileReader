@@ -1,5 +1,5 @@
-﻿using BlazorContextMenu.Blazor.FileReader.WasmTestApp.Client.Services;
-using BlazorContextMenu.E2ETestApplicationsCommon;
+﻿using BlazorFileReader.Blazor.FileReader.WasmTestApp.Client.Services;
+using BlazorFileReader.E2ETestApplicationsCommon;
 using Microsoft.AspNetCore.Components.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -7,14 +7,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace BlazorContextMenu.Blazor.FileReader.WasmTestApp.Client
+namespace BlazorFileReader.Blazor.FileReader.WasmTestApp.Client
 {
     public class Startup
     {
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddSingleton<ISampleDataService, SampleDataService>();
-            services.AddBlazorContextMenu(options =>
+            services.AddBlazorFileReader(options =>
             {
                 options.ConfigureTemplate(defaultTemplate =>
                 {

@@ -1,139 +1,136 @@
-﻿@inject ISampleDataService sampleDataService
+﻿@page "/SHA256"
+@using System.IO;
+@using System.Text;
+@using System.Security.Cryptography;
+@inject IFileReaderService fileReaderService;
 
+<h1>Hello, hash!</h1>
 
-<h1 id="header">Hello, Blazor context menu !</h1>
+This demo calculates SHA256 using the .NET framework <a href="https://docs.microsoft.com/en-us/dotnet/api/system.security.cryptography.sha256managed?view=netcore-2.1">hash function</a>.<br />
+The chunked version only loads a chunk at a time into the algorithm (using <a href="https://docs.microsoft.com/en-us/dotnet/api/system.security.cryptography.hashalgorithm.transformblock?view=netcore-2.1">TransformBlock</a>),<br />
+whereas the full-ram version reads the entire file into ram before doing anything.<br /><br />
+The full-ram version may block the interface for larger files unless an inferior buffersize is used.<br />
+In any case the full-ram version will use at least the same amount of ram as the file size.<br />
+For any API accepting a stream but not supporting ReadAsync, the full-ram version must be used.<br />
 
-<label>Menu 2 animation: </label>
-<select @bind="Animation">
-    <option value="@BlazorContextMenu.Animation.None">@BlazorContextMenu.Animation.None</option>
-    <option value="@BlazorContextMenu.Animation.FadeIn">@BlazorContextMenu.Animation.FadeIn</option>
-    <option value="@BlazorContextMenu.Animation.Grow">@BlazorContextMenu.Animation.Grow</option>
-    <option value="@BlazorContextMenu.Animation.Slide">@BlazorContextMenu.Animation.Slide</option>
-    <option value="@BlazorContextMenu.Animation.Zoom">@BlazorContextMenu.Animation.Zoom</option>
-</select>
+<br /><br />
+<input type="file" @ref="@inputElement" />
+<br /><br />
+<input type="checkbox" @bind="@DebugOutput" id="useDebugOutput" />
+<label for="useDebugOutput">Debug output</label><br />
+<input type="checkbox" @bind="@UseBufferSize" id="useBufferSizeCheck" />
+<label for="useBufferSizeCheck">Use buffer size</label>
+<input type="number" @bind="@BufferSize" alt="buffersize" placeholder="Buffer size" />
+<br /><br />
+<button @onclick="@HashFile" class="btn btn-primary">Hash SHA256 of file - chunked</button>
+<button @onclick="@HashFileRam" style="margin-left:20px;" class="btn btn-primary">Hash SHA256 of file - full-ram</button>
+<br /><br />
 
+<h3>Log output</h3>
+<textarea style="max-width: 100%;" cols="50" rows="20">@Output</textarea>
 
-<ContextMenuTrigger MenuId="menu1">
-    <p id="test1-trigger">Right-click me (menu1)</p>
-</ContextMenuTrigger>
+@code {
+    ElementRef inputElement;
 
-<textarea style="@($"display:{TextAreaDisplay};")" id="test1-textarea" rows="20" cols="50" readonly wrap="hard" @bind="Summaries"></textarea>
+    string Output { get; set; }
 
+    bool UseBufferSize { get; set; } = false;
+    bool DebugOutput { get; set; } = true;
 
+    int BufferSize { get; set; } = 4096;
 
-<ContextMenuTrigger MenuId="menu2">
-    <p id="test2-trigger">Right-click me (menu2 - with icons and sub-menus)</p>
-</ContextMenuTrigger>
-
-
-<ContextMenuTrigger MenuId="menu1" MouseButtonTrigger="MouseButtonTrigger.Left">
-    <p id="test3-trigger">Left-click me (menu1)</p>
-</ContextMenuTrigger>
-
-<ContextMenuTrigger MenuId="menu1" MouseButtonTrigger="MouseButtonTrigger.Both">
-    <p id="test4-trigger">Click me with left or right mouse button (menu1)</p>
-</ContextMenuTrigger>
-
-<ContextMenuTrigger MenuId="menu2" MouseButtonTrigger="MouseButtonTrigger.Left">
-    <p id="test5-trigger">Left-click me (menu2 - with icons and sub-menus)</p>
-</ContextMenuTrigger>
-
-<ContextMenuTrigger MenuId="menu2" MouseButtonTrigger="MouseButtonTrigger.Both">
-    <p id="test6-trigger">Right or left-click me (menu2 - with icons and sub-menus)</p>
-</ContextMenuTrigger>
-
-<ContextMenuTrigger MenuId="menu1" WrapperTag="span">
-    <p id="test7-trigger">(span trigger) Right-click me (menu1)</p>
-</ContextMenuTrigger>
-
-<ContextMenuTrigger MenuId="menu1" Id="test8-trigger" WrapperTag="textarea">
-    (textarea trigger) Right-click me (menu1)
-</ContextMenuTrigger>
-
-<ContextMenuTrigger Id="test9-trigger" MenuId="menu1" WrapperTag="pre">
-    (pre) Right-click me (menu1). Menu show is prevented!
-    this is a preformated text
-</ContextMenuTrigger>
-
-<ContextMenuTrigger MenuId="menu1" MouseButtonTrigger="MouseButtonTrigger.DoubleClick">
-    <p id="test10-trigger">Double click me (menu1)</p>
-</ContextMenuTrigger>
-
-<ContextMenuTrigger MenuId="menu2" MouseButtonTrigger="MouseButtonTrigger.DoubleClick">
-    <p id="test11-trigger">Double click me (menu2 - with icons and sub-menus)</p>
-</ContextMenuTrigger>
-
-
-<ContextMenu Id="menu1" Template="dark" OnAppearing="OnAppearingMenu1">
-    <Item Id="menu1-item1" OnClick="FetchDataClick">Fetch Data</Item>
-    <Item Id="menu1-item2" OnClick="ClearDataClick">Clear Data</Item>
-    <Seperator />
-    <Item Id="menu1-item3" Enabled="false">Disabled Item </Item>
-</ContextMenu>
-
-<ContextMenu Id="menu2" Template="red" Animation="Animation">
-    <Item Id="menu2-item1" OnClick="OnClick"> <i class="far fa-file"></i> New</Item>
-    <Item OnClick="OnClick"><i class="fas fa-edit"></i> Edit</Item>
-    <Item OnClick="OnClick" Enabled="false"> <i class="fas fa-trash-alt"></i> Delete</Item>
-    <Seperator />
-    <Item Id="submenu1-trigger">
-        <i class="fas fa-cogs"></i> More
-        <SubMenu Id="submenu1" Template="dark">
-            <Item OnClick="OnClick"> <i class="far fa-save"></i> Save As</Item>
-            <Item OnClick="OnClick"> <i class="far fa-save"></i> Save</Item>
-            <Item Id="submenu2-trigger">
-                <i class="fas fa-save"></i> Export as
-                <SubMenu Id="submenu2">
-                    <Item OnClick="OnClick"> <i class="fas fa-file-pdf"></i> Pdf</Item>
-                    <Item OnClick="OnClick"> <i class="far fa-file-alt"></i> Text</Item>
-                </SubMenu>
-            </Item>
-        </SubMenu>
-    </Item>
-    <Item Enabled="false">
-        <i class="fas fa-cogs"></i> Disabled Submenu
-        <SubMenu>
-            <Item OnClick="OnClick">Item 1</Item>
-            <Item OnClick="OnClick">Item 2</Item>
-        </SubMenu>
-    </Item>
-</ContextMenu>
-
-<NavLink href="/TodoList">Go to Todo List</NavLink>
-@code{
-    protected string TextAreaDisplay { get; set; } = "none";
-
-    protected string Summaries { get; set; }
-
-    protected Animation Animation { get; set; }
-
-    async Task FetchDataClick(ItemClickEventArgs e)
+    protected override void OnInit()
     {
-        Console.WriteLine("Fetching");
-        var summaries = await sampleDataService.GetSampleData();
-        Summaries = string.Join(",", summaries);
-        Console.WriteLine("Fetched: " + summaries);
-        TextAreaDisplay = "block";
-        StateHasChanged();
+        base.OnInit();
     }
 
-    void ClearDataClick(ItemClickEventArgs e)
+    public async Task HashFile()
+
     {
-        Summaries = "";
-        TextAreaDisplay = "none";
-        StateHasChanged();
+        await HashFile(false);
     }
 
-    void OnClick(ItemClickEventArgs e)
+    public async Task HashFileRam()
     {
-        Console.WriteLine($"Item Clicked => Menu: {e.ContextMenuId}, MenuTarget: {e.ContextMenuTargetId}, IsCanceled: {e.IsCanceled}, MenuItem: {e.MenuItemElement}, MouseEvent: {e.MouseEvent}");
+        await HashFile(true);
     }
 
-    void OnAppearingMenu1(MenuAppearingEventArgs e)
+    public async Task HashFile(bool useMemoryStream)
     {
-        if (e.ContextMenuTriggerId == "test9-trigger")
+        Output = string.Empty;
+        this.StateHasChanged();
+        var nl = Environment.NewLine;
+        foreach (var file in await fileReaderService.CreateReference(inputElement).EnumerateFilesAsync())
         {
-            e.PreventShow = true;
+            IFileInfo fileInfo = null;
+            if (DebugOutput)
+            {
+                fileInfo = await file.ReadFileInfoAsync();
+                Output += $"{nameof(IFileInfo)}.{nameof(fileInfo.Name)}: {fileInfo.Name}{nl}";
+                Output += $"{nameof(IFileInfo)}.{nameof(fileInfo.Size)}: {fileInfo.Size}{nl}";
+                Output += $"{nameof(IFileInfo)}.{nameof(fileInfo.Type)}: {fileInfo.Type}{nl}";
+                Output += $"{nameof(IFileInfo)}.{nameof(fileInfo.LastModifiedDate)}: {fileInfo.LastModifiedDate?.ToString() ?? "(N/A)"}{nl}";
+                Output += $"Reading file...";
+                this.StateHasChanged();
+            }
+            var stopWatch = new System.Diagnostics.Stopwatch();
+
+            stopWatch.Start();
+            var outputBuffer = new StringBuilder();
+            using (var hash = new SHA256Managed())
+            {
+                if (useMemoryStream)
+                {
+                    using (var fs = UseBufferSize ?
+                        await file.CreateMemoryStreamAsync(BufferSize) :
+                        await file.CreateMemoryStreamAsync())
+                    {
+                        hash.ComputeHash(fs);
+                    }
+                }
+                else
+                {
+                    using (var fs = await file.OpenReadAsync())
+                    {
+                        var bufferSize = UseBufferSize ? BufferSize : 4096 * 8;
+                        if (DebugOutput)
+                        {
+                            outputBuffer.AppendLine($"Using chunks of size {bufferSize}");
+                        }
+                        var buffer = new byte[bufferSize];
+                        int count;
+
+                        while ((count = await fs.ReadAsync(buffer, 0, buffer.Length)) != 0)
+                        {
+                            if (DebugOutput)
+                            {
+                                outputBuffer.AppendLine($"Hashing {count} bytes. {fs.Position} / {fs.Length}");
+                            }
+                            hash.TransformBlock(buffer, 0, count, buffer, 0);
+                        }
+                        hash.TransformFinalBlock(buffer, 0, count);
+                    }
+                }
+                var sb = new StringBuilder(hash.HashSize / 4);
+                foreach (var b in hash.Hash)
+                {
+                    sb.AppendFormat("{0:x2}", b);
+                }
+
+                stopWatch.Stop();
+                if (DebugOutput)
+                {
+                    Output += $"Done hashing file {fileInfo.Name} in {stopWatch.ElapsedMilliseconds}ms:{nl}";
+                }
+
+                Output += sb.ToString();
+                if (outputBuffer.Length > 0)
+                {
+                    Output += $"{nl}{nl}Debug output:{nl}";
+                    Output += outputBuffer.ToString();
+                }
+            }
         }
+
     }
 }

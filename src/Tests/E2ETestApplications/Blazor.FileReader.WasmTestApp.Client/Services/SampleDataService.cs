@@ -1,4 +1,4 @@
-﻿using BlazorContextMenu.E2ETestApplicationsCommon;
+﻿using BlazorFileReader.E2ETestApplicationsCommon;
 using Microsoft.AspNetCore.Components;
 using System;
 using System.Collections.Generic;
@@ -6,7 +6,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace BlazorContextMenu.Blazor.FileReader.WasmTestApp.Client.Services
+namespace BlazorFileReader.Blazor.FileReader.WasmTestApp.Client.Services
 {
     public class SampleDataService : ISampleDataService
     {

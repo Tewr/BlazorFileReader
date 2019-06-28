@@ -26,8 +26,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\E2ETestApplications\Blazor.FileReader.ServerSideTestApp\BlazorContextMenu.Blazor.FileReader.ServerSideTestApp\BlazorContextMenu.Blazor.FileReader.ServerSideTestApp.csproj" />
     <ProjectReference Include="..\Blazor.FileReader.E2ETestsShared\Blazor.FileReader.E2ETestsShared.csproj" />
+    <ProjectReference Include="..\E2ETestApplications\Blazor.FileReader.ServerSideTestApp\Blazor.FileReader.ServerSideTestApp.csproj" />
   </ItemGroup>
 
 

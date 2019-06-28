@@ -7,7 +7,7 @@ using Newtonsoft.Json.Serialization;
 using System.Linq;
 using System.Net.Mime;
 
-namespace BlazorContextMenu.Blazor.FileReader.WasmTestApp.Server
+namespace BlazorFileReader.Blazor.FileReader.WasmTestApp.Server
 {
     public class Startup
     {
