@@ -1,20 +1,14 @@
-﻿// Copyright (c) .NET Foundation. All rights reserved.
-// Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
-
+﻿using Blazor.FileReader.E2ETestsShared.Infrastructure;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
 using System;
-using System.Linq;
-using Xunit;
-using Xunit.Abstractions;
-using System.Threading.Tasks;
-using OpenQA.Selenium.Interactions;
-using Blazor.FileReader.E2ETestsShared.Infrastructure;
+using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Security.Cryptography;
 using System.Text;
-using System.Collections.Generic;
-using System.Globalization;
+using System.Threading.Tasks;
+using Xunit;
 
 namespace Blazor.FileReader.Tests.Common
 {
@@ -29,7 +23,6 @@ namespace Blazor.FileReader.Tests.Common
         {
             GoToPage();
             WaitUntilLoaded();
-
         }
 
         protected void GoToPage()
@@ -40,33 +33,35 @@ namespace Blazor.FileReader.Tests.Common
 
         public (string, string) HashFile(bool useMemoryStream, bool debugOutput, int? bufferSize)
         {
-            Navigate("/");
             var tempFile = System.IO.Path.GetTempFileName();
             Disposables.Add(() => File.Delete(tempFile));
             var Output = "";
             File.WriteAllText(tempFile, "Test file contents!");
             var nl = Environment.NewLine;
 
-            var fileInfo = new FileInfo(tempFile);
-            Output += $"IFileInfo.Name: {fileInfo.Name}{nl}";
-            Output += $"IFileInfo.Size: {fileInfo.Length}{nl}";
-            Output += $"IFileInfo.Type: {nl}";
-            Output += $"IFileInfo.LastModifiedDate: {fileInfo.LastWriteTime.ToUniversalTime().ToString(CultureInfo.InvariantCulture) ?? "(N/A)"}{nl}";
-            Output += $"Reading file...";
+            if (debugOutput)
+            {
+                var fileInfo = new FileInfo(tempFile);
+                Output += $"IFileInfo.Name: {fileInfo.Name}{nl}";
+                Output += $"IFileInfo.Size: {fileInfo.Length}{nl}";
+                Output += $"IFileInfo.Type: {nl}";
+                Output += $"IFileInfo.LastModifiedDate: {fileInfo.LastWriteTime.ToUniversalTime().ToString(CultureInfo.InvariantCulture) ?? "(N/A)"}{nl}";
+                Output += $"Reading file...";
+            }
 
             var outputBuffer = new StringBuilder();
             using (var hash = new SHA256Managed())
             {
                 if (useMemoryStream)
                 {
-                    using (var fs = new MemoryStream(File.ReadAllBytes(fileInfo.FullName)))
+                    using (var fs = new MemoryStream(File.ReadAllBytes(tempFile)))
                     {
                         hash.ComputeHash(fs);
                     }
                 }
                 else
                 {
-                    using (var fs = fileInfo.OpenRead())
+                    using (var fs = File.OpenRead(tempFile))
                     {
                         var bufferSizeToUse = bufferSize ?? 4096 * 8;
                         if (debugOutput)
@@ -95,7 +90,7 @@ namespace Blazor.FileReader.Tests.Common
 
                 if (debugOutput)
                 {
-                    Output += $"Done hashing file {fileInfo.Name}.{nl}";
+                    Output += $"Done hashing file {Path.GetFileName(tempFile)}.{nl}";
                 }
 
                 Output += sb.ToString();
@@ -108,17 +103,17 @@ namespace Blazor.FileReader.Tests.Common
 
             Output += "--DONE";
             return (tempFile, Output);
-
         }
 
         [Theory]
         //[InlineData(true, true, null)]
         //[InlineData(true, true, 100)]
-        //[InlineData(true, false, 4096)]
+        //[InlineData(false, false, 4096)]
         [InlineData(false, true, null)]
         public async Task HashFileHotPath_HashEqualsFxHash(bool useMemoryStream, bool debugOutput, int? bufferSize)
         {
             //Arrange
+            GoToPage();
             try
             {
                 var (filePath, expectedOutput) = HashFile(useMemoryStream, debugOutput, bufferSize);
