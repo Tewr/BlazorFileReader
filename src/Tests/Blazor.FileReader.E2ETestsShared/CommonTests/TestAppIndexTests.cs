@@ -112,7 +112,7 @@ namespace Blazor.FileReader.Tests.Common
         //[InlineData(true, true, null)]
         //[InlineData(true, true, 100)]
         //[InlineData(true, false, 4096)]
-        [InlineData(false, false, null)]
+        [InlineData(false, true, null)]
         public async Task HashFileHotPath_HashEqualsFxHash(bool useMemoryStream, bool debugOutput, int? bufferSize)
         {
             //Arrange
@@ -128,18 +128,18 @@ namespace Blazor.FileReader.Tests.Common
 
                 if (!debugOutput)
                 {
-                    // DebugOutput is true by default, setting it to false will uncheck
-                    var useDebugCheckBox = Browser.FindElement(By.Id("useDebugOutput"));
+                    // DebugOutput is true by default, clicking is sets it to false
+                    var useDebugCheckBox = Browser.FindElement(By.Id("use-debug-output-check"));
                     useDebugCheckBox.Click();
                 }
 
                 //useDebugOutput
                 new WebDriverWait(Browser, TimeSpan.FromSeconds(30)).Until(
-                    driver => driver.FindElement(By.Id("debugOutput")).Text.Contains("--DONE"));
+                    driver => driver.FindElement(By.Id("debug-output")).Text.Contains("--DONE"));
                 await Task.Delay(1000);
 
                 var expectedOutputList = expectedOutput.Split(Environment.NewLine);
-                var actualList = Browser.FindElement(By.Id("debugOutput")).Text.Split(Environment.NewLine);
+                var actualList = Browser.FindElement(By.Id("debug-output")).Text.Split(Environment.NewLine);
                 var lineCount = 0;
 
                 //Assert
