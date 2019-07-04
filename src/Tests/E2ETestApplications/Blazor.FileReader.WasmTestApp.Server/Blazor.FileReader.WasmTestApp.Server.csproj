@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Blazor.FileReader.E2ETestAppShared\Blazor.FileReader.E2ETestAppShared.csproj" />
+    <ProjectReference Include="..\Blazor.FileReader.WasmTestApp.Client\Blazor.FileReader.WasmTestApp.Client.csproj" />
   </ItemGroup>
 
 </Project>

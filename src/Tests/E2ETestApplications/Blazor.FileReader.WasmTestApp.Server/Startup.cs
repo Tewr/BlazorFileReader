@@ -3,11 +3,9 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Newtonsoft.Json.Serialization;
 using System.Linq;
-using System.Net.Mime;
 
-namespace BlazorFileReader.Blazor.FileReader.WasmTestApp.Server
+namespace Blazor.FileReader.WasmTestApp.Server
 {
     public class Startup
     {
@@ -35,7 +33,6 @@ namespace BlazorFileReader.Blazor.FileReader.WasmTestApp.Server
             }
 
             app.UseClientSideBlazorFiles<Client.Startup>();
-
             app.UseRouting();
 
             app.UseEndpoints(endpoints =>

@@ -1,5 +1,3 @@
-using Blazor.FileReader;
-using Blazor.FileReader.ServerSideTestApp;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;

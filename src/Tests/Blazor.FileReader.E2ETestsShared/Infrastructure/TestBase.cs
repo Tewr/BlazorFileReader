@@ -27,19 +27,19 @@ namespace Blazor.FileReader.E2ETestsShared.Infrastructure
             _browser.Value = fixture.Browser;
         }
 
-        protected void MouseOverElement(string elementId)
-        {
-            var element = Browser.FindElement(By.Id(elementId));
-            var action = new Actions(Browser);
-            action.MoveToElement(element).Perform();
-        }
-
         protected void WaitUntilLoaded()
         {
             Browser.Manage().Window.Maximize();
             new WebDriverWait(Browser, TimeSpan.FromSeconds(30)).Until(
                 driver => driver.FindElement(By.TagName("app")).Text != "Loading...");
             Task.Delay(1000).Wait();
+        }
+
+        protected void MouseOverElement(string elementId)
+        {
+            var element = Browser.FindElement(By.Id(elementId));
+            var action = new Actions(Browser);
+            action.MoveToElement(element).Perform();
         }
 
         public void Navigate(string relativeUrl, bool noReload = false)

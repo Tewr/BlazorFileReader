@@ -22,4 +22,8 @@
     <ProjectReference Include="..\Blazor.FileReader.E2ETestAppShared\Blazor.FileReader.E2ETestAppShared.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Services\" />
+  </ItemGroup>
+
 </Project>
