@@ -14,6 +14,7 @@ using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 using System.Collections.Generic;
+using System.Globalization;
 
 namespace Blazor.FileReader.Tests.Common
 {
@@ -39,6 +40,7 @@ namespace Blazor.FileReader.Tests.Common
 
         public (string, string) HashFile(bool useMemoryStream, bool debugOutput, int? bufferSize)
         {
+            Navigate("/");
             var tempFile = System.IO.Path.GetTempFileName();
             Disposables.Add(() => File.Delete(tempFile));
             var Output = "";
@@ -49,7 +51,7 @@ namespace Blazor.FileReader.Tests.Common
             Output += $"IFileInfo.Name: {fileInfo.Name}{nl}";
             Output += $"IFileInfo.Size: {fileInfo.Length}{nl}";
             Output += $"IFileInfo.Type: {nl}";
-            Output += $"IFileInfo.LastModifiedDate: {fileInfo.LastWriteTime.ToUniversalTime().ToString() ?? "(N/A)"}{nl}";
+            Output += $"IFileInfo.LastModifiedDate: {fileInfo.LastWriteTime.ToUniversalTime().ToString(CultureInfo.InvariantCulture) ?? "(N/A)"}{nl}";
             Output += $"Reading file...";
 
             var outputBuffer = new StringBuilder();
@@ -104,6 +106,7 @@ namespace Blazor.FileReader.Tests.Common
                 }
             }
 
+            Output += "--DONE";
             return (tempFile, Output);
 
         }
@@ -123,15 +126,19 @@ namespace Blazor.FileReader.Tests.Common
                 //Act
                 var fileInputElement = Browser.FindElement(By.TagName("input"));
                 fileInputElement.SendKeys(filePath);
-                var gobutton = Browser.FindElement(By.Id(useMemoryStream ? "full-ram-button" : "chunked-button"));
-                gobutton.Click();
-
                 if (!debugOutput)
                 {
                     // DebugOutput is true by default, clicking is sets it to false
                     var useDebugCheckBox = Browser.FindElement(By.Id("use-debug-output-check"));
                     useDebugCheckBox.Click();
                 }
+
+
+
+                var gobutton = Browser.FindElement(By.Id(useMemoryStream ? "full-ram-button" : "chunked-button"));
+                gobutton.Click();
+
+
 
                 //useDebugOutput
                 new WebDriverWait(Browser, TimeSpan.FromSeconds(30)).Until(
