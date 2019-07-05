@@ -13,7 +13,7 @@ namespace Blazor.FileReader
     {
         private static readonly IReadOnlyDictionary<string, string> escapeScriptTextReplacements =
             new Dictionary<string, string> { { @"\", @"\\" }, { "\r", @"\r" }, { "\n", @"\n" }, { "'", @"\'" }, { "\"", @"\""" } };
-        private static bool _needsInitialization;
+        private bool _needsInitialization = false;
 
         internal IJSRuntime CurrentJSRuntime { get; }
 
@@ -54,7 +54,6 @@ namespace Blazor.FileReader
             }
 
             await Initialize();
-            _needsInitialization = false;
         }
 
         private async Task<int> OpenReadAsync(ElementRef elementReference, int fileIndex)
@@ -94,6 +93,12 @@ namespace Blazor.FileReader
 
         private async Task Initialize()
         {
+            var isLoaded = await CurrentJSRuntime.InvokeAsync<bool>("eval", "(function() { return !!window.FileReaderComponent })()");
+            if (isLoaded)
+            {
+                return;
+            }
+
             string scriptContent;
             using (var stream = this.GetType().Assembly.GetManifestResourceStream("blazor:js:FileReaderComponent.js"))
             {
@@ -103,10 +108,16 @@ namespace Blazor.FileReader
                 }
             }
 
+            // Load the script
+            await ExecuteRawScriptAsync<object>(scriptContent);
+        }
+
+        private async Task<T> ExecuteRawScriptAsync<T>(string scriptContent)
+        {
             scriptContent = escapeScriptTextReplacements.Aggregate(scriptContent, (r, pair) => r.Replace(pair.Key, pair.Value));
             var blob = $"URL.createObjectURL(new Blob([\"{scriptContent}\"],{{ \"type\": \"text/javascript\"}}))";
             var bootStrapScript = $"(function(){{var d = document; var s = d.createElement('script'); s.src={blob}; d.head.appendChild(s); d.head.removeChild(s);}})();";
-            await CurrentJSRuntime.InvokeAsync<object>("eval", bootStrapScript);
+            return await CurrentJSRuntime.InvokeAsync<T>("eval", bootStrapScript);
         }
     }
 }
