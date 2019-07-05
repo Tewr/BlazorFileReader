@@ -90,7 +90,9 @@ Blazor is an ~~experimental~~ preview project, not ready for production use. Jus
 
 ### Version notes
 
-Version ```0.12.0``` adds support for sdk ```3.0.0-preview6.19307.2```, and several issues are resolved with this release, notably meticulous setup and issues with buffer size for server-side projects. Also, the Wasm helper package has been deprecated.
+Version ```0.12.19186``` fixes an issue with server-side setup which was only visible when having multiple users.
+
+Version ```0.12.19168``` adds support for sdk ```3.0.0-preview6.19307.2```, and several issues are resolved with this release, notably meticulous setup and issues with buffer size for server-side projects. Also, the Wasm helper package has been deprecated.
 
 Version ```0.11.0``` adds support for sdk ```3.0.0-preview5-19227-01```. It also introduces a tiny feature: The ```IFileReaderRef.ClearValue()``` method, used to clear the value of a referenced file input. Also, fixes a bug in Edge and a package issue.
 
