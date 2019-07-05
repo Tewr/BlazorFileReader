@@ -115,7 +115,8 @@ namespace Blazor.FileReader.E2ETestAppShared
                 }
             }
 
-            Output += "--DONE";
+            Output += $"{nl}--DONE";
+            this.StateHasChanged();
         }
     }
 }

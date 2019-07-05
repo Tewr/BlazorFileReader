@@ -101,7 +101,7 @@ namespace Blazor.FileReader.Tests.Common
                 }
             }
 
-            Output += "--DONE";
+            Output += $"{nl}--DONE";
             return (tempFile, Output);
         }
 
@@ -109,35 +109,42 @@ namespace Blazor.FileReader.Tests.Common
         //[InlineData(true, true, null)]
         //[InlineData(true, true, 100)]
         //[InlineData(false, false, 4096)]
-        [InlineData(false, true, null)]
+        //[InlineData(false, true, null)]
+        [InlineData(false, false, null)]
         public async Task HashFileHotPath_HashEqualsFxHash(bool useMemoryStream, bool debugOutput, int? bufferSize)
         {
             //Arrange
-            GoToPage();
             try
             {
                 var (filePath, expectedOutput) = HashFile(useMemoryStream, debugOutput, bufferSize);
 
                 //Act
-                var fileInputElement = Browser.FindElement(By.TagName("input"));
+                var fileInputElement = Browser.FindElement(By.Id("file-input"));
                 fileInputElement.SendKeys(filePath);
-                if (!debugOutput)
+                
+                var useDebugCheckBox = Browser.FindElement(By.Id("use-debug-output-check"));
+                if (useDebugCheckBox.Selected ^ debugOutput)
                 {
-                    // DebugOutput is true by default, clicking is sets it to false
-                    var useDebugCheckBox = Browser.FindElement(By.Id("use-debug-output-check"));
                     useDebugCheckBox.Click();
                 }
-
-
+                
+                if (bufferSize.HasValue)
+                {
+                    var bufferSizeElement = Browser.FindElement(By.Id("buffer-size"));
+                    fileInputElement.SendKeys(bufferSize.Value.ToString());
+                }
 
                 var gobutton = Browser.FindElement(By.Id(useMemoryStream ? "full-ram-button" : "chunked-button"));
                 gobutton.Click();
-
-
-
-                //useDebugOutput
-                new WebDriverWait(Browser, TimeSpan.FromSeconds(30)).Until(
+                try
+                {
+                    new WebDriverWait(Browser, TimeSpan.FromSeconds(30)).Until(
                     driver => driver.FindElement(By.Id("debug-output")).Text.Contains("--DONE"));
+                }
+                catch (OpenQA.Selenium.WebDriverTimeoutException)
+                {
+                    Assert.Equal(expectedOutput, Browser.FindElement(By.Id("debug-output")).Text);
+                }
                 await Task.Delay(1000);
 
                 var expectedOutputList = expectedOutput.Split(Environment.NewLine);
