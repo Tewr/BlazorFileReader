@@ -5,11 +5,62 @@ var FileReaderComponent = /** @class */ (function () {
         var _this = this;
         this.newFileStreamReference = 0;
         this.fileStreams = {};
+        this.dragElements = new Map();
+        this.elementDataTransfers = new Map();
+        this.RegisterDrop = function (element) {
+            var handler = function (ev) {
+                event.preventDefault();
+                if (ev.target instanceof HTMLElement) {
+                    _this.elementDataTransfers.set(ev.target, ev.dataTransfer);
+                    // Note that dragstart and dragend events are not fired 
+                    // when dragging a file into the browser from the OS.
+                    ev.target.ondragend(ev);
+                }
+            };
+            _this.dragElements.set(element, handler);
+            element.addEventListener("drop", handler);
+            return true;
+        };
+        this.GetFileCount = function (element) {
+            var files = null;
+            if (element instanceof HTMLInputElement) {
+                files = element.files;
+            }
+            else {
+                var dataTransfer = _this.elementDataTransfers.get(element);
+                if (dataTransfer) {
+                    files = dataTransfer.files;
+                }
+            }
+            if (!files) {
+                return -1;
+            }
+            var result = files.length;
+            return result;
+        };
+        this.ClearValue = function (element) {
+            if (element instanceof HTMLInputElement) {
+                element.value = null;
+            }
+            else {
+                _this.elementDataTransfers.delete(element);
+            }
+        };
         this.GetFileInfoFromElement = function (element, index, property) {
-            if (!element.files) {
+            var files = null;
+            if (element instanceof HTMLInputElement) {
+                files = element.files;
+            }
+            else {
+                var dataTransfer = _this.elementDataTransfers.get(element);
+                if (dataTransfer) {
+                    files = dataTransfer.files;
+                }
+            }
+            if (!files) {
                 return null;
             }
-            var file = element.files.item(index);
+            var file = files.item(index);
             if (!file) {
                 return null;
             }
@@ -19,10 +70,20 @@ var FileReaderComponent = /** @class */ (function () {
             return delete (_this.fileStreams[fileRef]);
         };
         this.OpenRead = function (element, fileIndex) {
-            if (!element.files) {
+            var files = null;
+            if (element instanceof HTMLInputElement) {
+                files = element.files;
+            }
+            else {
+                var dataTransfer = _this.elementDataTransfers.get(element);
+                if (dataTransfer) {
+                    files = dataTransfer.files;
+                }
+            }
+            if (!files) {
                 throw 'No FileList available. Is this element a reference to an input of type="file"?';
             }
-            var file = element.files.item(fileIndex);
+            var file = files.item(fileIndex);
             if (!file) {
                 throw "No file with index " + fileIndex + " available.";
             }
@@ -87,17 +148,6 @@ var FileReaderComponent = /** @class */ (function () {
             });
         };
     }
-    FileReaderComponent.prototype.GetFileCount = function (element) {
-        if (!element.files) {
-            return -1;
-        }
-        var result = element.files.length;
-        return result;
-    };
-    FileReaderComponent.prototype.ClearValue = function (input) {
-        input.value = null;
-    };
-    ;
     FileReaderComponent.prototype.GetFileInfoFromFile = function (file) {
         var result = {
             lastModified: file.lastModified,

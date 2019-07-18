@@ -89,10 +89,22 @@ namespace Blazor.FileReader
         public ElementRef ElementRef { get; private set; }
         public FileReaderJsInterop FileReaderJsInterop { get; }
 
-        internal FileReaderRef(ElementRef elementRef, FileReaderJsInterop fileReaderJsInterop)
+        private Task Initialization { get; set; }
+
+        private async Task InitializeAsync()
+        {
+            // Asynchronously initialize this instance.
+            await FileReaderJsInterop.RegisterDrop(ElementRef);
+        }
+
+        internal FileReaderRef(ElementRef elementRef, FileReaderJsInterop fileReaderJsInterop, bool dropTarget = false)
         {
             this.ElementRef = elementRef;
             this.FileReaderJsInterop = fileReaderJsInterop;
+            if (dropTarget)
+            {
+                Initialization = InitializeAsync();
+            }
         }
     }
 

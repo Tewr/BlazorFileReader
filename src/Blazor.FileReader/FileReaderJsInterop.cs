@@ -23,6 +23,12 @@ namespace Blazor.FileReader
             _needsInitialization = initializeOnFirstCall;
         }
 
+        public async Task<bool> RegisterDrop(ElementRef elementReference)
+        {
+            await EnsureInitializedAsync();
+            return await CurrentJSRuntime.InvokeAsync<bool>($"FileReaderComponent.RegisterDrop", elementReference);
+        }
+
         public async Task<Stream> OpenFileStream(ElementRef elementReference, int index)
         {
             var fileInfo = await GetFileInfoFromElement(elementReference, index);
