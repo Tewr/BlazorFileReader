@@ -23,10 +23,11 @@ namespace Blazor.FileReader
             _needsInitialization = initializeOnFirstCall;
         }
 
-        public async Task<bool> RegisterDrop(ElementRef elementReference)
+        public async Task<bool> RegisterDropEvents(ElementRef elementReference)
         {
             await EnsureInitializedAsync();
-            return await CurrentJSRuntime.InvokeAsync<bool>($"FileReaderComponent.RegisterDrop", elementReference);
+            return await CurrentJSRuntime.InvokeAsync<bool>($"FileReaderComponent.RegisterDropEvents", elementReference);
+        }
         }
 
         public async Task<Stream> OpenFileStream(ElementRef elementReference, int index)

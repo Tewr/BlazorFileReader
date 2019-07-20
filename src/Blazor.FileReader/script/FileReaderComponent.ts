@@ -40,7 +40,7 @@ class FileReaderComponent {
     private readonly dragElements: Map<HTMLElement, object> = new Map();
     private readonly elementDataTransfers: Map<HTMLElement, DataTransfer> = new Map();
 
-    public RegisterDrop = (element: HTMLElement): boolean => {
+    public RegisterDropEvents = (element: HTMLElement): boolean => {
         const handler = (ev: DragEvent) => {
 event.preventDefault();
             if (ev.target instanceof HTMLElement) {
