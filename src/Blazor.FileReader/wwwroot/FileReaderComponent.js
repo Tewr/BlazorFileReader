@@ -22,16 +22,7 @@ var FileReaderComponent = /** @class */ (function () {
             return true;
         };
         this.GetFileCount = function (element) {
-            var files = null;
-            if (element instanceof HTMLInputElement) {
-                files = element.files;
-            }
-            else {
-                var dataTransfer = _this.elementDataTransfers.get(element);
-                if (dataTransfer) {
-                    files = dataTransfer.files;
-                }
-            }
+            var files = _this.GetFiles(element);
             if (!files) {
                 return -1;
             }
@@ -47,16 +38,7 @@ var FileReaderComponent = /** @class */ (function () {
             }
         };
         this.GetFileInfoFromElement = function (element, index, property) {
-            var files = null;
-            if (element instanceof HTMLInputElement) {
-                files = element.files;
-            }
-            else {
-                var dataTransfer = _this.elementDataTransfers.get(element);
-                if (dataTransfer) {
-                    files = dataTransfer.files;
-                }
-            }
+            var files = _this.GetFiles(element);
             if (!files) {
                 return null;
             }
@@ -70,16 +52,7 @@ var FileReaderComponent = /** @class */ (function () {
             return delete (_this.fileStreams[fileRef]);
         };
         this.OpenRead = function (element, fileIndex) {
-            var files = null;
-            if (element instanceof HTMLInputElement) {
-                files = element.files;
-            }
-            else {
-                var dataTransfer = _this.elementDataTransfers.get(element);
-                if (dataTransfer) {
-                    files = dataTransfer.files;
-                }
-            }
+            var files = _this.GetFiles(element);
             if (!files) {
                 throw 'No FileList available. Is this element a reference to an input of type="file"?';
             }
@@ -148,6 +121,19 @@ var FileReaderComponent = /** @class */ (function () {
             });
         };
     }
+    FileReaderComponent.prototype.GetFiles = function (element) {
+        var files = null;
+        if (element instanceof HTMLInputElement) {
+            files = element.files;
+        }
+        else {
+            var dataTransfer = this.elementDataTransfers.get(element);
+            if (dataTransfer) {
+                files = dataTransfer.files;
+            }
+        }
+        return files;
+    };
     FileReaderComponent.prototype.GetFileInfoFromFile = function (file) {
         var result = {
             lastModified: file.lastModified,

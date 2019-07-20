@@ -56,7 +56,7 @@ event.preventDefault();
         return true;
     }
 
-    public GetFileCount = (element: HTMLElement): number => {
+    private GetFiles(element: HTMLElement): FileList {
         var files: FileList = null;
         if (element instanceof HTMLInputElement) {
             files = (element as HTMLInputElement).files;
@@ -66,6 +66,11 @@ event.preventDefault();
                 files = dataTransfer.files;
             }
         }
+        return files;
+    }
+
+    public GetFileCount = (element: HTMLElement): number => {
+        const files = this.GetFiles(element);
         if (!files) {
             return -1;
         }
@@ -82,15 +87,7 @@ event.preventDefault();
     };
 
     public GetFileInfoFromElement = (element: HTMLElement, index: number, property: string): IFileInfo => {
-        var files: FileList = null;
-        if (element instanceof HTMLInputElement) {
-            files = (element as HTMLInputElement).files;
-        } else {
-            const dataTransfer = this.elementDataTransfers.get(element);
-            if (dataTransfer) {
-                files = dataTransfer.files;
-            }
-        }
+        const files = this.GetFiles(element);
         if (!files) {
             return null;
         }
@@ -119,15 +116,7 @@ event.preventDefault();
     }
 
     public OpenRead = (element: HTMLElement, fileIndex: number): number => {
-        var files: FileList = null;
-        if (element instanceof HTMLInputElement) {
-            files = (element as HTMLInputElement).files;
-        } else {
-            const dataTransfer = this.elementDataTransfers.get(element);
-            if (dataTransfer) {
-                files = dataTransfer.files;
-            }
-        }
+        const files = this.GetFiles(element);
         if (!files) {
             throw 'No FileList available. Is this element a reference to an input of type="file"?';
         }
