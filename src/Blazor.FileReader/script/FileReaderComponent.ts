@@ -37,7 +37,7 @@ class FileReaderComponent {
 
     private newFileStreamReference: number = 0;
     private readonly fileStreams: { [reference: number]: File } = {};
-    private readonly dragElements: Map<HTMLElement, object> = new Map();
+    private readonly dragElements: Map<HTMLElement, EventListenerOrEventListenerObject> = new Map();
     private readonly elementDataTransfers: Map<HTMLElement, DataTransfer> = new Map();
 
     public RegisterDropEvents = (element: HTMLElement): boolean => {
@@ -53,6 +53,16 @@ event.preventDefault();
 
         this.dragElements.set(element, handler);
         element.addEventListener("drop", handler);
+        return true;
+    }
+
+    public UnregisterDropEvents = (element: HTMLElement): boolean => {
+        const handler = this.dragElements.get(element);
+        if (handler) {
+            element.removeEventListener("drop", handler);
+        }
+        this.elementDataTransfers.delete(element);
+        this.dragElements.delete(element);
         return true;
     }
 

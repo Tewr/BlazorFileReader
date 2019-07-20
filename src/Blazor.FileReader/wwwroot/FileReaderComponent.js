@@ -7,7 +7,7 @@ var FileReaderComponent = /** @class */ (function () {
         this.fileStreams = {};
         this.dragElements = new Map();
         this.elementDataTransfers = new Map();
-        this.RegisterDrop = function (element) {
+        this.RegisterDropEvents = function (element) {
             var handler = function (ev) {
                 event.preventDefault();
                 if (ev.target instanceof HTMLElement) {
@@ -19,6 +19,15 @@ var FileReaderComponent = /** @class */ (function () {
             };
             _this.dragElements.set(element, handler);
             element.addEventListener("drop", handler);
+            return true;
+        };
+        this.UnregisterDropEvents = function (element) {
+            var handler = _this.dragElements.get(element);
+            if (handler) {
+                element.removeEventListener("drop", handler);
+            }
+            _this.elementDataTransfers.delete(element);
+            _this.dragElements.delete(element);
             return true;
         };
         this.GetFileCount = function (element) {
