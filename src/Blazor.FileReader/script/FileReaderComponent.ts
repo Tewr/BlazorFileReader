@@ -37,25 +37,72 @@ class FileReaderComponent {
 
     private newFileStreamReference: number = 0;
     private readonly fileStreams: { [reference: number]: File } = {};
+    private readonly dragElements: Map<HTMLElement, EventListenerOrEventListenerObject> = new Map();
+    private readonly elementDataTransfers: Map<HTMLElement, DataTransfer> = new Map();
 
-    public GetFileCount(element: HTMLInputElement): number {
-        if (!element.files) {
+    public RegisterDropEvents = (element: HTMLElement): boolean => {
+        const handler = (ev: DragEvent) => {
+event.preventDefault();
+            if (ev.target instanceof HTMLElement) {
+                this.elementDataTransfers.set(ev.target, ev.dataTransfer);
+                // Note that dragstart and dragend events are not fired 
+                // when dragging a file into the browser from the OS.
+                ev.target.ondragend(ev);
+            }
+        };
+
+        this.dragElements.set(element, handler);
+        element.addEventListener("drop", handler);
+        return true;
+    }
+
+    public UnregisterDropEvents = (element: HTMLElement): boolean => {
+        const handler = this.dragElements.get(element);
+        if (handler) {
+            element.removeEventListener("drop", handler);
+        }
+        this.elementDataTransfers.delete(element);
+        this.dragElements.delete(element);
+        return true;
+    }
+
+    private GetFiles(element: HTMLElement): FileList {
+        var files: FileList = null;
+        if (element instanceof HTMLInputElement) {
+            files = (element as HTMLInputElement).files;
+        } else {
+            const dataTransfer = this.elementDataTransfers.get(element);
+            if (dataTransfer) {
+                files = dataTransfer.files;
+            }
+        }
+        return files;
+    }
+
+    public GetFileCount = (element: HTMLElement): number => {
+        const files = this.GetFiles(element);
+        if (!files) {
             return -1;
         }
-        const result = element.files.length;
+        const result = files.length;
         return result;
     }
 
-    public ClearValue(input: HTMLInputElement) {
-        input.value = null;
+    public ClearValue = (element: HTMLInputElement) => {
+        if (element instanceof HTMLInputElement) {
+            element.value = null;
+        } else {
+            this.elementDataTransfers.delete(element);
+        }
     };
 
-    public GetFileInfoFromElement = (element: HTMLInputElement, index: number, property: string): IFileInfo => {
-        if (!element.files) {
+    public GetFileInfoFromElement = (element: HTMLElement, index: number, property: string): IFileInfo => {
+        const files = this.GetFiles(element);
+        if (!files) {
             return null;
         }
 
-        const file = element.files.item(index);
+        const file = files.item(index);
         if (!file) {
             return null;
         }
@@ -78,12 +125,12 @@ class FileReaderComponent {
         return result;
     }
 
-    public OpenRead = (element: HTMLInputElement, fileIndex: number): number => {
-
-        if (!element.files) {
+    public OpenRead = (element: HTMLElement, fileIndex: number): number => {
+        const files = this.GetFiles(element);
+        if (!files) {
             throw 'No FileList available. Is this element a reference to an input of type="file"?';
         }
-        const file = element.files.item(fileIndex);
+        const file = files.item(fileIndex);
         if (!file) {
             throw `No file with index ${fileIndex} available.`;
         }

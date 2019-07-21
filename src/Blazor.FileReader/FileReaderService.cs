@@ -18,7 +18,7 @@ namespace Blazor.FileReader
     {
         Task EnsureInitializedAsync();
 
-        IFileReaderRef CreateReference(ElementRef inputFileElement);
+        IFileReaderRef CreateReference(ElementRef element);
     }
 
     public class FileReaderService : IFileReaderService
@@ -35,9 +35,9 @@ namespace Blazor.FileReader
 
         public IFileReaderServiceOptions Options { get; }
 
-        public IFileReaderRef CreateReference(ElementRef inputFileElement)
+        public IFileReaderRef CreateReference(ElementRef element)
         {
-            return new FileReaderRef(inputFileElement, this._fileReaderJsInterop);
+            return new FileReaderRef(element, this._fileReaderJsInterop);
         }
 
         public async Task EnsureInitializedAsync()

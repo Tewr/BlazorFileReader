@@ -10,6 +10,18 @@ namespace Blazor.FileReader
     public interface IFileReaderRef
     {
         /// <summary>
+        /// Register for drop events on the source element
+        /// </summary>
+        /// <returns></returns>
+        Task RegisterDropEventsAsync();
+
+        /// <summary>
+        /// Unregister drop events on the source element
+        /// </summary>
+        /// <returns></returns>
+        Task UnregisterDropEventsAsync();
+
+        /// <summary>
         /// Clears any value set on the source element
         /// </summary>
         /// <returns></returns>
@@ -82,6 +94,9 @@ namespace Blazor.FileReader
         public async Task<IEnumerable<IFileReference>> EnumerateFilesAsync() => 
             Enumerable.Range(0, Math.Max(0, await this.FileReaderJsInterop.GetFileCount(this.ElementRef)))
                 .Select(index => (IFileReference)new FileReference(this, index));
+
+        public async Task RegisterDropEventsAsync() => await this.FileReaderJsInterop.RegisterDropEvents(this.ElementRef);
+        public async Task UnregisterDropEventsAsync() => await this.FileReaderJsInterop.UnregisterDropEvents(this.ElementRef);
 
         public async Task ClearValue() 
             => await this.FileReaderJsInterop.ClearValue(this.ElementRef);
