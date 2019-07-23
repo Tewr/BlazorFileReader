@@ -14,18 +14,18 @@ and [FileReader](https://developer.mozilla.org/en-US/docs/Web/API/FileReader).
 
 Originally built for Wasm ("Client-side" Blazor), Server-side Blazor (previously aka RazorComponents) is also supported as of version 0.7.1.
 
-Here is a [Live demo](https://tewr.github.io/BlazorFileReader/) that contains the output of [the wasm demo project](src/Blazor.FileReader.Wasm.Demo). Currently, its a build based on ```v0.5.1```.
+Here is a [Live demo](https://tewr.github.io/BlazorFileReader/) that contains the output of [the wasm demo project](src/Demo/Blazor.FileReader.Wasm.Demo). Currently, its a build based on ```v0.5.1```.
 
 ## Installation
 
 ```0.12.0``` is a pre-release version. First of all, make sure your environment is up to date with the appropriate SDK and VS2019 preview 4. See [this article](https://devblogs.microsoft.com/aspnet/asp-net-core-and-blazor-updates-in-net-core-3-0-preview-6/) for more details.
 Depending on your [project type](https://docs.microsoft.com/en-us/aspnet/core/razor-components/faq?view=aspnetcore-3.0), use one of the two examples below. 
-For a complete use-case, see the [client](src/Blazor.FileReader.Wasm.Demo) or [server-side](/src/Blazor.FileReader.ServerSide.Demo) demo projects.
+For a complete use-case, see the [client](src/Demo/Blazor.FileReader.Wasm.Demo) or [server-side](/src/Demo/Blazor.FileReader.ServerSide.Demo) demo projects.
 
 ### Client-side / Wasm Project type
 Use [Nuget](https://www.nuget.org/packages/Tewr.Blazor.FileReader): ```Install-Package Tewr.Blazor.FileReader```
 
-Setup IoC for ```IFileReaderService```as in ([Startup.cs](src/Blazor.FileReader.Wasm.Demo/Startup.cs#L11)):
+Setup IoC for ```IFileReaderService```as in ([Startup.cs](src/Demo/Blazor.FileReader.Wasm.Demo/Startup.cs#L11)):
 
 ```cs
 services.AddFileReaderService();
@@ -36,7 +36,7 @@ services.AddFileReaderService();
 
 Use [Nuget](https://www.nuget.org/packages/Tewr.Blazor.FileReader): ```Install-Package Tewr.Blazor.FileReader```
 
-Setup IoC for  ```IFileReaderService``` as in the example ([Startup.cs](src/Blazor.FileReader.ServerSideBlazor.Demo/Startup.cs#L16)):
+Setup IoC for  ```IFileReaderService``` as in the example ([Startup.cs](src/Demo/Blazor.FileReader.ServerSideBlazor.Demo/Startup.cs#L16)):
 
 ```cs
 services.AddFileReaderService(options => options.InitializeOnFirstCall = true);
@@ -45,7 +45,7 @@ services.AddFileReaderService(options => options.InitializeOnFirstCall = true);
 
 ## Usage in a Blazor View
 
-The code for views looks the same for both [client](src/Blazor.FileReader.Wasm.Demo)- and [server-side](/src/Blazor.FileReader.ServerSide.Demo) projects.
+The code for views looks the same for both [client](src/Demo/Blazor.FileReader.Wasm.Demo)- and [server-side](/src/Demo/Blazor.FileReader.ServerSide.Demo) projects.
 
 ```cs
 @page "/MyPage"
