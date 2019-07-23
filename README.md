@@ -7,7 +7,7 @@
 </p>
 
 # BlazorFileReader
-Blazor library exposing read-only file streams in [Blazor](https://github.com/aspnet/Blazor). 
+Blazor library exposing read-only file streams in [Blazor](https://github.com/aspnet/AspNetCore/tree/master/src/Components). 
 
 This library exposes read-only streams using ```<input type="file" />```
 and [FileReader](https://developer.mozilla.org/en-US/docs/Web/API/FileReader).
