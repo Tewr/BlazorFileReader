@@ -1,0 +1,59 @@
+﻿@using System.IO;
+@inject IFileReaderService fileReaderService;
+<h1>Hello, files!</h1>
+
+Welcome to your new filestreaming app.<br />
+This demo reads a file without doing anything particular with it.<br />
+There are other demos in the menu.<br /><br />
+
+<input type="file" @ref="@inputElement" />
+<button @onclick="@ReadFile" class="btn btn-primary">Read file</button>
+<button @onclick="@ClearFile" class="btn btn-primary">Clear</button>
+
+<br /><br />
+<textarea style="max-width: 100%;" cols="50" rows="20">@Output</textarea>
+@code {
+    ElementRef inputElement;
+
+    string Output { get; set; }
+
+    public async Task ClearFile()
+    {
+        await fileReaderService.CreateReference(inputElement).ClearValue();
+    }
+
+    public async Task ReadFile()
+    {
+        Output = string.Empty;
+        this.StateHasChanged();
+        var nl = Environment.NewLine;
+        foreach (var file in await fileReaderService.CreateReference(inputElement).EnumerateFilesAsync())
+        {
+            var fileInfo = await file.ReadFileInfoAsync();
+            Output += $"{nameof(IFileInfo)}.{nameof(fileInfo.Name)}: {fileInfo.Name}{nl}";
+            Output += $"{nameof(IFileInfo)}.{nameof(fileInfo.Size)}: {fileInfo.Size}{nl}";
+            Output += $"{nameof(IFileInfo)}.{nameof(fileInfo.Type)}: {fileInfo.Type}{nl}";
+            Output += $"{nameof(IFileInfo)}.{nameof(fileInfo.LastModifiedDate)}: {fileInfo.LastModifiedDate?.ToString() ?? "(N/A)"}{nl}";
+            Output += $"Reading file...";
+            this.StateHasChanged();
+
+            using (var fs = await file.OpenReadAsync())
+            {
+                var bufferSize = 4096;
+                var buffer = new byte[bufferSize];
+                int count;
+                while ((count = await fs.ReadAsync(buffer, 0, buffer.Length)) != 0)
+                {
+                    Output += $"Read {count} bytes. {fs.Position} / {fs.Length}{nl}";
+                    this.StateHasChanged();
+                }
+                Output += $"Done reading file {fileInfo.Name}{nl}.";
+            }
+            this.StateHasChanged();
+        }
+
+    }
+}
+
+
+

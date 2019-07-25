@@ -29,6 +29,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blazor.FileReader.WasmTestA
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blazor.FileReader.WasmTestApp.Server", "Tests\E2ETestApplications\Blazor.FileReader.WasmTestApp.Server\Blazor.FileReader.WasmTestApp.Server.csproj", "{E071BF86-678D-45D2-B4D2-5414AAE6E734}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Blazor.FileReader.Demo.Common", "Demo\Blazor.FileReader.Demo.Common\Blazor.FileReader.Demo.Common.csproj", "{6D6A6678-F90F-4EA3-94A7-A930D27F47E0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -95,6 +97,12 @@ Global
 		{E071BF86-678D-45D2-B4D2-5414AAE6E734}.Ghpages|Any CPU.Build.0 = Debug|Any CPU
 		{E071BF86-678D-45D2-B4D2-5414AAE6E734}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E071BF86-678D-45D2-B4D2-5414AAE6E734}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6D6A6678-F90F-4EA3-94A7-A930D27F47E0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6D6A6678-F90F-4EA3-94A7-A930D27F47E0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6D6A6678-F90F-4EA3-94A7-A930D27F47E0}.Ghpages|Any CPU.ActiveCfg = Debug|Any CPU
+		{6D6A6678-F90F-4EA3-94A7-A930D27F47E0}.Ghpages|Any CPU.Build.0 = Debug|Any CPU
+		{6D6A6678-F90F-4EA3-94A7-A930D27F47E0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6D6A6678-F90F-4EA3-94A7-A930D27F47E0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -110,6 +118,7 @@ Global
 		{20935500-FE99-4660-83F6-4F58D48E4464} = {3B98DC81-24B2-4EBF-A629-6A2D7948341C}
 		{20017041-698E-4635-B193-5E2F8DB2121B} = {3B98DC81-24B2-4EBF-A629-6A2D7948341C}
 		{E071BF86-678D-45D2-B4D2-5414AAE6E734} = {3B98DC81-24B2-4EBF-A629-6A2D7948341C}
+		{6D6A6678-F90F-4EA3-94A7-A930D27F47E0} = {8AA482CE-0130-43A1-84BC-92215AF25AED}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7BCBB258-C07A-4039-838A-09F3B45F7E58}

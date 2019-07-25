@@ -38,21 +38,21 @@ class FileReaderComponent {
     private newFileStreamReference: number = 0;
     private readonly fileStreams: { [reference: number]: File } = {};
     private readonly dragElements: Map<HTMLElement, EventListenerOrEventListenerObject> = new Map();
-    private readonly elementDataTransfers: Map<HTMLElement, DataTransfer> = new Map();
+    private readonly elementDataTransfers: Map<HTMLElement, FileList> = new Map();
 
     public RegisterDropEvents = (element: HTMLElement): boolean => {
+
         const handler = (ev: DragEvent) => {
-event.preventDefault();
+
+            this.PreventDefaultHandler(ev);
             if (ev.target instanceof HTMLElement) {
-                this.elementDataTransfers.set(ev.target, ev.dataTransfer);
-                // Note that dragstart and dragend events are not fired 
-                // when dragging a file into the browser from the OS.
-                ev.target.ondragend(ev);
+                this.elementDataTransfers.set(ev.target, ev.dataTransfer.files);
             }
         };
 
         this.dragElements.set(element, handler);
         element.addEventListener("drop", handler);
+        element.addEventListener("dragover", this.PreventDefaultHandler);
         return true;
     }
 
@@ -60,6 +60,7 @@ event.preventDefault();
         const handler = this.dragElements.get(element);
         if (handler) {
             element.removeEventListener("drop", handler);
+            element.removeEventListener("dragover", this.PreventDefaultHandler);
         }
         this.elementDataTransfers.delete(element);
         this.dragElements.delete(element);
@@ -73,7 +74,7 @@ event.preventDefault();
         } else {
             const dataTransfer = this.elementDataTransfers.get(element);
             if (dataTransfer) {
-                files = dataTransfer.files;
+                files = dataTransfer;
             }
         }
         return files;
@@ -218,6 +219,10 @@ event.preventDefault();
                 reject(e);
             }
         });
+    }
+
+    private PreventDefaultHandler = (ev: DragEvent) => {
+        ev.preventDefault();
     }
 }
 

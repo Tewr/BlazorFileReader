@@ -9,26 +9,28 @@ var FileReaderComponent = /** @class */ (function () {
         this.elementDataTransfers = new Map();
         this.RegisterDropEvents = function (element) {
             var handler = function (ev) {
-                event.preventDefault();
+                _this.PreventDefaultHandler(ev);
                 if (ev.target instanceof HTMLElement) {
-                    _this.elementDataTransfers.set(ev.target, ev.dataTransfer);
-                    // Note that dragstart and dragend events are not fired 
-                    // when dragging a file into the browser from the OS.
-                    ev.target.ondragend(ev);
+                    _this.elementDataTransfers.set(ev.target, ev.dataTransfer.files);
                 }
             };
             _this.dragElements.set(element, handler);
             element.addEventListener("drop", handler);
+            element.addEventListener("dragover", _this.PreventDefaultHandler);
             return true;
         };
         this.UnregisterDropEvents = function (element) {
             var handler = _this.dragElements.get(element);
             if (handler) {
                 element.removeEventListener("drop", handler);
+                element.removeEventListener("dragover", _this.PreventDefaultHandler);
             }
             _this.elementDataTransfers.delete(element);
             _this.dragElements.delete(element);
             return true;
+        };
+        this.PreventDefaultHandler = function (ev) {
+            ev.preventDefault();
         };
         this.GetFileCount = function (element) {
             var files = _this.GetFiles(element);
@@ -138,7 +140,7 @@ var FileReaderComponent = /** @class */ (function () {
         else {
             var dataTransfer = this.elementDataTransfers.get(element);
             if (dataTransfer) {
-                files = dataTransfer.files;
+                files = dataTransfer;
             }
         }
         return files;
