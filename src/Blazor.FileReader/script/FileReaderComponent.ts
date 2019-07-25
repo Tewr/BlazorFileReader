@@ -42,7 +42,7 @@ class FileReaderComponent {
 
     public RegisterDropEvents = (element: HTMLElement): boolean => {
         const handler = (ev: DragEvent) => {
-event.preventDefault();
+            ev.preventDefault();
             if (ev.target instanceof HTMLElement) {
                 this.elementDataTransfers.set(ev.target, ev.dataTransfer);
                 // Note that dragstart and dragend events are not fired 
