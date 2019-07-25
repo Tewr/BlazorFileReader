@@ -1,0 +1,111 @@
+﻿@using System.IO;
+@inject IFileReaderService fileReaderService;
+<h1>Hello, dropped files!</h1>
+
+Welcome to your new filestreaming app.<br />
+This demo reads files that was dropped in without doing anything particular with it.
+<br /><br />
+<style>
+    .droptarget {
+        display:block;
+        padding: 20px;
+        margin-bottom: 10px;
+        border: 1px dashed black;
+        border-radius: 5px;
+    }
+
+    .droptarget-drag {
+        border-color: orangered;
+        font-weight: bold;
+    }
+
+</style>
+<div class="@DropClass" 
+     @ref="@dropTargetElement" 
+     @ondrop="@OnDrop" 
+     @ondragenter="@(e => this.DropClass += " droptarget-drag")" 
+     @ondragleave="@(e => this.DropClass = _dropClass)">
+    Drop Files here.
+    @foreach (var fileInfo in FileList) {
+        <br/>@fileInfo.Name
+    }
+</div>
+<button @onclick="@ReadFile" class="btn btn-primary">Read file</button>
+<button @onclick="@ClearFile" class="btn btn-primary">Clear</button>
+
+<br /><br />
+<textarea style="max-width: 100%;" cols="50" rows="20">@Output</textarea>
+@code {
+    ElementRef dropTargetElement;
+    IFileReaderRef dropReference;
+
+    const string _dropClass = "droptarget";
+    string DropClass { get; set; } = _dropClass;
+    string Output { get; set; }
+    List<IFileInfo> FileList { get; } = new List<IFileInfo>();
+
+    protected override async Task OnAfterRenderAsync()
+    {
+        dropReference = fileReaderService.CreateReference(dropTargetElement);
+        await dropReference.RegisterDropEventsAsync();
+    }
+
+    public async Task ClearFile()
+    {
+        await dropReference.ClearValue();
+        await this.RefreshFileList();
+    }
+
+    public async Task OnDrop(UIDragEventArgs e)
+    {
+        Output += "Dropped a file.";
+        this.DropClass = _dropClass;
+        this.StateHasChanged();
+        await this.RefreshFileList();
+    }
+
+    private async Task RefreshFileList() {
+        this.FileList.Clear();
+        foreach (var file in await dropReference.EnumerateFilesAsync())
+        {
+            var fileInfo = await file.ReadFileInfoAsync();
+            this.FileList.Add(fileInfo);
+        }
+        this.StateHasChanged();
+    }
+
+    public async Task ReadFile()
+    {
+        Output = string.Empty;
+        this.StateHasChanged();
+        var nl = Environment.NewLine;
+        foreach (var file in await dropReference.EnumerateFilesAsync())
+        {
+            var fileInfo = await file.ReadFileInfoAsync();
+            Output += $"{nameof(IFileInfo)}.{nameof(fileInfo.Name)}: {fileInfo.Name}{nl}";
+            Output += $"{nameof(IFileInfo)}.{nameof(fileInfo.Size)}: {fileInfo.Size}{nl}";
+            Output += $"{nameof(IFileInfo)}.{nameof(fileInfo.Type)}: {fileInfo.Type}{nl}";
+            Output += $"{nameof(IFileInfo)}.{nameof(fileInfo.LastModifiedDate)}: {fileInfo.LastModifiedDate?.ToString() ?? "(N/A)"}{nl}";
+            Output += $"Reading file...";
+            this.StateHasChanged();
+
+            using (var fs = await file.OpenReadAsync())
+            {
+                var bufferSize = 4096;
+                var buffer = new byte[bufferSize];
+                int count;
+                while ((count = await fs.ReadAsync(buffer, 0, buffer.Length)) != 0)
+                {
+                    Output += $"Read {count} bytes. {fs.Position} / {fs.Length}{nl}";
+                    this.StateHasChanged();
+                }
+                Output += $"Done reading file {fileInfo.Name}{nl}.";
+            }
+            this.StateHasChanged();
+        }
+
+    }
+}
+
+
+

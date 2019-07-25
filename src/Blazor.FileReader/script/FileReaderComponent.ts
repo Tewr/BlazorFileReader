@@ -38,21 +38,21 @@ class FileReaderComponent {
     private newFileStreamReference: number = 0;
     private readonly fileStreams: { [reference: number]: File } = {};
     private readonly dragElements: Map<HTMLElement, EventListenerOrEventListenerObject> = new Map();
-    private readonly elementDataTransfers: Map<HTMLElement, DataTransfer> = new Map();
+    private readonly elementDataTransfers: Map<HTMLElement, FileList> = new Map();
 
     public RegisterDropEvents = (element: HTMLElement): boolean => {
+
         const handler = (ev: DragEvent) => {
-            ev.preventDefault();
+
+            this.PreventDefaultHandler(ev);
             if (ev.target instanceof HTMLElement) {
-                this.elementDataTransfers.set(ev.target, ev.dataTransfer);
-                // Note that dragstart and dragend events are not fired 
-                // when dragging a file into the browser from the OS.
-                ev.target.ondragend(ev);
+                this.elementDataTransfers.set(ev.target, ev.dataTransfer.files);
             }
         };
 
         this.dragElements.set(element, handler);
         element.addEventListener("drop", handler);
+        element.addEventListener("dragover", this.PreventDefaultHandler);
         return true;
     }
 
@@ -60,6 +60,7 @@ class FileReaderComponent {
         const handler = this.dragElements.get(element);
         if (handler) {
             element.removeEventListener("drop", handler);
+            element.removeEventListener("dragover", this.PreventDefaultHandler);
         }
         this.elementDataTransfers.delete(element);
         this.dragElements.delete(element);
@@ -73,7 +74,7 @@ class FileReaderComponent {
         } else {
             const dataTransfer = this.elementDataTransfers.get(element);
             if (dataTransfer) {
-                files = dataTransfer.files;
+                files = dataTransfer;
             }
         }
         return files;
@@ -88,12 +89,14 @@ class FileReaderComponent {
         return result;
     }
 
-    public ClearValue = (element: HTMLInputElement) => {
+    public ClearValue = (element: HTMLInputElement): number => {
         if (element instanceof HTMLInputElement) {
             element.value = null;
         } else {
             this.elementDataTransfers.delete(element);
         }
+
+        return 0;
     };
 
     public GetFileInfoFromElement = (element: HTMLElement, index: number, property: string): IFileInfo => {
@@ -128,7 +131,7 @@ class FileReaderComponent {
     public OpenRead = (element: HTMLElement, fileIndex: number): number => {
         const files = this.GetFiles(element);
         if (!files) {
-            throw 'No FileList available. Is this element a reference to an input of type="file"?';
+            throw 'No FileList available.';
         }
         const file = files.item(fileIndex);
         if (!file) {
@@ -139,7 +142,7 @@ class FileReaderComponent {
         this.fileStreams[fileRef] = file;
         return fileRef;
     }
-
+    /*
     public ReadFileUnmarshalled = (dotNetArrayPtr: any, readFileParamsPtr: any): boolean => {
         const readFileParams: IReadFileParams = JSON.parse(Blazor.platform.toJavaScriptString(readFileParamsPtr));
         const callBack = (bytesRead: number, exception: any) => 
@@ -194,7 +197,7 @@ class FileReaderComponent {
                 reject(e);
             }
         });
-    }
+    }*/
 
     public ReadFileMarshalledAsync = (readFileParams: IReadFileParams): Promise<string> => {
         
@@ -218,6 +221,10 @@ class FileReaderComponent {
                 reject(e);
             }
         });
+    }
+
+    private PreventDefaultHandler = (ev: DragEvent) => {
+        ev.preventDefault();
     }
 }
 
