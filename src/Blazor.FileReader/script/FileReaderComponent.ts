@@ -89,12 +89,14 @@ class FileReaderComponent {
         return result;
     }
 
-    public ClearValue = (element: HTMLInputElement) => {
+    public ClearValue = (element: HTMLInputElement): number => {
         if (element instanceof HTMLInputElement) {
             element.value = null;
         } else {
             this.elementDataTransfers.delete(element);
         }
+
+        return 0;
     };
 
     public GetFileInfoFromElement = (element: HTMLElement, index: number, property: string): IFileInfo => {
@@ -129,7 +131,7 @@ class FileReaderComponent {
     public OpenRead = (element: HTMLElement, fileIndex: number): number => {
         const files = this.GetFiles(element);
         if (!files) {
-            throw 'No FileList available. Is this element a reference to an input of type="file"?';
+            throw 'No FileList available.';
         }
         const file = files.item(fileIndex);
         if (!file) {
@@ -140,7 +142,7 @@ class FileReaderComponent {
         this.fileStreams[fileRef] = file;
         return fileRef;
     }
-
+    /*
     public ReadFileUnmarshalled = (dotNetArrayPtr: any, readFileParamsPtr: any): boolean => {
         const readFileParams: IReadFileParams = JSON.parse(Blazor.platform.toJavaScriptString(readFileParamsPtr));
         const callBack = (bytesRead: number, exception: any) => 
@@ -195,7 +197,7 @@ class FileReaderComponent {
                 reject(e);
             }
         });
-    }
+    }*/
 
     public ReadFileMarshalledAsync = (readFileParams: IReadFileParams): Promise<string> => {
         
