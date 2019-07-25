@@ -10,7 +10,7 @@
 Blazor library exposing read-only file streams in [Blazor](https://github.com/aspnet/AspNetCore/tree/master/src/Components). 
 
 This library exposes read-only streams using ```<input type="file" />```
-and [FileReader](https://developer.mozilla.org/en-US/docs/Web/API/FileReader).
+and [FileReader](https://developer.mozilla.org/en-US/docs/Web/API/FileReader). Drag and drop may also be used to initialize streams.
 
 Originally built for Wasm ("Client-side" Blazor), Server-side Blazor (previously aka RazorComponents) is also supported as of version 0.7.1.
 
@@ -45,7 +45,7 @@ services.AddFileReaderService(options => options.InitializeOnFirstCall = true);
 
 ## Usage in a Blazor View
 
-The code for views looks the same for both [client](src/Demo/Blazor.FileReader.Wasm.Demo)- and [server-side](/src/Demo/Blazor.FileReader.ServerSide.Demo) projects.
+The code for views looks the same for both [client](src/Demo/Blazor.FileReader.Wasm.Demo)- and [server-side](/src/Demo/Blazor.FileReader.ServerSide.Demo) projects. The demo projects also contains [a drag and drop example](src/Demo/Blazor.FileReader.Demo.Common/DragnDropCommon.razor).
 
 ```cs
 @page "/MyPage"
@@ -89,6 +89,9 @@ The ```master``` branch uses ```v3.0.0-preview7.19365.7``` of Blazor.
 Blazor is an ~~experimental~~ preview project, not ready for production use. Just as Blazor API frequently has breaking changes, so does the API of this library.
 
 ### Version notes
+
+Version ```0.13.19207``` Fixes a regression with the ```ClearValue``` method and adds some essential events to the drag and drop api.
+
 Version ```0.13.19206``` adds support for sdk ```3.0.0-preview7.19365.7```. New feature: Drag and drop (contribution by [@catlan](https://github.com/catlan))
 
 Version ```0.12.19186``` fixes an issue with server-side setup which was only visible when having multiple users.
