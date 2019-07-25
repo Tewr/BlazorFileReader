@@ -84,11 +84,12 @@ The code for views looks the same for both [client](src/Demo/Blazor.FileReader.W
 To use the code in this demo in your own project you need to use at least version 
 ```0.4.0``` of blazor (see branch 0.4.0). 
 
-The ```master``` branch uses ```v3.0.0-preview6.19307.2``` of Blazor.
+The ```master``` branch uses ```v3.0.0-preview7.19365.7``` of Blazor.
 
 Blazor is an ~~experimental~~ preview project, not ready for production use. Just as Blazor API frequently has breaking changes, so does the API of this library.
 
 ### Version notes
+Version ```0.13.19206``` adds support for sdk ```3.0.0-preview7.19365.7```. New feature: Drag and drop (contribution by [@catlan](https://github.com/catlan))
 
 Version ```0.12.19186``` fixes an issue with server-side setup which was only visible when having multiple users.
 
