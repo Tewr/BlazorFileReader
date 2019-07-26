@@ -36,7 +36,7 @@ services.AddFileReaderService();
 
 Use [Nuget](https://www.nuget.org/packages/Tewr.Blazor.FileReader): ```Install-Package Tewr.Blazor.FileReader```
 
-Setup IoC for  ```IFileReaderService``` as in the example ([Startup.cs](src/Demo/Blazor.FileReader.ServerSideBlazor.Demo/Startup.cs#L16)):
+Setup IoC for  ```IFileReaderService``` as in the example ([Startup.cs](src/Demo/Blazor.FileReader.ServerSide.Demo/Startup.cs#L16)):
 
 ```cs
 services.AddFileReaderService(options => options.InitializeOnFirstCall = true);
