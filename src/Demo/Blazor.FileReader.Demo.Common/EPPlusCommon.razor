@@ -1,0 +1,115 @@
+@using System.IO;
+@inject IFileReaderService fileReaderService
+<h1>Hello, Excel!</h1>
+
+This demo reads Excel (xlsx) files using <a href="https://github.com/JanKallman/EPPlus">EPPlus</a>.
+                                         <br />
+<strong>Note:</strong> As EPPlus has native dependencies, this demo only compiles if the linker is turned off,
+using the <code>&lt;BlazorLinkOnBuild&gt;false&lt;/BlazorLinkOnBuild&gt;</code> directive in the <code>.csproj</code> file.
+
+<br />
+<br />
+
+<input type="file" @ref="@sourceElement" Accept=".xlsx" />
+<button @onclick="@ReadFile" class="btn btn-primary">Import Excel file</button>
+<br />
+<br />
+<input type="checkbox" @bind="@FirstRowIsHeader" id="firstRowIsHeader" />
+<label for="firstRowIsHeader">Treat first row as header</label>
+<br />
+<br />
+<h3>Import results</h3>
+<p>@Message</p>
+<style>
+    .excel {
+        border: 1px solid black;
+    }
+
+        .excel td {
+            border: 1px solid black;
+            padding: 5px;
+        }
+
+        .excel th {
+            border: 2px solid black;
+            padding: 5px;
+            text-align: center;
+        }
+
+        .excel caption {
+            text-align: center;
+        }
+</style>
+@foreach (var table in Tables.Tables)
+{
+    <table class="excel">
+        <caption>@table.Name</caption>
+        @if (table.Header != null)
+        {
+            <thead>
+                <tr>
+                    @foreach (var cell in table.Header.Cells)
+                    {
+
+                        <th rowspan="@cell.Rowspan" colspan="@cell.Colspan">@cell.Value</th>
+                    }
+                </tr>
+            </thead>
+        }
+        <tbody>
+            @foreach (var row in table.Body)
+            {
+                <tr>
+                    @foreach (var cell in row.Cells)
+                    {
+                        <td rowspan="@cell.Rowspan" colspan="@cell.Colspan">@cell.Value</td>
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+@code {
+    ElementRef sourceElement;
+    IFileReaderRef Reader;
+
+    public string Message { get; set; }
+    public bool FirstRowIsHeader { get; set; }
+
+    EPPlusBuilder.TablesModel Tables = new EPPlusBuilder.TablesModel();
+
+    protected override void OnAfterRender()
+    {
+        Reader = fileReaderService.CreateReference(sourceElement);
+    }
+
+    public async Task ReadFile()
+    {
+        Message = string.Empty;
+        this.StateHasChanged();
+
+        var file = (await Reader.EnumerateFilesAsync()).FirstOrDefault();
+        if (file != null)
+        {
+            try
+            {
+                Message = "Reading file...";
+                this.StateHasChanged();
+                var fileInRam = await file.CreateMemoryStreamAsync(4096);
+                Message = "Parsing file...";
+                this.StateHasChanged();
+                using (var package = new OfficeOpenXml.ExcelPackage(fileInRam))
+                {
+                    Tables = EPPlusBuilder.Parse(package, FirstRowIsHeader);
+                }
+
+                this.StateHasChanged();
+                Message = "Done.";
+            }
+            catch (Exception e)
+            {
+                Message = e.ToString();
+            }
+        }
+    }
+}
