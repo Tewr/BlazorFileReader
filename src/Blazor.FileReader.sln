@@ -29,7 +29,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blazor.FileReader.WasmTestA
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blazor.FileReader.WasmTestApp.Server", "Tests\E2ETestApplications\Blazor.FileReader.WasmTestApp.Server\Blazor.FileReader.WasmTestApp.Server.csproj", "{E071BF86-678D-45D2-B4D2-5414AAE6E734}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Blazor.FileReader.Demo.Common", "Demo\Blazor.FileReader.Demo.Common\Blazor.FileReader.Demo.Common.csproj", "{6D6A6678-F90F-4EA3-94A7-A930D27F47E0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blazor.FileReader.Demo.Common", "Demo\Blazor.FileReader.Demo.Common\Blazor.FileReader.Demo.Common.csproj", "{6D6A6678-F90F-4EA3-94A7-A930D27F47E0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

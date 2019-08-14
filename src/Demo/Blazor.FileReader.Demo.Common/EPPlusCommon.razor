@@ -10,11 +10,11 @@ using the <code>&lt;BlazorLinkOnBuild&gt;false&lt;/BlazorLinkOnBuild&gt;</code> 
 <br />
 <br />
 
-<input type="file" @ref="@sourceElement" Accept=".xlsx" />
-<button @onclick="@ReadFile" class="btn btn-primary">Import Excel file</button>
+<input type="file" @ref:suppressField @ref=sourceElement Accept=".xlsx" />
+<button @onclick=ReadFile class="btn btn-primary">Import Excel file</button>
 <br />
 <br />
-<input type="checkbox" @bind="@FirstRowIsHeader" id="firstRowIsHeader" />
+<input type="checkbox" @bind=FirstRowIsHeader id="firstRowIsHeader" />
 <label for="firstRowIsHeader">Treat first row as header</label>
 <br />
 <br />
@@ -51,7 +51,7 @@ using the <code>&lt;BlazorLinkOnBuild&gt;false&lt;/BlazorLinkOnBuild&gt;</code> 
                     @foreach (var cell in table.Header.Cells)
                     {
 
-                        <th rowspan="@cell.Rowspan" colspan="@cell.Colspan">@cell.Value</th>
+                        <th @rowspan="cell.Rowspan" @colspan="cell.Colspan">@cell.Value</th>
                     }
                 </tr>
             </thead>
@@ -62,7 +62,7 @@ using the <code>&lt;BlazorLinkOnBuild&gt;false&lt;/BlazorLinkOnBuild&gt;</code> 
                 <tr>
                     @foreach (var cell in row.Cells)
                     {
-                        <td rowspan="@cell.Rowspan" colspan="@cell.Colspan">@cell.Value</td>
+                        <td @rowspan="cell.Rowspan" @colspan="cell.Colspan">@cell.Value</td>
                     }
                 </tr>
             }
@@ -70,7 +70,7 @@ using the <code>&lt;BlazorLinkOnBuild&gt;false&lt;/BlazorLinkOnBuild&gt;</code> 
     </table>
 }
 @code {
-    ElementRef sourceElement;
+    ElementReference sourceElement;
     IFileReaderRef Reader;
 
     public string Message { get; set; }

@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Blazor.Hosting;
-using Microsoft.Extensions.DependencyInjection;
 using System;
 
 namespace Blazor.FileReader.WasmTestApp.Client
