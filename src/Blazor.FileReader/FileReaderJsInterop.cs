@@ -14,13 +14,19 @@ namespace Blazor.FileReader
         private static readonly IReadOnlyDictionary<string, string> escapeScriptTextReplacements =
             new Dictionary<string, string> { { @"\", @"\\" }, { "\r", @"\r" }, { "\n", @"\n" }, { "'", @"\'" }, { "\"", @"\""" } };
         private bool _needsInitialization = false;
+        private readonly IFileReaderServiceOptions _options;
+
+        private static readonly object _bufferIdLock = new object();
+        private static readonly IDictionary<int, byte[]> buffers = new Dictionary<int, byte[]>();
+        private static int _nextBufferId = 0;
 
         internal IJSRuntime CurrentJSRuntime { get; }
 
-        public FileReaderJsInterop(IJSRuntime jsRuntime, bool initializeOnFirstCall)
+        public FileReaderJsInterop(IJSRuntime jsRuntime, IFileReaderServiceOptions options)
         {
             CurrentJSRuntime = jsRuntime;
-            _needsInitialization = initializeOnFirstCall;
+            _options = options;
+            _needsInitialization = options.InitializeOnFirstCall;
         }
 
         public async Task<bool> RegisterDropEvents(ElementRef elementReference)
@@ -80,8 +86,12 @@ namespace Blazor.FileReader
 
         private async Task<int> ReadFileAsync(int fileRef, byte[] buffer, long position, int count, CancellationToken cancellationToken)
         {
-            return await ReadFileMarshalledAsync(fileRef, buffer, position, count, 
-                cancellationToken);
+            if (this._options.UseWasmSharedBuffer)
+            {
+                return await ReadFileUnmarshalledAsync(fileRef, buffer, position, count, cancellationToken);
+            }
+
+            return await ReadFileMarshalledAsync(fileRef, buffer, position, count, cancellationToken);
         }
 
         private async Task<int> ReadFileMarshalledAsync(
@@ -101,6 +111,28 @@ namespace Blazor.FileReader
             }
 
             return bytesRead;
+        }
+
+        private async Task<int> ReadFileUnmarshalledAsync(
+            int fileRef, byte[] buffer, long position, int count,
+            CancellationToken cancellationToken)
+        {
+            var callBackId = 0;
+            lock (_bufferIdLock)
+            {
+                callBackId = _nextBufferId++;
+                buffers.Add(callBackId, buffer);
+            }
+            var bytesRead = await CurrentJSRuntime.InvokeAsync<long>(
+                $"FileReaderComponent.ReadFileUnmarshalledAsync",
+                new { position, count, fileRef, callBackId });
+
+            lock (_bufferIdLock)
+            {
+                buffers.Remove(callBackId);
+            }
+
+            return (int)bytesRead;
         }
 
         private async Task Initialize()
@@ -131,5 +163,13 @@ namespace Blazor.FileReader
             var bootStrapScript = $"(function(){{var d = document; var s = d.createElement('script'); s.src={blob}; d.head.appendChild(s); d.head.removeChild(s);}})();";
             return await CurrentJSRuntime.InvokeAsync<T>("eval", bootStrapScript);
         }
+
+        /// <remarks>
+        /// While it may be tempting to remove this method because it appears to be unused,
+        /// this method is referenced by client code and must persist.
+        /// </remarks>
+#pragma warning disable IDE0051 // Remove unused private members
+        private static byte[] GetStreamBuffer(string bufferId) => buffers[int.Parse(bufferId)];
+#pragma warning restore IDE0051 // Remove unused private members
     }
 }

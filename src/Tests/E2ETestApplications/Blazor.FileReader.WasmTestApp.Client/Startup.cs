@@ -7,7 +7,7 @@ namespace Blazor.FileReader.WasmTestApp.Client
     {
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddFileReaderService();
+            services.AddFileReaderService(o => o.UseWasmSharedBuffer = true);
         }
 
         public void Configure(IComponentsApplicationBuilder app)
