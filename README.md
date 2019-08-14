@@ -28,7 +28,7 @@ Use [Nuget](https://www.nuget.org/packages/Tewr.Blazor.FileReader): ```Install-P
 Setup IoC for ```IFileReaderService```as in ([Startup.cs](src/Demo/Blazor.FileReader.Wasm.Demo/Startup.cs#L11)):
 
 ```cs
-services.AddFileReaderService();
+services.AddFileReaderService(options => options.UseWasmSharedBuffer = true);
 
 ```
 
@@ -52,10 +52,9 @@ The code for views looks the same for both [client](src/Demo/Blazor.FileReader.W
 @using System.IO;
 @inject IFileReaderService fileReaderService;
 
-<input type="file" @ref="@inputTypeFileElement" /><button @onclick="@ReadFile">Read file</button>
+<input type="file" @ref=inputTypeFileElement /><button @onclick=ReadFile>Read file</button>
 
 @functions {
-    ElementRef inputTypeFileElement;
 
     public async Task ReadFile()
     {
@@ -89,6 +88,7 @@ The ```master``` branch uses ```v3.0.0-preview7.19365.7``` of Blazor.
 Blazor is an ~~experimental~~ preview project, not ready for production use. Just as Blazor API frequently has breaking changes, so does the API of this library.
 
 ### Version notes
+Version ```0.13.19226``` adds support for sdk  ```3.0.0-preview8-013656```. Adds shared Buffer back again for WASM, this can be activated by setting the ```UseWasmSharedBuffer``` option to true (recommended).
 
 Version ```0.13.19207``` Fixes a regression with the ```ClearValue``` method and adds some essential events to the drag and drop api.
 
