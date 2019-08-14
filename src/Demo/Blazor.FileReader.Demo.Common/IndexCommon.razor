@@ -6,14 +6,14 @@ Welcome to your new filestreaming app.<br />
 This demo reads a file without doing anything particular with it.<br />
 There are other demos in the menu.<br /><br />
 
-<input type="file" @ref="@inputElement" />
-<button @onclick="@ReadFile" class="btn btn-primary">Read file</button>
-<button @onclick="@ClearFile" class="btn btn-primary">Clear</button>
+<input type="file" @ref=inputElement @ref:suppressField />
+<button @onclick=ReadFile class="btn btn-primary">Read file</button>
+<button @onclick=ClearFile class="btn btn-primary">Clear</button>
 
 <br /><br />
 <textarea style="max-width: 100%;" cols="50" rows="20">@Output</textarea>
 @code {
-    ElementRef inputElement;
+    ElementReference inputElement;
 
     string Output { get; set; }
 
@@ -24,11 +24,14 @@ There are other demos in the menu.<br /><br />
 
     public async Task ReadFile()
     {
+        Console.WriteLine("DO something");
+
         Output = string.Empty;
         this.StateHasChanged();
         var nl = Environment.NewLine;
         foreach (var file in await fileReaderService.CreateReference(inputElement).EnumerateFilesAsync())
         {
+            
             var fileInfo = await file.ReadFileInfoAsync();
             Output += $"{nameof(IFileInfo)}.{nameof(fileInfo.Name)}: {fileInfo.Name}{nl}";
             Output += $"{nameof(IFileInfo)}.{nameof(fileInfo.Size)}: {fileInfo.Size}{nl}";
@@ -36,7 +39,7 @@ There are other demos in the menu.<br /><br />
             Output += $"{nameof(IFileInfo)}.{nameof(fileInfo.LastModifiedDate)}: {fileInfo.LastModifiedDate?.ToString() ?? "(N/A)"}{nl}";
             Output += $"Reading file...";
             this.StateHasChanged();
-
+            Console.WriteLine(Output);
             using (var fs = await file.OpenReadAsync())
             {
                 var bufferSize = 4096;

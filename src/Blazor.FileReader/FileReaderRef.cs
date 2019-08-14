@@ -101,10 +101,10 @@ namespace Blazor.FileReader
         public async Task ClearValue() 
             => await this.FileReaderJsInterop.ClearValue(this.ElementRef);
 
-        public ElementRef ElementRef { get; private set; }
+        public ElementReference ElementRef { get; private set; }
         public FileReaderJsInterop FileReaderJsInterop { get; }
 
-        internal FileReaderRef(ElementRef elementRef, FileReaderJsInterop fileReaderJsInterop)
+        internal FileReaderRef(ElementReference elementRef, FileReaderJsInterop fileReaderJsInterop)
         {
             this.ElementRef = elementRef;
             this.FileReaderJsInterop = fileReaderJsInterop;

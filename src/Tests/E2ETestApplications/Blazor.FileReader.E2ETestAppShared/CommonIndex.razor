@@ -1,16 +1,16 @@
 ﻿@inherits CommonIndexBase
 <h1>CommonIndex Test</h1>
 
-<input type="file" @ref="@inputElement" id="file-input" />
+<input type="file" @ref:suppressField="inputElement" id="file-input" />
 <br /><br />
-<input type="checkbox" @bind="@DebugOutput" id="use-debug-output-check" />
+<input type="checkbox" @bind="DebugOutput" id="use-debug-output-check" />
 <label for="useDebugOutput">Debug output</label><br />
-<input type="checkbox" @bind="@UseBufferSize" id="use-buffer-size-check" />
+<input type="checkbox" @bind="UseBufferSize" id="use-buffer-size-check" />
 <label for="useBufferSizeCheck">Use buffer size</label>
-<input type="number" @bind="@BufferSize" alt="buffersize" placeholder="Buffer size" id="buffer-size" />
+<input type="number" @bind="BufferSize" alt="buffersize" placeholder="Buffer size" id="buffer-size" />
 <br /><br />
-<button @onclick="@HashFile" class="btn btn-primary" id="chunked-button">Hash SHA256 of file - chunked</button>
-<button @onclick="@HashFileRam" style="margin-left:20px;" class="btn btn-primary" id="full-ram-button">Hash SHA256 of file - full-ram</button>
+<button @onclick="HashFile" class="btn btn-primary" id="chunked-button">Hash SHA256 of file - chunked</button>
+<button @onclick="HashFileRam" style="margin-left:20px;" class="btn btn-primary" id="full-ram-button">Hash SHA256 of file - full-ram</button>
 <br /><br />
 
 <h3>Log output</h3>

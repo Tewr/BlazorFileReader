@@ -13,7 +13,7 @@ namespace Blazor.FileReader.E2ETestAppShared
         [Inject]
         public IFileReaderService fileReaderService { get; set; }
 
-        public ElementRef inputElement;
+        public ElementReference inputElement;
 
         public string Output { get; set; }
 
@@ -21,11 +21,6 @@ namespace Blazor.FileReader.E2ETestAppShared
         public bool DebugOutput { get; set; } = true;
 
         public int BufferSize { get; set; } = 4096;
-
-        protected override void OnInit()
-        {
-            base.OnInit();
-        }
 
         public async Task HashFile()
 

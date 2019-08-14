@@ -13,7 +13,7 @@ namespace Blazor.FileReader
     {
         private static readonly IReadOnlyDictionary<string, string> escapeScriptTextReplacements =
             new Dictionary<string, string> { { @"\", @"\\" }, { "\r", @"\r" }, { "\n", @"\n" }, { "'", @"\'" }, { "\"", @"\""" } };
-        private bool _needsInitialization = false;
+        private readonly bool _needsInitialization = false;
         private readonly IFileReaderServiceOptions _options;
 
         private static readonly object _bufferIdLock = new object();
@@ -29,37 +29,37 @@ namespace Blazor.FileReader
             _needsInitialization = options.InitializeOnFirstCall;
         }
 
-        public async Task<bool> RegisterDropEvents(ElementRef elementReference)
+        public async Task<bool> RegisterDropEvents(ElementReference elementReference)
         {
             await EnsureInitializedAsync();
             return await CurrentJSRuntime.InvokeAsync<bool>($"FileReaderComponent.RegisterDropEvents", elementReference);
         }
 
-        public async Task<bool> UnregisterDropEvents(ElementRef elementReference)
+        public async Task<bool> UnregisterDropEvents(ElementReference elementReference)
         {
             await EnsureInitializedAsync();
             return await CurrentJSRuntime.InvokeAsync<bool>($"FileReaderComponent.UnregisterDropEvents", elementReference);
         }
 
-        public async Task<Stream> OpenFileStream(ElementRef elementReference, int index)
+        public async Task<Stream> OpenFileStream(ElementReference elementReference, int index)
         {
             var fileInfo = await GetFileInfoFromElement(elementReference, index);
             return new InteropFileStream(await OpenReadAsync(elementReference, index), fileInfo.Size, this);
         }
 
-        public async Task<int> GetFileCount(ElementRef elementReference)
+        public async Task<int> GetFileCount(ElementReference elementReference)
         {
             await EnsureInitializedAsync();
             return (int)await CurrentJSRuntime.InvokeAsync<long>($"FileReaderComponent.GetFileCount", elementReference);
         }
 
-        public async Task<int> ClearValue(ElementRef elementReference)
+        public async Task<int> ClearValue(ElementReference elementReference)
         {
             await EnsureInitializedAsync();
             return (int)await CurrentJSRuntime.InvokeAsync<long>($"FileReaderComponent.ClearValue", elementReference);
         }
 
-        public async Task<FileInfo> GetFileInfoFromElement(ElementRef elementReference, int index)
+        public async Task<FileInfo> GetFileInfoFromElement(ElementReference elementReference, int index)
         {
             return await CurrentJSRuntime.InvokeAsync<FileInfo>($"FileReaderComponent.GetFileInfoFromElement", elementReference, index);
         }
@@ -74,7 +74,7 @@ namespace Blazor.FileReader
             await Initialize();
         }
 
-        private async Task<int> OpenReadAsync(ElementRef elementReference, int fileIndex)
+        private async Task<int> OpenReadAsync(ElementReference elementReference, int fileIndex)
         {
             return (int)await CurrentJSRuntime.InvokeAsync<long>($"FileReaderComponent.OpenRead", elementReference, fileIndex);
         }
