@@ -8,7 +8,7 @@ namespace Blazor.FileReader.Wasm.Demo
     {
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddFileReaderService();
+            services.AddFileReaderService(options => options.UseWasmSharedBuffer = true);
         }
 
         public void Configure(IComponentsApplicationBuilder app)

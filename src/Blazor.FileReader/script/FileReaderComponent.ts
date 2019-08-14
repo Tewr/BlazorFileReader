@@ -4,11 +4,16 @@ declare var DotNet: IDotNet;
 interface IBlazor {
     platform: IBlazorPlatform;
 }
+interface MethodHandle { MethodHandle__DO_NOT_IMPLEMENT: any }
+interface System_Object { System_Object__DO_NOT_IMPLEMENT: any }
+interface System_Array<T> extends System_Object { System_Array__DO_NOT_IMPLEMENT: any }
 
 interface IBlazorPlatform {
     toJavaScriptString(pointer: any): string;
     toDotNetString(jsString: string): any;
-    toUint8Array(pointer: any): Uint8Array;
+    toUint8Array(array: System_Array<any>): Uint8Array;
+    findMethod(assemblyName: string, namespace: string, className: string, methodName: string): MethodHandle;
+    callMethod(method: MethodHandle, target: System_Object | null, args: (System_Object | null)[]): System_Object;
 }
 
 interface IReadFileParams {
@@ -34,11 +39,17 @@ interface IDotNet {
 }
 
 class FileReaderComponent {
+    private readonly assembly = "Blazor.FileReader";
+    private readonly namespace = "Blazor.FileReader";
+    private readonly className = "FileReaderJsInterop";
+
 
     private newFileStreamReference: number = 0;
     private readonly fileStreams: { [reference: number]: File } = {};
     private readonly dragElements: Map<HTMLElement, EventListenerOrEventListenerObject> = new Map();
     private readonly elementDataTransfers: Map<HTMLElement, FileList> = new Map();
+    private static getStreamBuffer: MethodHandle;
+    private static readFileUnmarshalledAsyncCallback: MethodHandle;
 
     public RegisterDropEvents = (element: HTMLElement): boolean => {
 
@@ -142,6 +153,7 @@ class FileReaderComponent {
         this.fileStreams[fileRef] = file;
         return fileRef;
     }
+
     /*
     public ReadFileUnmarshalled = (dotNetArrayPtr: any, readFileParamsPtr: any): boolean => {
         const readFileParams: IReadFileParams = JSON.parse(Blazor.platform.toJavaScriptString(readFileParamsPtr));
@@ -171,12 +183,15 @@ class FileReaderComponent {
             reject(e);
         }
         return false;
-    }
+    }*/
 
-    public ReadFileUnmarshalledAsync(dotNetArrayPtr: any, readFileParamsPtr: any): Promise<number> {
+    public ReadFileUnmarshalledAsync = (readFileParams: IReadFileParams): Promise<number> => {
         return new Promise<number>((resolve, reject) => {
-            const readFileParams: IReadFileParams = JSON.parse(Blazor.platform.toJavaScriptString(readFileParamsPtr));
-            const dotNetBuffer: IDotNetBuffer = { toUint8Array: (): Uint8Array => Blazor.platform.toUint8Array(dotNetArrayPtr) };
+            if (!FileReaderComponent.getStreamBuffer) {
+                FileReaderComponent.getStreamBuffer =
+                        Blazor.platform.findMethod(this.assembly, this.namespace, this.className, "GetStreamBuffer");
+            }
+            
             const file: File = this.fileStreams[readFileParams.fileRef];
             try {
                 const reader = new FileReader();
@@ -184,7 +199,10 @@ class FileReaderComponent {
                     return () => {
                         try {
                             const contents: ArrayBuffer = <ArrayBuffer>r.result;
-                            const dotNetBufferView: Uint8Array = dotNetBuffer.toUint8Array();
+                            const dotNetBuffer = Blazor.platform.callMethod(FileReaderComponent.getStreamBuffer,
+                                null,
+                                [Blazor.platform.toDotNetString(readFileParams.callBackId.toString())]) as System_Array<any>;
+                            const dotNetBufferView: Uint8Array = Blazor.platform.toUint8Array(dotNetBuffer);
                             dotNetBufferView.set(new Uint8Array(contents));
                             resolve(contents.byteLength);
                         } catch (e) {
@@ -197,7 +215,7 @@ class FileReaderComponent {
                 reject(e);
             }
         });
-    }*/
+    }
 
     public ReadFileMarshalledAsync = (readFileParams: IReadFileParams): Promise<string> => {
         

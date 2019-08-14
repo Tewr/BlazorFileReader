@@ -3,6 +3,9 @@
 var FileReaderComponent = (function () {
     function FileReaderComponent() {
         var _this = this;
+        this.assembly = "Blazor.FileReader";
+        this.namespace = "Blazor.FileReader";
+        this.className = "FileReaderJsInterop";
         this.newFileStreamReference = 0;
         this.fileStreams = {};
         this.dragElements = new Map();
@@ -72,6 +75,36 @@ var FileReaderComponent = (function () {
             var fileRef = _this.newFileStreamReference++;
             _this.fileStreams[fileRef] = file;
             return fileRef;
+        };
+        this.ReadFileUnmarshalledAsync = function (readFileParams) {
+            return new Promise(function (resolve, reject) {
+                if (!FileReaderComponent.getStreamBuffer) {
+                    FileReaderComponent.getStreamBuffer =
+                        Blazor.platform.findMethod(_this.assembly, _this.namespace, _this.className, "GetStreamBuffer");
+                }
+                var file = _this.fileStreams[readFileParams.fileRef];
+                try {
+                    var reader = new FileReader();
+                    reader.onload = (function (r) {
+                        return function () {
+                            try {
+                                var contents = r.result;
+                                var dotNetBuffer = Blazor.platform.callMethod(FileReaderComponent.getStreamBuffer, null, [Blazor.platform.toDotNetString(readFileParams.callBackId.toString())]);
+                                var dotNetBufferView = Blazor.platform.toUint8Array(dotNetBuffer);
+                                dotNetBufferView.set(new Uint8Array(contents));
+                                resolve(contents.byteLength);
+                            }
+                            catch (e) {
+                                reject(e);
+                            }
+                        };
+                    })(reader);
+                    reader.readAsArrayBuffer(file.slice(readFileParams.position, readFileParams.position + readFileParams.count));
+                }
+                catch (e) {
+                    reject(e);
+                }
+            });
         };
         this.ReadFileMarshalledAsync = function (readFileParams) {
             return new Promise(function (resolve, reject) {

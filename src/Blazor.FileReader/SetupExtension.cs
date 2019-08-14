@@ -29,12 +29,14 @@ namespace Blazor.FileReader
                 throw new ArgumentNullException(nameof(setOptions));
             }
 
-            services.AddSingleton<IFileReaderServiceOptions, FileReaderServiceOptions>(_sp => {
-                var options = new FileReaderServiceOptions();
-                setOptions(options);
-                return options;
+            services.AddSingleton<IFileReaderServiceOptions, FileReaderServiceOptions>(si => {
+                var o = new FileReaderServiceOptions();
+                setOptions(o);
+                return o;
             });
+
             services.AddScoped<IFileReaderService, FileReaderService>();
+            
             return services;
         }
     }

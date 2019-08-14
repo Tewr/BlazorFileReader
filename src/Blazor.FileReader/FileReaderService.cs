@@ -7,11 +7,15 @@ namespace Blazor.FileReader
     public interface IFileReaderServiceOptions
     {
         bool InitializeOnFirstCall { get; set; }
+
+        bool UseWasmSharedBuffer { get; set; }
     }
 
     internal class FileReaderServiceOptions : IFileReaderServiceOptions
     {
         public bool InitializeOnFirstCall { get; set; } = false;
+
+        public bool UseWasmSharedBuffer { get; set; } = false;
     }
 
     public interface IFileReaderService
@@ -30,7 +34,7 @@ namespace Blazor.FileReader
         public FileReaderService(IJSRuntime jsRuntime, IFileReaderServiceOptions options)
         {
             this.Options = options;
-            this._fileReaderJsInterop = new FileReaderJsInterop(jsRuntime, options.InitializeOnFirstCall);
+            this._fileReaderJsInterop = new FileReaderJsInterop(jsRuntime, options);
         }
 
         public IFileReaderServiceOptions Options { get; }
