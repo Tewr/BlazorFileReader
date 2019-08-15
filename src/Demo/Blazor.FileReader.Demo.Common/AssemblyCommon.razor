@@ -31,13 +31,14 @@ This demo reads a .net Standard assembly and takes a look inside.<br /><br />
             System.Reflection.Assembly assembly;
             using (var fs = await file.CreateMemoryStreamAsync(4096))
             {
-                Output += $"Done reading file {fileInfo.Name}{nl}.";
+                Output += $"Done reading file {fileInfo.Name}.{nl}";
                 Output += $"Loading assembly...{nl}";
                 this.StateHasChanged();
                 try
                 {
                     assembly = System.Reflection.Assembly.Load(fs.ToArray());
                     Output += $"Assembly loaded.{nl}";
+                    Output += $"Assembly FullName:{assembly.FullName}{nl}";
                     this.StateHasChanged();
                 }
                 catch (Exception e)
