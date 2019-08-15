@@ -1,5 +1,5 @@
-﻿@using System.IO;
-@inject IFileReaderService fileReaderService;
+﻿@using System.IO
+@inject IFileReaderService fileReaderService
 <h1>Hello, dropped files!</h1>
 
 Welcome to your new filestreaming app.<br />
@@ -57,12 +57,12 @@ This demo reads files that was dropped in without doing anything particular with
         await this.RefreshFileList();
     }
 
-    public async Task OnDragEnter(UIDragEventArgs e)
+    public void OnDragEnter(UIDragEventArgs e)
     {
         this.DropClass += " droptarget-drag";
     }
 
-    public async Task OnDragLeave(UIDragEventArgs e)
+    public void OnDragLeave(UIDragEventArgs e)
     {
         this.DropClass = _dropClass;
     }
