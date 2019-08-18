@@ -9,7 +9,8 @@ This demo reads a .net Standard assembly and takes a look inside.
 <strong>Note:</strong> This demo requires the full <a href="https://www.nuget.org/packages/NETStandard.Library/">.net standard dll</a>
  to be loaded, so this demo only runs if the linker is turned off,
 using the <code>&lt;BlazorLinkOnBuild&gt;false&lt;/BlazorLinkOnBuild&gt;</code> directive in the <code>.csproj</code> file.
-
+<br />
+<br />
 <input type="file" @ref=inputElement @ref:suppressField accept=".dll,.exe" />
 <button @onclick=ReadFile class="btn btn-primary">Read assembly</button>
 <br />
