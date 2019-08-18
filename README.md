@@ -18,7 +18,7 @@ Here is a [Live demo](https://tewr.github.io/BlazorFileReader/) that contains th
 
 ## Installation
 
-```0.12.0``` is a pre-release version. First of all, make sure your environment is up to date with the appropriate SDK and VS2019 preview 4. See [this article](https://devblogs.microsoft.com/aspnet/asp-net-core-and-blazor-updates-in-net-core-3-0-preview-6/) for more details.
+```0.14.0``` is a pre-release version. First of all, make sure your environment is up to date with the appropriate SDK and VS2019 preview 8. See [this article](https://devblogs.microsoft.com/aspnet/asp-net-core-and-blazor-updates-in-net-core-3-0-preview-8/) for more details.
 Depending on your [project type](https://docs.microsoft.com/en-us/aspnet/core/razor-components/faq?view=aspnetcore-3.0), use one of the two examples below. 
 For a complete use-case, see the [client](src/Demo/Blazor.FileReader.Wasm.Demo) or [server-side](/src/Demo/Blazor.FileReader.ServerSide.Demo) demo projects.
 
@@ -61,7 +61,7 @@ The code for views looks the same for both [client](src/Demo/Blazor.FileReader.W
         foreach (var file in await fileReaderService.CreateReference(inputTypeFileElement).EnumerateFilesAsync())
         {
             // Read into buffer and act (uses less memory)
-            using(Stream stream = await file.OpenReadAsync()) {
+            using (Stream stream = await file.OpenReadAsync()) {
                 // Do (async) stuff with stream...
                 await stream.ReadAsync(buffer, ...);
                 // The following will fail. Only async read is allowed.
@@ -69,7 +69,7 @@ The code for views looks the same for both [client](src/Demo/Blazor.FileReader.W
             }
 
             // Read into memory and act
-            using(MemoryStream memoryStream = await file.CreateMemoryStreamAsync(4096)) {
+            using (MemoryStream memoryStream = await file.CreateMemoryStreamAsync(4096)) {
                 // Sync calls are ok once file is in memory
                 memoryStream.Read(buffer, ...)
             }
@@ -83,12 +83,12 @@ The code for views looks the same for both [client](src/Demo/Blazor.FileReader.W
 To use the code in this demo in your own project you need to use at least version 
 ```0.4.0``` of blazor (see branch 0.4.0). 
 
-The ```master``` branch uses ```v3.0.0-preview7.19365.7``` of Blazor.
+The ```master``` branch uses the ```v3.0.0-preview8-013656``` sdk.
 
 Blazor is an ~~experimental~~ preview project, not ready for production use. Just as Blazor API frequently has breaking changes, so does the API of this library.
 
 ### Version notes
-Version ```0.13.19226``` adds support for sdk  ```3.0.0-preview8-013656```. Adds shared Buffer back again for WASM, this can be activated by setting the ```UseWasmSharedBuffer``` option to true (recommended).
+Version ```0.14.19226``` adds support for sdk  ```3.0.0-preview8-013656```. Adds shared Buffer back again for WASM, this can be activated by setting the ```UseWasmSharedBuffer``` option to true (recommended).
 
 Version ```0.13.19207``` Fixes a regression with the ```ClearValue``` method and adds some essential events to the drag and drop api.
 
