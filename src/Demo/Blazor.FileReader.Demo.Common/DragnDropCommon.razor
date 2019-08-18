@@ -6,7 +6,7 @@ Welcome to your new filestreaming app.<br />
 This demo reads files that was dropped in without doing anything particular with it.
 <br /><br />
 <style>
-    .droptarget {
+    .@dropTargetClass {
         display:block;
         padding: 20px;
         margin-bottom: 10px;
@@ -14,13 +14,13 @@ This demo reads files that was dropped in without doing anything particular with
         border-radius: 5px;
     }
 
-    .droptarget-drag {
+    .@dropTargetDragClass {
         border-color: orangered;
         font-weight: bold;
     }
-
 </style>
-<div class="DropClass" 
+
+<div class="@DropClass" 
      @ref:suppressField
      @ref=dropTargetElement 
      @ondrop=OnDrop
@@ -40,8 +40,12 @@ This demo reads files that was dropped in without doing anything particular with
     ElementReference dropTargetElement;
     IFileReaderRef dropReference;
 
-    const string _dropClass = "droptarget";
-    string DropClass { get; set; } = _dropClass;
+    const string dropTargetDragClass = "droptarget-drag";
+    const string dropTargetClass = "droptarget";
+
+    private List<string> _dropClasses = new List<string>() { dropTargetClass };
+
+    string DropClass => string.Join(" ", _dropClasses);
     string Output { get; set; }
     List<IFileInfo> FileList { get; } = new List<IFileInfo>();
 
@@ -57,20 +61,20 @@ This demo reads files that was dropped in without doing anything particular with
         await this.RefreshFileList();
     }
 
-    public async Task OnDragEnter(UIDragEventArgs e)
+    public void OnDragEnter(UIDragEventArgs e)
     {
-        this.DropClass += " droptarget-drag";
+        _dropClasses.Add(dropTargetDragClass);
     }
 
-    public async Task OnDragLeave(UIDragEventArgs e)
+    public void OnDragLeave(UIDragEventArgs e)
     {
-        this.DropClass = _dropClass;
+        _dropClasses.Remove(dropTargetDragClass);
     }
 
     public async Task OnDrop(UIDragEventArgs e)
     {
         Output += "Dropped a file.";
-        this.DropClass = _dropClass;
+        _dropClasses.Remove(dropTargetDragClass);
         this.StateHasChanged();
         await this.RefreshFileList();
     }
