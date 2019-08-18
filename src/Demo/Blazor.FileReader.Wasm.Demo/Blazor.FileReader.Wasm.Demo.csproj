@@ -29,4 +29,7 @@
     <ProjectReference Include="..\Blazor.FileReader.Demo.Common\Blazor.FileReader.Demo.Common.csproj" />
   </ItemGroup>
 
+  <Target Name="FixBasePathafterPublish" AfterTargets="Publish">
+    <Message Text="outputpath: $(OutputPath) publishDir: $(PublishDir)" Importance="high"></Message>
+  </Target>
 </Project>
