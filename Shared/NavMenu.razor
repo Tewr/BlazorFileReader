@@ -1,0 +1,60 @@
+﻿<div class="top-row pl-4 navbar navbar-dark">
+    <a class="navbar-brand" href="">BlazorFileReader</a>
+    <button class="navbar-toggler" @onclick=@ToggleNavMenu>
+        <span class="navbar-toggler-icon"></span>
+    </button>
+</div>
+
+<div class=@(collapseNavMenu ? "collapse" : null) @onclick=@ToggleNavMenu>
+    <ul class="nav flex-column">
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="" Match=NavLinkMatch.All>
+                <span class="oi oi-home" aria-hidden="true"></span> Home
+            </NavLink>
+        </li>
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="SHA256">
+                <span class="oi oi-list-rich" aria-hidden="true"></span> SHA256 Hash
+            </NavLink>
+        </li>
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="EPPlus">
+                <span class="oi oi-calculator" aria-hidden="true"></span> Excel
+            </NavLink>
+        </li>
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="Assembly">
+                <span class="oi oi-puzzle-piece" aria-hidden="true"></span> .NET Assembly
+            </NavLink>
+        </li>
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="DragnDrop">
+                <span class="oi oi-droplet" aria-hidden="true"></span> Drag n' drop'
+            </NavLink>
+        </li>
+
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="https://github.com/tewr/BlazorFileReader">
+                <span class="oi oi-fork" aria-hidden="true"></span> To the source!
+            </NavLink>
+        </li>
+
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="https://www.nuget.org/packages/Tewr.Blazor.FileReader">
+                <span class="oi oi-info" aria-hidden="true"></span> @BlazorFileReaderVersion
+            </NavLink>
+        </li>
+    </ul>
+</div>
+
+@code {
+    bool collapseNavMenu = true;
+
+    void ToggleNavMenu()
+    {
+        collapseNavMenu = !collapseNavMenu;
+    }
+
+    static string BlazorFileReaderVersion { get; } = 
+        $"v{typeof(IFileReaderService).Assembly.GetName().Version}";
+}

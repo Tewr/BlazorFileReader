@@ -1,0 +1,57 @@
+C:\Users\Tor\.nuget\packages\epplus\4.5.3.2\lib\netstandard2.0\EPPlus.dll
+C:\Users\Tor\.nuget\packages\microsoft.aspnetcore.authorization\3.0.0-preview8.19405.7\lib\netstandard2.0\Microsoft.AspNetCore.Authorization.dll
+C:\Users\Tor\.nuget\packages\microsoft.aspnetcore.blazor\3.0.0-preview8.19405.7\lib\netstandard2.0\Microsoft.AspNetCore.Blazor.dll
+C:\Users\Tor\.nuget\packages\microsoft.aspnetcore.components\3.0.0-preview8.19405.7\lib\netstandard2.0\Microsoft.AspNetCore.Components.dll
+C:\Users\Tor\.nuget\packages\microsoft.aspnetcore.components.web\3.0.0-preview8.19405.7\lib\netstandard2.0\Microsoft.AspNetCore.Components.Web.dll
+C:\Users\Tor\.nuget\packages\microsoft.aspnetcore.metadata\3.0.0-preview8.19405.7\lib\netstandard2.0\Microsoft.AspNetCore.Metadata.dll
+C:\Users\Tor\.nuget\packages\microsoft.bcl.asyncinterfaces\1.0.0-preview8.19405.3\lib\netstandard2.0\Microsoft.Bcl.AsyncInterfaces.dll
+C:\Users\Tor\.nuget\packages\microsoft.extensions.configuration\2.2.0\lib\netstandard2.0\Microsoft.Extensions.Configuration.dll
+C:\Users\Tor\.nuget\packages\microsoft.extensions.configuration.abstractions\2.2.0\lib\netstandard2.0\Microsoft.Extensions.Configuration.Abstractions.dll
+C:\Program Files\dotnet\sdk\NuGetFallbackFolder\microsoft.extensions.configuration.fileextensions\2.2.0\lib\netstandard2.0\Microsoft.Extensions.Configuration.FileExtensions.dll
+C:\Program Files\dotnet\sdk\NuGetFallbackFolder\microsoft.extensions.configuration.json\2.2.0\lib\netstandard2.0\Microsoft.Extensions.Configuration.Json.dll
+C:\Users\Tor\.nuget\packages\microsoft.extensions.dependencyinjection\3.0.0-preview8.19405.4\lib\netstandard2.0\Microsoft.Extensions.DependencyInjection.dll
+C:\Users\Tor\.nuget\packages\microsoft.extensions.dependencyinjection.abstractions\3.0.0-preview8.19405.4\lib\netstandard2.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll
+C:\Users\Tor\.nuget\packages\microsoft.extensions.fileproviders.abstractions\2.2.0\lib\netstandard2.0\Microsoft.Extensions.FileProviders.Abstractions.dll
+C:\Users\Tor\.nuget\packages\microsoft.extensions.fileproviders.physical\2.2.0\lib\netstandard2.0\Microsoft.Extensions.FileProviders.Physical.dll
+C:\Users\Tor\.nuget\packages\microsoft.extensions.filesystemglobbing\2.2.0\lib\netstandard2.0\Microsoft.Extensions.FileSystemGlobbing.dll
+C:\Users\Tor\.nuget\packages\microsoft.extensions.logging.abstractions\3.0.0-preview8.19405.4\lib\netstandard2.0\Microsoft.Extensions.Logging.Abstractions.dll
+C:\Users\Tor\.nuget\packages\microsoft.extensions.options\3.0.0-preview8.19405.4\lib\netstandard2.0\Microsoft.Extensions.Options.dll
+C:\Users\Tor\.nuget\packages\microsoft.extensions.primitives\3.0.0-preview8.19405.4\lib\netstandard2.0\Microsoft.Extensions.Primitives.dll
+C:\Users\Tor\.nuget\packages\microsoft.jsinterop\3.0.0-preview8.19405.4\lib\netstandard2.0\Microsoft.JSInterop.dll
+C:\Users\Tor\.nuget\packages\mono.webassembly.interop\3.0.0-preview8.19405.4\lib\netstandard2.0\Mono.WebAssembly.Interop.dll
+C:\Users\Tor\.nuget\packages\newtonsoft.json\11.0.2\lib\netstandard2.0\Newtonsoft.Json.dll
+C:\Program Files\dotnet\sdk\NuGetFallbackFolder\system.buffers\4.5.0\lib\netstandard2.0\System.Buffers.dll
+C:\Users\Tor\.nuget\packages\system.collections.concurrent\4.3.0\lib\netstandard1.3\System.Collections.Concurrent.dll
+C:\Program Files\dotnet\sdk\NuGetFallbackFolder\system.collections.nongeneric\4.3.0\lib\netstandard1.3\System.Collections.NonGeneric.dll
+C:\Program Files\dotnet\sdk\NuGetFallbackFolder\system.collections.specialized\4.3.0\lib\netstandard1.3\System.Collections.Specialized.dll
+C:\Program Files\dotnet\sdk\NuGetFallbackFolder\system.componentmodel\4.3.0\lib\netstandard1.3\System.ComponentModel.dll
+C:\Users\Tor\.nuget\packages\system.componentmodel.annotations\4.6.0-preview8.19405.3\lib\netstandard2.0\System.ComponentModel.Annotations.dll
+C:\Program Files\dotnet\sdk\NuGetFallbackFolder\system.componentmodel.primitives\4.3.0\lib\netstandard1.0\System.ComponentModel.Primitives.dll
+C:\Program Files\dotnet\sdk\NuGetFallbackFolder\system.componentmodel.typeconverter\4.3.0\lib\netstandard1.5\System.ComponentModel.TypeConverter.dll
+C:\Users\Tor\.nuget\packages\system.data.common\4.3.0\lib\netstandard1.2\System.Data.Common.dll
+C:\Users\Tor\.nuget\packages\system.drawing.common\4.5.1\lib\netstandard2.0\System.Drawing.Common.dll
+C:\Program Files\dotnet\sdk\NuGetFallbackFolder\system.io.filesystem.primitives\4.3.0\lib\netstandard1.3\System.IO.FileSystem.Primitives.dll
+C:\Users\Tor\.nuget\packages\system.linq\4.3.0\lib\netstandard1.6\System.Linq.dll
+C:\Users\Tor\.nuget\packages\system.memory\4.5.3\lib\netstandard2.0\System.Memory.dll
+C:\Program Files\dotnet\sdk\NuGetFallbackFolder\system.numerics.vectors\4.5.0\lib\netstandard2.0\System.Numerics.Vectors.dll
+C:\Program Files\dotnet\sdk\NuGetFallbackFolder\system.reflection.typeextensions\4.3.0\lib\netstandard1.5\System.Reflection.TypeExtensions.dll
+C:\Users\Tor\.nuget\packages\system.runtime.compilerservices.unsafe\4.6.0-preview8.19405.3\lib\netstandard2.0\System.Runtime.CompilerServices.Unsafe.dll
+C:\Users\Tor\.nuget\packages\system.runtime.numerics\4.3.0\lib\netstandard1.3\System.Runtime.Numerics.dll
+C:\Program Files\dotnet\sdk\NuGetFallbackFolder\system.security.claims\4.3.0\lib\netstandard1.3\System.Security.Claims.dll
+C:\Users\Tor\.nuget\packages\system.security.cryptography.cng\4.4.0\lib\netstandard2.0\System.Security.Cryptography.Cng.dll
+C:\Program Files\dotnet\sdk\NuGetFallbackFolder\system.security.cryptography.openssl\4.3.0\lib\netstandard1.6\System.Security.Cryptography.OpenSsl.dll
+C:\Users\Tor\.nuget\packages\system.security.cryptography.pkcs\4.5.1\lib\netstandard2.0\System.Security.Cryptography.Pkcs.dll
+C:\Program Files\dotnet\sdk\NuGetFallbackFolder\system.security.cryptography.primitives\4.3.0\lib\netstandard1.3\System.Security.Cryptography.Primitives.dll
+C:\Program Files\dotnet\sdk\NuGetFallbackFolder\system.security.principal\4.3.0\lib\netstandard1.0\System.Security.Principal.dll
+C:\Program Files\dotnet\sdk\NuGetFallbackFolder\system.text.encoding.codepages\4.5.0\lib\netstandard2.0\System.Text.Encoding.CodePages.dll
+C:\Users\Tor\.nuget\packages\system.text.encodings.web\4.6.0-preview8.19405.3\lib\netstandard2.0\System.Text.Encodings.Web.dll
+C:\Users\Tor\.nuget\packages\system.text.json\4.6.0-preview8.19405.3\lib\netstandard2.0\System.Text.Json.dll
+C:\Users\Tor\.nuget\packages\system.text.regularexpressions\4.3.0\lib\netstandard1.6\System.Text.RegularExpressions.dll
+C:\Users\Tor\.nuget\packages\system.threading\4.3.0\lib\netstandard1.3\System.Threading.dll
+C:\Users\Tor\.nuget\packages\system.threading.tasks.extensions\4.5.2\lib\netstandard2.0\System.Threading.Tasks.Extensions.dll
+C:\Users\Tor\.nuget\packages\system.xml.readerwriter\4.3.0\lib\netstandard1.3\System.Xml.ReaderWriter.dll
+C:\Program Files\dotnet\sdk\NuGetFallbackFolder\system.xml.xmldocument\4.3.0\lib\netstandard1.3\System.Xml.XmlDocument.dll
+C:\Program Files\dotnet\sdk\NuGetFallbackFolder\system.xml.xpath\4.3.0\lib\netstandard1.3\System.Xml.XPath.dll
+C:\Users\Tor\.nuget\packages\system.xml.xpath.xmldocument\4.3.0\lib\netstandard1.3\System.Xml.XPath.XmlDocument.dll
+C:\Users\Tor\source\repos\BlazorFileReader\src\Demo\Blazor.FileReader.Demo.Common\bin\Debug\netstandard2.0\Blazor.FileReader.Demo.Common.dll
+C:\Users\Tor\source\repos\BlazorFileReader\src\Blazor.FileReader\bin\Debug\netstandard2.0\Blazor.FileReader.dll
