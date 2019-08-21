@@ -4,7 +4,7 @@
 
 This demo reads Excel (xlsx) files using <a href="https://github.com/JanKallman/EPPlus">EPPlus</a>.
 <br /><br />
-<strong>Note:</strong> As EPPlus has native dependencies, this demo only compiles if the linker is turned off,
+<strong>Note:</strong> As EPPlus has native dependencies, this demo only compiles for WASM / Client-side projects if the linker is turned off,
 using the <code>&lt;BlazorLinkOnBuild&gt;false&lt;/BlazorLinkOnBuild&gt;</code> directive in the <code>.csproj</code> file.
 
 <br />
@@ -50,8 +50,7 @@ using the <code>&lt;BlazorLinkOnBuild&gt;false&lt;/BlazorLinkOnBuild&gt;</code> 
                 <tr>
                     @foreach (var cell in table.Header.Cells)
                     {
-
-                        <th @rowspan="cell.Rowspan" @colspan="cell.Colspan">@cell.Value</th>
+                        <th rowspan="@cell.Rowspan" colspan="@cell.Colspan">@cell.Value</th>
                     }
                 </tr>
             </thead>
@@ -62,7 +61,7 @@ using the <code>&lt;BlazorLinkOnBuild&gt;false&lt;/BlazorLinkOnBuild&gt;</code> 
                 <tr>
                     @foreach (var cell in row.Cells)
                     {
-                        <td @rowspan="cell.Rowspan" @colspan="cell.Colspan">@cell.Value</td>
+                        <td rowspan="@cell.Rowspan" colspan="@cell.Colspan">@cell.Value</td>
                     }
                 </tr>
             }
