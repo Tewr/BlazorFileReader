@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Blazor.FileReader
@@ -43,7 +44,14 @@ namespace Blazor.FileReader
         Task<Stream> OpenReadAsync();
 
         /// <summary>
+        /// Opens a base64-encoded string stream to read the file
+        /// </summary>
+        /// <returns></returns>
+        Task<IBase64Stream> OpenReadBase64Async();
+
+        /// <summary>
         /// Read the file into memory using a single interop call and returns it as a MemoryStream.
+        /// Buffer size will be equal to the file size.
         /// </summary>
         /// <returns></returns>
         Task<MemoryStream> CreateMemoryStreamAsync();
@@ -59,6 +67,20 @@ namespace Blazor.FileReader
         /// </summary>
         /// <returns></returns>
         Task<IFileInfo> ReadFileInfoAsync();
+    }
+
+    public interface IBase64Stream : IDisposable
+    {
+        /// <summary>
+        /// Gets or sets the current byte position in the Stream.
+        /// </summary>
+        long Position { get; set; }
+
+        /// <summary>
+        /// Gets the length of the stream in bytes.
+        /// </summary>
+        long Length { get; }
+        Task<string> ReadAsync(int offset, int count, CancellationToken cancellationToken);
     }
 
     public interface IFileInfo
@@ -131,6 +153,26 @@ namespace Blazor.FileReader
             return InnerCreateMemoryStreamAsync(bufferSize);
         }
 
+        public Task<Stream> OpenReadAsync()
+        {
+            return this.fileLoaderRef.FileReaderJsInterop.OpenFileStream(this.fileLoaderRef.ElementRef, index);
+        }
+
+        public async Task<IFileInfo> ReadFileInfoAsync()
+        {
+            if (fileInfo == null)
+            {
+                fileInfo = await this.fileLoaderRef.FileReaderJsInterop.GetFileInfoFromElement(fileLoaderRef.ElementRef, index);
+            }
+
+            return fileInfo;
+        }
+
+        public async Task<IBase64Stream> OpenReadBase64Async()
+        {
+            return await this.fileLoaderRef.FileReaderJsInterop.OpenBase64Stream(fileLoaderRef.ElementRef, index);
+        }
+
         private async Task<MemoryStream> InnerCreateMemoryStreamAsync(int? bufferSizeParam)
         {
             MemoryStream memoryStream;
@@ -159,20 +201,6 @@ namespace Blazor.FileReader
             return memoryStream;
         }
 
-        public Task<Stream> OpenReadAsync()
-        {
-            return this.fileLoaderRef.FileReaderJsInterop.OpenFileStream(this.fileLoaderRef.ElementRef, index);
-        }
-
-        public async Task<IFileInfo> ReadFileInfoAsync()
-        {
-            if (fileInfo == null)
-            {
-                fileInfo = await this.fileLoaderRef.FileReaderJsInterop.GetFileInfoFromElement(fileLoaderRef.ElementRef, index); ;
-            }
-
-            return fileInfo;
-        }
     }
 
     public class FileInfo : IFileInfo

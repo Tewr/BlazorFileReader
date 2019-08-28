@@ -47,6 +47,12 @@ namespace Blazor.FileReader
             return new InteropFileStream(await OpenReadAsync(elementReference, index), fileInfo.Size, this);
         }
 
+        public async Task<IBase64Stream> OpenBase64Stream(ElementReference elementReference, int index)
+        {
+            var fileInfo = await GetFileInfoFromElement(elementReference, index);
+            return new Base64Stream(await OpenReadAsync(elementReference, index), fileInfo.Size, this);
+        }
+
         public async Task<int> GetFileCount(ElementReference elementReference)
         {
             await EnsureInitializedAsync();
@@ -98,19 +104,29 @@ namespace Blazor.FileReader
             int fileRef, byte[] buffer, long position, int count,
             CancellationToken cancellationToken)
         {
-            var data = await CurrentJSRuntime.InvokeAsync<string>(
-                $"FileReaderComponent.ReadFileMarshalledAsync",
-                new { position, count, fileRef });
+            var result = await ReadFileMarshalledBase64Async(fileRef, position, count, cancellationToken);
             
             var bytesRead = 0;
-            if (!string.IsNullOrEmpty(data))
+            if (!string.IsNullOrEmpty(result))
             {
-                var byteResult = Convert.FromBase64String(data);
+                var byteResult = Convert.FromBase64String(result);
                 bytesRead = byteResult.Length;
                 Array.Copy(byteResult, buffer, bytesRead);
             }
 
             return bytesRead;
+        }
+
+        private async Task<string> ReadFileMarshalledBase64Async(
+    int fileRef, long position, int count,
+    CancellationToken cancellationToken)
+        {
+            var data = await CurrentJSRuntime.InvokeAsync<string>(
+                $"FileReaderComponent.ReadFileMarshalledAsync",
+                new { position, count, fileRef });
+
+            return data;
+
         }
 
         private async Task<int> ReadFileUnmarshalledAsync(
@@ -171,5 +187,6 @@ namespace Blazor.FileReader
 #pragma warning disable IDE0051 // Remove unused private members
         private static byte[] GetStreamBuffer(string bufferId) => buffers[int.Parse(bufferId)];
 #pragma warning restore IDE0051 // Remove unused private members
+
     }
 }
