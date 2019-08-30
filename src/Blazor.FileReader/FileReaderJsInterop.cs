@@ -64,7 +64,7 @@ namespace Blazor.FileReader
             return await CurrentJSRuntime.InvokeAsync<FileInfo>($"FileReaderComponent.GetFileInfoFromElement", elementReference, index);
         }
 
-        public async Task EnsureInitializedAsync()
+        public async Task EnsureInitializedAsync(bool force = false)
         {
             if (!_needsInitialization)
             {
@@ -137,7 +137,7 @@ namespace Blazor.FileReader
 
         private async Task Initialize()
         {
-            var isLoaded = await CurrentJSRuntime.InvokeAsync<bool>("eval", "(function() { return !!window.FileReaderComponent })()");
+            var isLoaded = await IsLoaded();
             if (isLoaded)
             {
                 return;
@@ -154,13 +154,30 @@ namespace Blazor.FileReader
 
             // Load the script
             await ExecuteRawScriptAsync<object>(scriptContent);
+            var loaderLoopBreaker = 0;
+            while (!await IsLoaded())
+            {
+                loaderLoopBreaker++;
+                await Task.Delay(100);
+
+                // Fail after 3s not to block and hide any other possible error
+                if (loaderLoopBreaker > 25)
+                {
+                    throw new InvalidOperationException("Unable to initialize FileReaderComponent script");
+                }
+            }
+        }
+
+        private async Task<bool> IsLoaded()
+        {
+            return await CurrentJSRuntime.InvokeAsync<bool>("eval", "(function() { return !!window.FileReaderComponent })()");
         }
 
         private async Task<T> ExecuteRawScriptAsync<T>(string scriptContent)
         {
             scriptContent = escapeScriptTextReplacements.Aggregate(scriptContent, (r, pair) => r.Replace(pair.Key, pair.Value));
             var blob = $"URL.createObjectURL(new Blob([\"{scriptContent}\"],{{ \"type\": \"text/javascript\"}}))";
-            var bootStrapScript = $"(function(){{var d = document; var s = d.createElement('script'); s.src={blob}; d.head.appendChild(s); d.head.removeChild(s);}})();";
+            var bootStrapScript = $"(function(){{var d = document; var s = d.createElement('script'); s.src={blob}; s.async=false; d.head.appendChild(s); d.head.removeChild(s);}})();";
             return await CurrentJSRuntime.InvokeAsync<T>("eval", bootStrapScript);
         }
 
