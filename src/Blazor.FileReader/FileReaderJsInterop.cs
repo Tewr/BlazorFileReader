@@ -66,7 +66,7 @@ namespace Blazor.FileReader
 
         public async Task EnsureInitializedAsync(bool force = false)
         {
-            if (!_needsInitialization)
+            if (!_needsInitialization && !force)
             {
                 return;
             }
