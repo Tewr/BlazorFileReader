@@ -27,8 +27,6 @@ namespace Blazor.FileReader
 
     public class FileReaderService : IFileReaderService
     {
-        private static bool _needsInitialization = false;
-
         private readonly FileReaderJsInterop _fileReaderJsInterop;
 
         public FileReaderService(IJSRuntime jsRuntime, IFileReaderServiceOptions options)
@@ -46,14 +44,7 @@ namespace Blazor.FileReader
 
         public async Task EnsureInitializedAsync()
         {
-            if (!_needsInitialization)
-            {
-                return;
-            }
-
-            await this._fileReaderJsInterop.EnsureInitializedAsync();
-            _needsInitialization = false;
+            await this._fileReaderJsInterop.EnsureInitializedAsync(true);
         }
-
     }
 }
