@@ -118,8 +118,8 @@ namespace Blazor.FileReader
         }
 
         private async Task<string> ReadFileMarshalledBase64Async(
-    int fileRef, long position, int count,
-    CancellationToken cancellationToken)
+            int fileRef, long position, int count,
+            CancellationToken cancellationToken)
         {
             var data = await CurrentJSRuntime.InvokeAsync<string>(
                 $"FileReaderComponent.ReadFileMarshalledAsync",
