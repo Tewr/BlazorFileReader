@@ -6,16 +6,16 @@
     <TypeScriptToolsVersion>2.8</TypeScriptToolsVersion>
     <LangVersion>latest</LangVersion>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-    <Version>0.14.19233</Version>
+    <Version>0.14.19242</Version>
     <Authors>Tor Knutsson (Tewr)</Authors>
     <PackageProjectUrl>https://github.com/Tewr/BlazorFileReader</PackageProjectUrl>
     <RepositoryUrl>https://github.com/Tewr/BlazorFileReader</RepositoryUrl>
-    <Description>Read-Only File streams in blazor</Description>
-    <PackageTags>blazor blazor-component stream filestream file-stream read-file</PackageTags>
+    <Description>Create Read-Only file streams from file input elements or drop targets in Blazor.</Description>
+    <PackageTags>blazor blazor-component stream filestream file-stream read-file filereader</PackageTags>
     <Configurations>Debug;Release;Ghpages</Configurations>
     <PackageId>Tewr.Blazor.FileReader</PackageId>
     <PackageReleaseNotes></PackageReleaseNotes>
-    <AssemblyVersion>0.14.19233</AssemblyVersion>
+    <AssemblyVersion>0.14.19242</AssemblyVersion>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageIconUrl>https://raw.githubusercontent.com/Tewr/BlazorFileReader/master/icon.png</PackageIconUrl>
     <RazorLangVersion>3.0</RazorLangVersion>

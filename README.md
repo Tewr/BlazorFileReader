@@ -107,6 +107,8 @@ The ```master``` branch uses the ```v3.0.0-preview8-013656``` sdk.
 Blazor is an ~~experimental~~ preview project, not ready for production use. Just as Blazor API frequently has breaking changes, so does the API of this library.
 
 ### Version notes
+Version ```0.14.19242``` fixes two bugs: [a minor package problem](https://github.com/Tewr/BlazorFileReader/issues/55) and [a possible race condition for server-side drag and drop initialization](https://github.com/Tewr/BlazorFileReader/issues/71).
+
 Version ```0.14.19226``` adds support for sdk  ```3.0.0-preview8-013656```. Adds shared Buffer back again for WASM, this can be activated by setting the ```UseWasmSharedBuffer``` option to true (recommended).
 
 Version ```0.13.19207``` Fixes a regression with the ```ClearValue``` method and adds some essential events to the drag and drop api.
