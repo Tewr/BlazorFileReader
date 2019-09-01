@@ -33,7 +33,13 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Components" Version="3.0.0-preview8.19405.7" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.0.0-preview8.19405.4" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(Configuration)'=='Debug'">
+    <!-- 
+    Referencing this is needed for a smooth developer experience, 
+    but it will botch the pack command, thus only available for debug config
+    -->
     <PackageReference Include="Microsoft.TypeScript.Msbuild" Version="3.4.5">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
