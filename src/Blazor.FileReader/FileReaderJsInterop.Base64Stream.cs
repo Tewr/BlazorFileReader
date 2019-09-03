@@ -47,7 +47,7 @@ namespace Blazor.FileReader
                 ThrowIfDisposed();
                 var result = await this.fileReaderJsInterop.ReadFileMarshalledBase64Async(this.fileRef, Position + offset, count, cancellationToken);
                 Position += offset + count;
-                return result;
+                return result ?? string.Empty;
             }
 
             private void ThrowIfDisposed()
