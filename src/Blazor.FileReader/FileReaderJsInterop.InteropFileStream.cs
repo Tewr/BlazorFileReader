@@ -47,7 +47,6 @@ namespace Blazor.FileReader
             public override async Task<int> ReadAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)
             {
                 ThrowIfDisposed();
-                //Console.WriteLine($"{nameof(InteropFileStream)}.{nameof(ReadAsync)}({nameof(buffer)}=byte[{buffer.Length}], {nameof(offset)}={offset}, {nameof(count)}={count})");
                 var bytesRead = await fileReaderJsInterop.ReadFileAsync(fileRef, buffer, Position + offset, count, cancellationToken);
                 Position += bytesRead;
                 return bytesRead;
