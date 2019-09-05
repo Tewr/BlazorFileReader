@@ -23,6 +23,11 @@
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <NoWarn>1701;1702;NU5104</NoWarn>
+    <DocumentationFile>Blazor.FileReader.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>Blazor.FileReader.xml</DocumentationFile>
   </PropertyGroup>
 
 
