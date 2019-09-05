@@ -44,7 +44,7 @@ namespace Blazor.FileReader.ServerSide.Demo
             
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapBlazorHub<App>("app");
+                endpoints.MapBlazorHub();
                 endpoints.MapFallbackToPage("/_Host");
             });
         }

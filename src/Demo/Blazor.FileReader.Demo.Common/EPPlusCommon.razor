@@ -10,7 +10,7 @@ using the <code>&lt;BlazorLinkOnBuild&gt;false&lt;/BlazorLinkOnBuild&gt;</code> 
 <br />
 <br />
 
-<input type="file" @ref:suppressField @ref=sourceElement Accept=".xlsx" />
+<input type="file" @ref=sourceElement Accept=".xlsx" />
 <button @onclick=ReadFile class="btn btn-primary">Import Excel file</button>
 <br />
 <br />
@@ -77,7 +77,7 @@ using the <code>&lt;BlazorLinkOnBuild&gt;false&lt;/BlazorLinkOnBuild&gt;</code> 
 
     EPPlusBuilder.TablesModel Tables = new EPPlusBuilder.TablesModel();
 
-    protected override void OnAfterRender()
+    protected override void OnAfterRender(bool isFirstRender)
     {
         Reader = fileReaderService.CreateReference(sourceElement);
     }

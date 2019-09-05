@@ -6,8 +6,21 @@ namespace Blazor.FileReader
 {
     public interface IFileReaderServiceOptions
     {
+        /// <summary>
+        /// Initializes the file service on the first interop call.
+        /// Redundant for client-side blazor.
+        /// </summary>
+        /// <remarks>
+        /// Initializing on the first call is neccessary only if the javascript 
+        /// interop file (FileReaderComponent.js)
+        /// has not been loaded manually using a script tag.
+        /// </remarks>
         bool InitializeOnFirstCall { get; set; }
 
+        /// <summary>
+        /// For client-side blazor, uses shared memory buffer to transfer data quickly.
+        /// Not available for server-side blazor.
+        /// </summary>
         bool UseWasmSharedBuffer { get; set; }
     }
 

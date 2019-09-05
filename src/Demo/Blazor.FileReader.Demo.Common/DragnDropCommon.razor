@@ -21,7 +21,7 @@ This demo reads files that was dropped in without doing anything particular with
 </style>
 
 <div class="@DropClass" 
-     @ref:suppressField
+    
      @ref=dropTargetElement 
      @ondrop=OnDrop
      @ondragenter=OnDragEnter 
@@ -49,7 +49,7 @@ This demo reads files that was dropped in without doing anything particular with
     string Output { get; set; }
     List<IFileInfo> FileList { get; } = new List<IFileInfo>();
 
-    protected override async Task OnAfterRenderAsync()
+    protected override async Task OnAfterRenderAsync(bool isFirstRender)
     {
         dropReference = fileReaderService.CreateReference(dropTargetElement);
         await dropReference.RegisterDropEventsAsync();
@@ -61,17 +61,17 @@ This demo reads files that was dropped in without doing anything particular with
         await this.RefreshFileList();
     }
 
-    public void OnDragEnter(UIDragEventArgs e)
+    public void OnDragEnter(EventArgs e)
     {
         _dropClasses.Add(dropTargetDragClass);
     }
 
-    public void OnDragLeave(UIDragEventArgs e)
+    public void OnDragLeave(EventArgs e)
     {
         _dropClasses.Remove(dropTargetDragClass);
     }
 
-    public async Task OnDrop(UIDragEventArgs e)
+    public async Task OnDrop(EventArgs e)
     {
         Output += "Dropped a file.";
         _dropClasses.Remove(dropTargetDragClass);
