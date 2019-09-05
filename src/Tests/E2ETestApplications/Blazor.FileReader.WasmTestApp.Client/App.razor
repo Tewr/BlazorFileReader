@@ -1,5 +1,8 @@
-﻿<Router AppAssembly="typeof(Program).Assembly">
-    <NotFoundContent>
+﻿<Router AppAssembly="typeof(Startup).Assembly">
+    <Found Context="routeData">
+        <RouteView RouteData="routeData" DefaultLayout="typeof(MainLayout)" />
+    </Found>
+    <NotFound>
         <p>Sorry, there's nothing at this address.</p>
-    </NotFoundContent>
-</Router>
+    </NotFound>
+</Router>base64
