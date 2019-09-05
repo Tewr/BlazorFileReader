@@ -36,7 +36,7 @@ namespace Blazor.FileReader.ServerSideTestApp
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapBlazorHub<App>("app");
+                endpoints.MapBlazorHub();
                 endpoints.MapFallbackToPage("/_Host");
             });
         }

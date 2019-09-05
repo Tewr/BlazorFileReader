@@ -85,9 +85,9 @@ namespace Blazor.FileReader
             return (int)await CurrentJSRuntime.InvokeAsync<long>($"FileReaderComponent.OpenRead", elementReference, fileIndex);
         }
 
-        private Task<bool> DisposeStream(int fileRef)
+        private async Task<bool> DisposeStream(int fileRef)
         {
-            return CurrentJSRuntime.InvokeAsync<bool>($"FileReaderComponent.Dispose", fileRef);
+            return await CurrentJSRuntime.InvokeAsync<bool>($"FileReaderComponent.Dispose", fileRef);
         }
 
         private async Task<int> ReadFileAsync(int fileRef, byte[] buffer, long position, int count, CancellationToken cancellationToken)

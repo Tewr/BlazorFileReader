@@ -21,7 +21,7 @@ For any API accepting a stream but not supporting ReadAsync, the full-ram versio
 
 <br />
 <br />
-<input type="file" @ref:suppressField @ref=inputElement />
+<input type="file" @ref=inputElement />
 <br />
 <br />
 <input type="checkbox" @bind=DebugOutput />
@@ -29,15 +29,15 @@ For any API accepting a stream but not supporting ReadAsync, the full-ram versio
 <br />
 Transfer method : <br/>
 <label>
-    <input type="radio" name="txmethod" value="@TxMethods.Classic" checked="@GetTxMethodChecked(TxMethods.Classic)" @onclick="@(e => OnTxMethodChange(TxMethods.Classic))" />
+    <input type="radio" name="txmethod" checked="@(GetTxMethodChecked(TxMethods.Classic))" @onclick="@(e => OnTxMethodChange(TxMethods.Classic))" />
     Classic 
 </label>
 <label>
-    <input type="radio" name="txmethod" value="@TxMethods.MemoryStream" checked="@GetTxMethodChecked(TxMethods.MemoryStream)" @onclick="@(e => OnTxMethodChange(TxMethods.MemoryStream))"/>
+    <input type="radio" name="txmethod" checked="@(GetTxMethodChecked(TxMethods.MemoryStream))" @onclick="@(e => OnTxMethodChange(TxMethods.MemoryStream))"/>
     Use MemoryStream
 </label>
 <label>
-    <input type="radio" name="txmethod" value="@TxMethods.Base64" checked="@GetTxMethodChecked(TxMethods.Base64)" @onclick="@(e => OnTxMethodChange(TxMethods.Base64))" />
+    <input type="radio" name="txmethod" checked="@(GetTxMethodChecked(TxMethods.Base64))" @onclick="@(e => OnTxMethodChange(TxMethods.Base64))" />
     Use Base64
 </label>
     <br />
@@ -77,7 +77,7 @@ Transfer method : <br/>
 
         int BufferSize { get; set; } = 4096;
 
-        protected override async Task OnAfterRenderAsync()
+        protected override async Task OnAfterRenderAsync(bool isFirstRender)
         {
             reference = fileReaderService.CreateReference(inputElement);
         }
@@ -103,6 +103,7 @@ Transfer method : <br/>
                 IFileInfo fileInfo = null;
                 if (DebugOutput)
                 {
+                    Output += $"Method: {CurrentTxMethod}{nl}";
                     fileInfo = await file.ReadFileInfoAsync();
                     Output += $"{nameof(IFileInfo)}.{nameof(fileInfo.Name)}: {fileInfo.Name}{nl}";
                     Output += $"{nameof(IFileInfo)}.{nameof(fileInfo.Size)}: {fileInfo.Size}{nl}";

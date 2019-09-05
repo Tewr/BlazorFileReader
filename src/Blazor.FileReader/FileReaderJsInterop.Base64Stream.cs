@@ -37,7 +37,10 @@ namespace Blazor.FileReader
             {
                 if (!this.isDisposed)
                 {
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                    // Fire-and-forget dispose as the only impact is the js GC
                     this.fileReaderJsInterop.DisposeStream(fileRef);
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                     this.isDisposed = true;
                 }
             }
