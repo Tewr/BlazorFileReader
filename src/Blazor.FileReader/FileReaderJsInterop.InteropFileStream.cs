@@ -2,11 +2,10 @@
 using System.Threading.Tasks;
 using System.IO;
 using System.Threading;
-using System.Diagnostics.Contracts;
 
 namespace Blazor.FileReader
 {
-    public partial class FileReaderJsInterop
+    internal partial class FileReaderJsInterop
     {
         private class InteropFileStream : Stream
         {

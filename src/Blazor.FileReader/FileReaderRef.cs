@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 
 namespace Blazor.FileReader
 {
+    /// <summary>
+    /// Provides methods for interacting with an element that provides file streams.
+    /// </summary>
     public interface IFileReaderRef
     {
         /// <summary>
@@ -35,10 +38,13 @@ namespace Blazor.FileReader
         Task<IEnumerable<IFileReference>> EnumerateFilesAsync();
     }
 
+    /// <summary>
+    /// Provides properties and instance methods for the reading file metadata and aids in the creation of Readonly Stream objects. 
+    /// </summary>
     public interface IFileReference
     {
         /// <summary>
-        /// Opens a stream to read the file
+        /// Opens a stream to read the file.
         /// </summary>
         /// <returns></returns>
         Task<Stream> OpenReadAsync();
@@ -50,25 +56,28 @@ namespace Blazor.FileReader
         Task<IBase64Stream> OpenReadBase64Async();
 
         /// <summary>
-        /// Read the file into memory using a single interop call and returns it as a MemoryStream.
-        /// Buffer size will be equal to the file size.
+        /// Convenience method to read the file into memory using a single interop call 
+        /// and returns it as a MemoryStream. Buffer size will be equal to the file size.
         /// </summary>
         /// <returns></returns>
         Task<MemoryStream> CreateMemoryStreamAsync();
 
         /// <summary>
-        /// Read the file into memory and returns it as a MemoryStream, using the specified buffersize.
+        /// Convenience method to read the file into memory and returns it as a MemoryStream, using the specified buffersize.
         /// </summary>
         /// <returns></returns>
         Task<MemoryStream> CreateMemoryStreamAsync(int bufferSize);
 
         /// <summary>
-        /// Reads the available file metadata
+        /// Reads the file metadata
         /// </summary>
         /// <returns></returns>
         Task<IFileInfo> ReadFileInfoAsync();
     }
 
+    /// <summary>
+    /// Provides a base64-encoded string view of a sequence of bytes from a file.
+    /// </summary>
     public interface IBase64Stream : IDisposable
     {
         /// <summary>
@@ -80,9 +89,24 @@ namespace Blazor.FileReader
         /// Gets the length of the stream in bytes.
         /// </summary>
         long Length { get; }
+
+        /// <summary>
+        /// Asynchronously reads a sequence of bytes as a base64 encoded string from the current stream 
+        /// and advances the position within the stream by the number of bytes read.
+        /// </summary>
+        /// <param name="offset">The byte offset in the source at which to begin reading data from the stream.</param>
+        /// <param name="count">The maximum number of bytes to read.</param>
+        /// <param name="cancellationToken"></param>
+        /// <returns>The requested sequence of bytes as a base64 encoded string. 
+        /// The resulting string can be shorter than the number of bytes requested if
+        /// the number of bytes currently available is less than the requested 
+        /// number, or it can be string.empty if the end of the stream has been reached. </returns>
         Task<string> ReadAsync(int offset, int count, CancellationToken cancellationToken);
     }
 
+    /// <summary>
+    /// Provides properties for file metadata.
+    /// </summary>
     public interface IFileInfo
     {
         /// <summary>
@@ -145,8 +169,8 @@ namespace Blazor.FileReader
             this.index = index;
         }
 
-        public Task<MemoryStream> CreateMemoryStreamAsync() {
-            return InnerCreateMemoryStreamAsync(null);
+        public async Task<MemoryStream> CreateMemoryStreamAsync() {
+            return await InnerCreateMemoryStreamAsync((int)(await ReadFileInfoAsync()).Size);
         }
         public Task<MemoryStream> CreateMemoryStreamAsync(int bufferSize)
         {
@@ -173,11 +197,9 @@ namespace Blazor.FileReader
             return await this.fileLoaderRef.FileReaderJsInterop.OpenBase64Stream(fileLoaderRef.ElementRef, index);
         }
 
-        private async Task<MemoryStream> InnerCreateMemoryStreamAsync(int? bufferSizeParam)
+        private async Task<MemoryStream> InnerCreateMemoryStreamAsync(int bufferSize)
         {
             MemoryStream memoryStream;
-            var file = await ReadFileInfoAsync();
-            var bufferSize = bufferSizeParam.GetValueOrDefault((int)file.Size);
             if (bufferSize < 1)
             {
                 throw new InvalidOperationException("Unable to determine buffersize or provided buffersize was 0 or less");
@@ -203,7 +225,7 @@ namespace Blazor.FileReader
 
     }
 
-    public class FileInfo : IFileInfo
+    internal class FileInfo : IFileInfo
     {
         private static readonly DateTime Epoch = new DateTime(1970, 01, 01);
         private readonly Lazy<DateTime?> lastModifiedDate;
