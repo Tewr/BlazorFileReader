@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace Blazor.FileReader
 {
-    public partial class FileReaderJsInterop
+    internal partial class FileReaderJsInterop
     {
         private class Base64Stream : IBase64Stream
         {
