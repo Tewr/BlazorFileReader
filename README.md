@@ -104,7 +104,7 @@ To use the code in this demo in your own project you need to use at least versio
 
 The ```master``` branch uses the ```v3.0.0-preview9-014004``` sdk.
 
-Blazor is an ~~experimental~~ preview project, not ready for production use. Just as Blazor API frequently has breaking changes, so does the API of this library.
+Blazor is a ~~experimental~~ preview project, but ~~not~~ [ready for production use](https://devblogs.microsoft.com/dotnet/announcing-net-core-3-0-preview-9/#user-content-go-live). Just as Blazor API frequently has breaking changes, so does the API of this library.
 
 ### Version notes
 
