@@ -82,7 +82,7 @@ Calling `IFileReference.CreateMemoryStreamAsync()` may thus be unsuitable for la
 
 ## Usage in a Blazor View
 
-The code for views looks the same for both [client](src/Demo/Blazor.FileReader.Wasm.Demo)- and [server-side](/src/Demo/Blazor.FileReader.ServerSide.Demo) projects. The demo projects also contains [a drag and drop example](src/Demo/Blazor.FileReader.Demo.Common/DragnDropCommon.razor).
+The code for views looks the same for both [client](src/Demo/Blazor.FileReader.Wasm.Demo)- and [server-side](/src/Demo/Blazor.FileReader.ServerSide.Demo) projects. The demo projects also contains [a drag and drop example](src/Demo/Blazor.FileReader.Demo.Common/DragnDropCommon.razor). While the demo projects are the reference, examples also exist in the [wiki](https://github.com/Tewr/BlazorFileReader/wiki).
 
 ```cs
 @page "/MyPage"
