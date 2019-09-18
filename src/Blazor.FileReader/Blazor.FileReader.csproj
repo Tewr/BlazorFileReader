@@ -15,7 +15,7 @@
     <Configurations>Debug;Release;Ghpages</Configurations>
     <PackageId>Tewr.Blazor.FileReader</PackageId>
     <PackageReleaseNotes></PackageReleaseNotes>
-    <AssemblyVersion>0.15.0.19248</AssemblyVersion>
+    <AssemblyVersion>0.16.0.19261</AssemblyVersion>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageIconUrl>https://raw.githubusercontent.com/Tewr/BlazorFileReader/master/icon.png</PackageIconUrl>
     <RazorLangVersion>3.0</RazorLangVersion>
