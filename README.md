@@ -14,11 +14,11 @@ and [FileReader](https://developer.mozilla.org/en-US/docs/Web/API/FileReader). D
 
 Originally built for Wasm ("Client-side" Blazor), Server-side Blazor (previously aka RazorComponents) is also supported as of version 0.7.1.
 
-Here is a [Live demo](https://tewr.github.io/BlazorFileReader/) that contains the output of [the wasm demo project](src/Demo/Blazor.FileReader.Wasm.Demo). Currently, its a build based on ```v0.15.0```.
+Here is a [Live demo](https://tewr.github.io/BlazorFileReader/) that contains the output of [the wasm demo project](src/Demo/Blazor.FileReader.Wasm.Demo). Currently, its a build based on ```v0.16.0```.
 
 ## Installation
 
-```0.15.0``` is a pre-release version. First of all, make sure your environment is up to date with the appropriate SDK and VS2019 preview 8. See [this article](https://devblogs.microsoft.com/aspnet/asp-net-core-and-blazor-updates-in-net-core-3-0-preview-8/) for more details.
+```0.16.0``` is a pre-release version. First of all, make sure your environment is up to date with the appropriate SDK and VS2019 16.3 preview4. See [this article](https://devblogs.microsoft.com/aspnet/asp-net-core-and-blazor-updates-in-net-core-3-0-release-candidate-1/) for more details.
 Depending on your [project type](https://docs.microsoft.com/en-us/aspnet/core/razor-components/faq?view=aspnetcore-3.0), use one of the two examples below. 
 For a complete use-case, see the [client](src/Demo/Blazor.FileReader.Wasm.Demo) or [server-side](/src/Demo/Blazor.FileReader.ServerSide.Demo) demo projects.
 
@@ -127,6 +127,7 @@ The ```master``` branch uses the ```v3.0.0-preview9-014004``` sdk.
 Blazor is a ~~experimental~~ preview project, but ~~not~~ [ready for production use](https://devblogs.microsoft.com/dotnet/announcing-net-core-3-0-preview-9/#user-content-go-live). Just as Blazor API frequently has breaking changes, so does the API of this library.
 
 ### Version notes
+Version ```0.16.0.19261``` adds support for ```v3.0.100-rc1-014190```
 
 Version ```0.15.0.19242``` adds support for ```v3.0.0-preview9-014004```. Also fixes [a minor packaging issue](https://github.com/Tewr/BlazorFileReader/issues/55). New API: [IBase64Stream](https://github.com/Tewr/BlazorFileReader/blob/d9cdea5d954eeac6f3ba2a99ec5dbc9181bc23de/src/Blazor.FileReader/FileReaderRef.cs#L50), for optimizing third-party cloud uploads (data exposed as raw base64 strings). Mostly interesting for server-side deployments.
 
