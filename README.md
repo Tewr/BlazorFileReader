@@ -127,6 +127,8 @@ The ```master``` branch uses the ```v3.0.0-preview9-014004``` sdk.
 Blazor is a ~~experimental~~ preview project, but ~~not~~ [ready for production use](https://devblogs.microsoft.com/dotnet/announcing-net-core-3-0-preview-9/#user-content-go-live). Just as Blazor API frequently has breaking changes, so does the API of this library.
 
 ### Version notes
+Version ```0.16.0.19262``` fixes [a packaging issue](https://github.com/Tewr/BlazorFileReader/issues/55).
+
 Version ```0.16.0.19261``` adds support for ```v3.0.100-rc1-014190```
 
 Version ```0.15.0.19242``` adds support for ```v3.0.0-preview9-014004```. Also fixes [a minor packaging issue](https://github.com/Tewr/BlazorFileReader/issues/55). New API: [IBase64Stream](https://github.com/Tewr/BlazorFileReader/blob/d9cdea5d954eeac6f3ba2a99ec5dbc9181bc23de/src/Blazor.FileReader/FileReaderRef.cs#L50), for optimizing third-party cloud uploads (data exposed as raw base64 strings). Mostly interesting for server-side deployments.
