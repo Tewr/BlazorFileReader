@@ -17,9 +17,12 @@
     <PackageReleaseNotes></PackageReleaseNotes>
     <AssemblyVersion>1.0.0.19267</AssemblyVersion>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageIconUrl>https://raw.githubusercontent.com/Tewr/BlazorFileReader/master/icon.png</PackageIconUrl>
+    <PackageIcon>icon.png</PackageIcon>
     <RazorLangVersion>3.0</RazorLangVersion>
   </PropertyGroup>
+  <ItemGroup>
+    <None Include="icon.png" Pack="true" Visible="false" PackagePath="" />
+  </ItemGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <NoWarn>1701;1702;NU5104</NoWarn>
