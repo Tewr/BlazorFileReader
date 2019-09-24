@@ -16,12 +16,13 @@ Here is a [Live demo](https://tewr.github.io/BlazorFileReader/) that contains th
 
 ## Installation
 
+Use [Nuget](https://www.nuget.org/packages/Tewr.Blazor.FileReader): ```Install-Package Tewr.Blazor.FileReader```
+
 Make sure your environment is up to date with the appropriate SDK and VS2019 16.4. See [this article](https://devblogs.microsoft.com/aspnet/asp-net-core-and-blazor-updates-in-net-core-3-0/) for more details.
 Depending on your [project type](https://docs.microsoft.com/en-us/aspnet/core/razor-components/faq?view=aspnetcore-3.0), use one of the two examples below. 
 For a complete use-case, see the [client](src/Demo/Blazor.FileReader.Wasm.Demo) or [server-side](/src/Demo/Blazor.FileReader.ServerSide.Demo) demo projects.
 
-### Client-side / Wasm Project type
-Use [Nuget](https://www.nuget.org/packages/Tewr.Blazor.FileReader): ```Install-Package Tewr.Blazor.FileReader```
+### Client-side / Wasm Project type / "CSB"
 
 Setup IoC for ```IFileReaderService```as in ([Startup.cs](src/Demo/Blazor.FileReader.Wasm.Demo/Startup.cs#L11)):
 
@@ -30,9 +31,7 @@ services.AddFileReaderService(options => options.UseWasmSharedBuffer = true);
 
 ```
 
-### Server-side / asp.net core Project type
-
-Use [Nuget](https://www.nuget.org/packages/Tewr.Blazor.FileReader): ```Install-Package Tewr.Blazor.FileReader```
+### Server-side / asp.net core Project type / "SSB"
 
 Setup IoC for  ```IFileReaderService``` as in the example ([Startup.cs](src/Demo/Blazor.FileReader.ServerSide.Demo/Startup.cs#L16)):
 
@@ -62,6 +61,7 @@ using Microsoft.AspNetCore.Http.Features;
             
             // (...)
 ```
+
 </details>
 
 #### Optional SignalR Configuration for large buffer sizes
@@ -79,7 +79,7 @@ services.AddServerSideBlazor().AddHubOptions(o =>
 
 ### IFileReference.CreateMemoryStreamAsync()
 The `IFileReference.CreateMemoryStreamAsync()` method (without any argument) is basically the same as calling `IFileReference.CreateMemoryStreamAsync(bufferSize: file.Size)`.
-Calling `IFileReference.CreateMemoryStreamAsync()` may thus be unsuitable for large files (at least for client-side Blazor) as the UI will be blocked during the transfer.
+Calling `IFileReference.CreateMemoryStreamAsync()` may thus be unsuitable for large files (at least for client-side Blazor as the UI will be blocked during the transfer).
 
 ## Usage in a Blazor View
 
