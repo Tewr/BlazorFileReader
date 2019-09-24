@@ -3,6 +3,9 @@ using System;
 
 namespace Blazor.FileReader
 {
+    /// <summary>
+    /// Provides extension methods for setting up <see cref="IFileReaderService"/>
+    /// </summary>
     public static class SetupExtension
     {
         /// <summary>
