@@ -13,19 +13,16 @@ namespace Blazor.FileReader.ServerSide.Demo
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddRazorPages();
-            services.AddServerSideBlazor();
+            services.AddServerSideBlazor().AddHubOptions(o =>
+            {
+                o.MaximumReceiveMessageSize = 10 * 1024 * 1024; // 10MB
+            });
             services.AddFileReaderService(options => options.InitializeOnFirstCall = true);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            // Temporary workaround for https://github.com/aspnet/AspNetCore/issues/13470
-            app.Use(async (context, next) =>
-            {
-                context.Features.Get<IHttpMaxRequestBodySizeFeature>().MaxRequestBodySize = null;
-                await next.Invoke();
-            });
 
             if (env.IsDevelopment())
             {
