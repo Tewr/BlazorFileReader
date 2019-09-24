@@ -42,7 +42,8 @@ services.AddFileReaderService(options => options.InitializeOnFirstCall = true);
 ```
 
 #### IIS Hosting Bug (Fixed)
-<details><summary>For versions 0.12-0.16</summary>
+<details><summary>Read this for versions 0.12-0.16</summary>
+
 ⚠️🐛 If you are using IIS to host your server-side application, you should also add the following as the first statement of the [Startup.cs Configure() method](src/Demo/Blazor.FileReader.ServerSide.Demo/Startup.cs#L21) to avoid a SignalR / IIS bug. This bug will only appear after a certain time, or never, for most applications, but may appear quickly when using this library as it depends on the amount of data being transferred over SignalR (by default slightly less than 22MB of file data, or 30MB of raw data). Credits to [IVData](https://github.com/IVData) for the find. The bug is [fixed in release 3.0](https://github.com/aspnet/AspNetCore/issues/13470#issuecomment-525478423), at that point the following can (should) be removed.
 
 ```cs
