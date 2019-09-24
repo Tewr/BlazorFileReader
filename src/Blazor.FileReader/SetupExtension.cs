@@ -22,6 +22,7 @@ namespace Blazor.FileReader
         /// to the specified <see cref="IServiceCollection"/> with the specifed <paramref name="setOptions"/>
         /// </summary>
         /// <param name="services"></param>
+        /// <param name="setOptions">Delegate that modifies the options for <see cref="IFileReaderService"/> </param>
         public static IServiceCollection AddFileReaderService(this IServiceCollection services, Action<IFileReaderServiceOptions> setOptions)
         {
             if (setOptions is null)
