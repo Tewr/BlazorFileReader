@@ -39,7 +39,7 @@
             if (!window.XMLHttpRequest) {
                 return;
             }
-            var $ = document.getElementById;
+            
             var total = 0;
             var loaded = 0;
             
@@ -49,11 +49,10 @@
                 total++;
                 this.addEventListener("load", function () {
                     loaded++;
-
                     var progress = Math.floor(((loaded / total) * 100));
-                    $("pbar").max = total;
-                    $("pbar").value = loaded;
-                    $("loadingText").innerHTML = "Loaded " + file + ", " + progress + " %..."
+                    document.getElementById("pbar").max = total;
+                    document.getElementById("pbar").value = loaded;
+                    document.getElementById("loadingText").innerHTML = "Loaded " + file + ", " + progress + " %..."
 
                     if (loaded == total) {
                         // Reset override.
