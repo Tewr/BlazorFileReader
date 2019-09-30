@@ -29,10 +29,10 @@ namespace Blazor.FileReader
             _needsInitialization = options.InitializeOnFirstCall;
         }
 
-        public async Task<bool> RegisterDropEvents(ElementReference elementReference)
+        public async Task<bool> RegisterDropEvents(ElementReference elementReference, bool additive)
         {
             await EnsureInitializedAsync();
-            return await CurrentJSRuntime.InvokeAsync<bool>($"FileReaderComponent.RegisterDropEvents", elementReference);
+            return await CurrentJSRuntime.InvokeAsync<bool>($"FileReaderComponent.RegisterDropEvents", elementReference, additive);
         }
 
         public async Task<bool> UnregisterDropEvents(ElementReference elementReference)

@@ -2,9 +2,11 @@
 @inject IFileReaderService fileReaderService;
 <h1>Hello, dropped files!</h1>
 
-Welcome to your new filestreaming app.<br />
+Welcome to your new filestreaming app.
+<br />
 This demo reads files that was dropped in without doing anything particular with it.
-<br /><br />
+<br />
+<br />
 <style>
     .@dropTargetClass {
         display:block;
@@ -20,25 +22,30 @@ This demo reads files that was dropped in without doing anything particular with
     }
 </style>
 
-<div class="@DropClass" 
-    
-     @ref=dropTargetElement 
+<div class="@DropClass"
+     @ref=dropTargetElement
      @ondrop=OnDrop
-     @ondragenter=OnDragEnter 
+     @ondragenter=OnDragEnter
      @ondragleave=OnDragLeave>
     Drop Files here.
-    @foreach (var fileInfo in FileList) {
-        <br/>@fileInfo.Name
+    @foreach (var fileInfo in FileList)
+    {
+        <br />@fileInfo.Name
     }
 </div>
+<input id="additive" type="checkbox" value=@Additive @onchange="OnAdditiveChange" />
+<label for="additive">Additive</label>
+<br />
 <button @onclick="ReadFile" class="btn btn-primary">Read file</button>
 <button @onclick="ClearFile" class="btn btn-primary">Clear</button>
 
-<br /><br />
+<br />
+<br />
 <textarea style="max-width: 100%;" cols="50" rows="20">@Output</textarea>
 @code {
     ElementReference dropTargetElement;
     IFileReaderRef dropReference;
+    bool Additive { get; set; }
 
     const string dropTargetDragClass = "droptarget-drag";
     const string dropTargetClass = "droptarget";
@@ -51,8 +58,18 @@ This demo reads files that was dropped in without doing anything particular with
 
     protected override async Task OnAfterRenderAsync(bool isFirstRender)
     {
-        dropReference = fileReaderService.CreateReference(dropTargetElement);
-        await dropReference.RegisterDropEventsAsync();
+        if (isFirstRender)
+        {
+            dropReference = fileReaderService.CreateReference(dropTargetElement);
+            await dropReference.RegisterDropEventsAsync();
+        }
+    }
+
+    public async Task OnAdditiveChange(ChangeEventArgs e)
+    {
+        Additive = (bool)e.Value;
+        await dropReference.UnregisterDropEventsAsync();
+        await dropReference.RegisterDropEventsAsync(Additive);
     }
 
     public async Task ClearFile()
@@ -79,7 +96,8 @@ This demo reads files that was dropped in without doing anything particular with
         await this.RefreshFileList();
     }
 
-    private async Task RefreshFileList() {
+    private async Task RefreshFileList()
+    {
         this.FileList.Clear();
         foreach (var file in await dropReference.EnumerateFilesAsync())
         {

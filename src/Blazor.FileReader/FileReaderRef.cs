@@ -16,8 +16,9 @@ namespace Blazor.FileReader
         /// <summary>
         /// Register for drop events on the source element
         /// </summary>
+        /// <param name="additive">If set to true, drop target file list becomes additive. Defaults to false.</param>
         /// <returns></returns>
-        Task RegisterDropEventsAsync();
+        Task RegisterDropEventsAsync(bool additive = false);
 
         /// <summary>
         /// Unregister drop events on the source element
@@ -141,7 +142,7 @@ namespace Blazor.FileReader
             Enumerable.Range(0, Math.Max(0, await this.FileReaderJsInterop.GetFileCount(this.ElementRef)))
                 .Select(index => (IFileReference)new FileReference(this, index));
 
-        public async Task RegisterDropEventsAsync() => await this.FileReaderJsInterop.RegisterDropEvents(this.ElementRef);
+        public async Task RegisterDropEventsAsync(bool additive) => await this.FileReaderJsInterop.RegisterDropEvents(this.ElementRef, additive);
         public async Task UnregisterDropEventsAsync() => await this.FileReaderJsInterop.UnregisterDropEvents(this.ElementRef);
 
         public async Task ClearValue() 

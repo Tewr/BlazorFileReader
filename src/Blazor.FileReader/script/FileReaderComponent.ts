@@ -43,21 +43,27 @@ class FileReaderComponent {
     private readonly namespace = "Blazor.FileReader";
     private readonly className = "FileReaderJsInterop";
 
-
     private newFileStreamReference: number = 0;
     private readonly fileStreams: { [reference: number]: File } = {};
     private readonly dragElements: Map<HTMLElement, EventListenerOrEventListenerObject> = new Map();
     private readonly elementDataTransfers: Map<HTMLElement, FileList> = new Map();
     private static getStreamBuffer: MethodHandle;
-    private static readFileUnmarshalledAsyncCallback: MethodHandle;
 
-    public RegisterDropEvents = (element: HTMLElement): boolean => {
+    public RegisterDropEvents = (element: HTMLElement, additive : boolean): boolean => {
 
         const handler = (ev: DragEvent) => {
-
             this.PreventDefaultHandler(ev);
             if (ev.target instanceof HTMLElement) {
-                this.elementDataTransfers.set(ev.target, ev.dataTransfer.files);
+                let list = ev.dataTransfer.files;
+
+                if (additive) {
+                    const existing = this.elementDataTransfers.get(ev.target);
+                    if (existing != null && existing.length > 0) {
+                        list = new FileReaderComponent.ConcatFileList(existing, list);
+                    }
+                }
+                
+                this.elementDataTransfers.set(ev.target, list);
             }
         };
 
@@ -243,6 +249,46 @@ class FileReaderComponent {
 
     private PreventDefaultHandler = (ev: DragEvent) => {
         ev.preventDefault();
+    }
+
+    static ConcatFileList = class implements FileList {
+        [index: number]: File;
+
+        length: number;
+
+        item(index: number): File {
+            return this[index];
+        }
+
+        constructor(existing: FileList, additions: FileList) {
+            for (let i = 0; i < existing.length; i++) {
+                this[i] = existing[i];
+            }
+
+            var eligebleAdditions = [];
+
+            // Check for doubles
+            for (let i = 0; i < additions.length; i++) {
+                let exists = false;
+                let addition = additions[i];
+                for (let j = 0; j < existing.length; j++) {
+                    if (existing[j] === addition) {
+                        exists = true;
+                        break;
+                    }
+                }
+
+                if (!exists) {
+                    eligebleAdditions[eligebleAdditions.length] = addition;
+                }
+            }
+
+            for (let i = 0; i < eligebleAdditions.length; i++) {
+                this[i + existing.length] = eligebleAdditions[i];
+            }
+
+            this.length = existing.length + eligebleAdditions.length;
+        }
     }
 }
 

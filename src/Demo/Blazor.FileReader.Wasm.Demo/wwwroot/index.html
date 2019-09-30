@@ -57,7 +57,7 @@
                     if (loaded == total) {
                         // Reset override.
                         window.XMLHttpRequest.prototype.open = proxied;
-                        $("loadingText").innerHTML = "Loading 100%, opening application...";
+                        document.getElementById("loadingText").innerHTML = "Loading 100%, opening application...";
                     }
                 });
                 return proxied.apply(this, [].slice.call(arguments));
