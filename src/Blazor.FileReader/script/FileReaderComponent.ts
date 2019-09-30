@@ -48,20 +48,17 @@ class ConcatFileList implements FileList {
     }
 
     constructor(existing: FileList, additions: FileList) {
-        console.debug(`ConcatFileList constructor`);
-        for (var i = 0; i < existing.length; i++) {
-            console.debug(`Added one item from existing to index ${i}`);
+        for (let i = 0; i < existing.length; i++) {
             this[i] = existing[i];
         }
 
         var eligebleAdditions = [];
 
         // Check for doubles
-        for (var i = 0; i < additions.length; i++) {
-            var exists = false;
-            var addition = additions[i];
-            for (var j = 0; j < existing.length; j++) {
-                
+        for (let i = 0; i < additions.length; i++) {
+            let exists = false;
+            let addition = additions[i];
+            for (let j = 0; j < existing.length; j++) {
                 if (existing[j] == addition) {
                     exists = true;
                     break;
@@ -73,8 +70,7 @@ class ConcatFileList implements FileList {
             }
         }
         
-        for (var i = 0; i < eligebleAdditions.length; i++) {
-            console.debug(`Added one item from additions to index ${i + existing.length}`);
+        for (let i = 0; i < eligebleAdditions.length; i++) {
             this[i + existing.length] = eligebleAdditions[i];
         }
         
