@@ -1,5 +1,37 @@
 ;
 ;
+var ConcatFileList = (function () {
+    function ConcatFileList(existing, additions) {
+        console.debug("ConcatFileList constructor");
+        for (var i = 0; i < existing.length; i++) {
+            console.debug("Added one item from existing to index " + i);
+            this[i] = existing[i];
+        }
+        var eligebleAdditions = [];
+        for (var i = 0; i < additions.length; i++) {
+            var exists = false;
+            var addition = additions[i];
+            for (var j = 0; j < existing.length; j++) {
+                if (existing[j] == addition) {
+                    exists = true;
+                    break;
+                }
+            }
+            if (!exists) {
+                eligebleAdditions[eligebleAdditions.length] = addition;
+            }
+        }
+        for (var i = 0; i < eligebleAdditions.length; i++) {
+            console.debug("Added one item from additions to index " + (i + existing.length));
+            this[i + existing.length] = eligebleAdditions[i];
+        }
+        this.length = existing.length + eligebleAdditions.length;
+    }
+    ConcatFileList.prototype.item = function (index) {
+        return this[index];
+    };
+    return ConcatFileList;
+}());
 var FileReaderComponent = (function () {
     function FileReaderComponent() {
         var _this = this;
@@ -10,11 +42,18 @@ var FileReaderComponent = (function () {
         this.fileStreams = {};
         this.dragElements = new Map();
         this.elementDataTransfers = new Map();
-        this.RegisterDropEvents = function (element) {
+        this.RegisterDropEvents = function (element, additive) {
             var handler = function (ev) {
                 _this.PreventDefaultHandler(ev);
                 if (ev.target instanceof HTMLElement) {
-                    _this.elementDataTransfers.set(ev.target, ev.dataTransfer.files);
+                    var list = ev.dataTransfer.files;
+                    if (additive) {
+                        var existing = _this.elementDataTransfers.get(ev.target);
+                        if (existing != null && existing.length > 0) {
+                            list = new ConcatFileList(existing, list);
+                        }
+                    }
+                    _this.elementDataTransfers.set(ev.target, list);
                 }
             };
             _this.dragElements.set(element, handler);
