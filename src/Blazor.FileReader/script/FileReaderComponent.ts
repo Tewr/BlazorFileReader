@@ -94,10 +94,10 @@ class FileReaderComponent {
         const handler = (ev: DragEvent) => {
             this.PreventDefaultHandler(ev);
             if (ev.target instanceof HTMLElement) {
-                var list = ev.dataTransfer.files;
+                let list = ev.dataTransfer.files;
 
                 if (additive) {
-                    var existing = this.elementDataTransfers.get(ev.target);
+                    const existing = this.elementDataTransfers.get(ev.target);
                     if (existing != null && existing.length > 0) {
                         list = new ConcatFileList(existing, list);
                     }
