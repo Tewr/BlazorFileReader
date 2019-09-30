@@ -1,37 +1,5 @@
 ;
 ;
-var ConcatFileList = (function () {
-    function ConcatFileList(existing, additions) {
-        console.debug("ConcatFileList constructor");
-        for (var i = 0; i < existing.length; i++) {
-            console.debug("Added one item from existing to index " + i);
-            this[i] = existing[i];
-        }
-        var eligebleAdditions = [];
-        for (var i = 0; i < additions.length; i++) {
-            var exists = false;
-            var addition = additions[i];
-            for (var j = 0; j < existing.length; j++) {
-                if (existing[j] == addition) {
-                    exists = true;
-                    break;
-                }
-            }
-            if (!exists) {
-                eligebleAdditions[eligebleAdditions.length] = addition;
-            }
-        }
-        for (var i = 0; i < eligebleAdditions.length; i++) {
-            console.debug("Added one item from additions to index " + (i + existing.length));
-            this[i + existing.length] = eligebleAdditions[i];
-        }
-        this.length = existing.length + eligebleAdditions.length;
-    }
-    ConcatFileList.prototype.item = function (index) {
-        return this[index];
-    };
-    return ConcatFileList;
-}());
 var FileReaderComponent = (function () {
     function FileReaderComponent() {
         var _this = this;
@@ -50,7 +18,7 @@ var FileReaderComponent = (function () {
                     if (additive) {
                         var existing = _this.elementDataTransfers.get(ev.target);
                         if (existing != null && existing.length > 0) {
-                            list = new ConcatFileList(existing, list);
+                            list = new FileReaderComponent.ConcatFileList(existing, list);
                         }
                     }
                     _this.elementDataTransfers.set(ev.target, list);
@@ -195,6 +163,35 @@ var FileReaderComponent = (function () {
         };
         return result;
     };
+    FileReaderComponent.ConcatFileList = (function () {
+        function class_1(existing, additions) {
+            for (var i = 0; i < existing.length; i++) {
+                this[i] = existing[i];
+            }
+            var eligebleAdditions = [];
+            for (var i = 0; i < additions.length; i++) {
+                var exists = false;
+                var addition = additions[i];
+                for (var j = 0; j < existing.length; j++) {
+                    if (existing[j] === addition) {
+                        exists = true;
+                        break;
+                    }
+                }
+                if (!exists) {
+                    eligebleAdditions[eligebleAdditions.length] = addition;
+                }
+            }
+            for (var i = 0; i < eligebleAdditions.length; i++) {
+                this[i + existing.length] = eligebleAdditions[i];
+            }
+            this.length = existing.length + eligebleAdditions.length;
+        }
+        class_1.prototype.item = function (index) {
+            return this[index];
+        };
+        return class_1;
+    }());
     return FileReaderComponent;
 }());
 window.FileReaderComponent = new FileReaderComponent();
