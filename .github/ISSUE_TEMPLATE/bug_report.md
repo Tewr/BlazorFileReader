@@ -24,7 +24,7 @@ A clear and concise description of what you expected to happen.
 If applicable, add screenshots to help explain your problem.
 
 **Project type**
-Server-side or client-side (or when applicable, specify both)
+**'Server-side'/'SSB'** or **'Client-side'/'CSB'** (or when applicable, specify **'Both SSB/CSB'**)
 
 **Environment**
  - Browser [e.g. chrome, safari]
