@@ -1,21 +1,31 @@
 ﻿@using System.IO;
+@using System.Diagnostics;
 @inject IFileReaderService fileReaderService
 <h1>Hello, files!</h1>
 
-Welcome to your new filestreaming app.<br />
-This demo reads a file without doing anything particular with it.<br />
-There are other demos in the menu.<br /><br />
+Welcome to your new filestreaming app.
+<br />
+This demo reads a file without doing anything particular with it.
+<br />
+There are other demos in the menu.
+<br />
+<br />
 
 <input type="file" @ref=inputElement />
 <button @onclick=ReadFile class="btn btn-primary">Read file</button>
 <button @onclick=ClearFile class="btn btn-primary">Clear</button>
 
-<br /><br />
+<br />
+<br />
+<progress max="@max" value="@value" />
+<br />
 <textarea style="max-width: 100%;" cols="50" rows="20">@Output</textarea>
 @code {
+
     [Parameter]
     public int BufferSize { get; set; } = 20480;
-
+    public long max;
+    public long value;
     ElementReference inputElement;
 
     string Output { get; set; }
@@ -27,13 +37,20 @@ There are other demos in the menu.<br /><br />
 
     public async Task ReadFile()
     {
-
+        max = 0;
+        value = 0;
         Output = string.Empty;
         this.StateHasChanged();
         var nl = Environment.NewLine;
-        foreach (var file in await fileReaderService.CreateReference(inputElement).EnumerateFilesAsync())
+        var files = (await fileReaderService.CreateReference(inputElement).EnumerateFilesAsync()).ToList();
+        foreach (var file in files)
         {
-
+            max += (await file.ReadFileInfoAsync()).Size;
+        }
+        foreach (var file in files)
+        {
+            var stopwatch = new Stopwatch();
+            stopwatch.Start();
             var fileInfo = await file.ReadFileInfoAsync();
             Output += $"{nameof(IFileInfo)}.{nameof(fileInfo.Name)}: {fileInfo.Name}{nl}";
             Output += $"{nameof(IFileInfo)}.{nameof(fileInfo.Size)}: {fileInfo.Size}{nl}";
@@ -46,12 +63,22 @@ There are other demos in the menu.<br /><br />
             {
                 var buffer = new byte[BufferSize];
                 int count;
+                var lastAnnounce = 0m;
                 while ((count = await fs.ReadAsync(buffer, 0, buffer.Length)) != 0)
                 {
-                    Output += $"Read {count} bytes. {fs.Position} / {fs.Length}{nl}";
-                    this.StateHasChanged();
+                    value += count;
+                    var progress = ((decimal)fs.Position * 100) / fs.Length;
+                    if (progress > (lastAnnounce + 10))
+                    {
+                        stopwatch.Stop();
+                        Output += $"Read {count} bytes ({progress:00}%). {fs.Position} / {fs.Length}{nl}";
+                        this.StateHasChanged();
+                        lastAnnounce = progress;
+                        stopwatch.Start();
+                    }
                 }
-                Output += $"Done reading file {fileInfo.Name}{nl}.";
+                stopwatch.Stop();
+                Output += $"Done reading file {fileInfo.Name} - {fs.Length} bytes in {stopwatch.ElapsedMilliseconds}ms.{nl}.";
             }
             this.StateHasChanged();
         }
