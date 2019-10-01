@@ -10,11 +10,18 @@ var FileReaderComponent = (function () {
         this.fileStreams = {};
         this.dragElements = new Map();
         this.elementDataTransfers = new Map();
-        this.RegisterDropEvents = function (element) {
+        this.RegisterDropEvents = function (element, additive) {
             var handler = function (ev) {
                 _this.PreventDefaultHandler(ev);
                 if (ev.target instanceof HTMLElement) {
-                    _this.elementDataTransfers.set(ev.target, ev.dataTransfer.files);
+                    var list = ev.dataTransfer.files;
+                    if (additive) {
+                        var existing = _this.elementDataTransfers.get(ev.target);
+                        if (existing != null && existing.length > 0) {
+                            list = new FileReaderComponent.ConcatFileList(existing, list);
+                        }
+                    }
+                    _this.elementDataTransfers.set(ev.target, list);
                 }
             };
             _this.dragElements.set(element, handler);
@@ -156,6 +163,35 @@ var FileReaderComponent = (function () {
         };
         return result;
     };
+    FileReaderComponent.ConcatFileList = (function () {
+        function class_1(existing, additions) {
+            for (var i = 0; i < existing.length; i++) {
+                this[i] = existing[i];
+            }
+            var eligebleAdditions = [];
+            for (var i = 0; i < additions.length; i++) {
+                var exists = false;
+                var addition = additions[i];
+                for (var j = 0; j < existing.length; j++) {
+                    if (existing[j] === addition) {
+                        exists = true;
+                        break;
+                    }
+                }
+                if (!exists) {
+                    eligebleAdditions[eligebleAdditions.length] = addition;
+                }
+            }
+            for (var i = 0; i < eligebleAdditions.length; i++) {
+                this[i + existing.length] = eligebleAdditions[i];
+            }
+            this.length = existing.length + eligebleAdditions.length;
+        }
+        class_1.prototype.item = function (index) {
+            return this[index];
+        };
+        return class_1;
+    }());
     return FileReaderComponent;
 }());
 window.FileReaderComponent = new FileReaderComponent();
