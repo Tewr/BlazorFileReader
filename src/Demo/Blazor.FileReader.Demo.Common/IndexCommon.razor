@@ -13,6 +13,9 @@ There are other demos in the menu.<br /><br />
 <br /><br />
 <textarea style="max-width: 100%;" cols="50" rows="20">@Output</textarea>
 @code {
+    [Parameter]
+    public int BufferSize { get; set; } = 20480;
+
     ElementReference inputElement;
 
     string Output { get; set; }
@@ -24,14 +27,13 @@ There are other demos in the menu.<br /><br />
 
     public async Task ReadFile()
     {
-        Console.WriteLine("DO something");
 
         Output = string.Empty;
         this.StateHasChanged();
         var nl = Environment.NewLine;
         foreach (var file in await fileReaderService.CreateReference(inputElement).EnumerateFilesAsync())
         {
-            
+
             var fileInfo = await file.ReadFileInfoAsync();
             Output += $"{nameof(IFileInfo)}.{nameof(fileInfo.Name)}: {fileInfo.Name}{nl}";
             Output += $"{nameof(IFileInfo)}.{nameof(fileInfo.Size)}: {fileInfo.Size}{nl}";
@@ -42,8 +44,7 @@ There are other demos in the menu.<br /><br />
             Console.WriteLine(Output);
             using (var fs = await file.OpenReadAsync())
             {
-                var bufferSize = 4096;
-                var buffer = new byte[bufferSize];
+                var buffer = new byte[BufferSize];
                 int count;
                 while ((count = await fs.ReadAsync(buffer, 0, buffer.Length)) != 0)
                 {
