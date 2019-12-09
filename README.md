@@ -27,7 +27,11 @@ For a complete use-case, see the [client](src/Demo/Blazor.FileReader.Wasm.Demo) 
 Setup IoC for ```IFileReaderService```as in ([Startup.cs](src/Demo/Blazor.FileReader.Wasm.Demo/Startup.cs#L11)):
 
 ```cs
-services.AddFileReaderService(options => options.UseWasmSharedBuffer = true);
+services.AddFileReaderService(options => {
+  options.UseWasmSharedBuffer = true;
+  // The following is is a workaround for missing javascript file in Blazor 3.1 Preview 4 / ASP.NET Core 3.1.
+  options.InitializeOnFirstCall = true;
+ });
 
 ```
 
