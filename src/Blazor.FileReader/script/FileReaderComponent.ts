@@ -21,6 +21,7 @@ interface IReadFileParams {
     position: number;
     count: number;
     callBackId: number;
+    bufferOffset: number;
 };
 
 interface IFileInfo {
@@ -160,37 +161,6 @@ class FileReaderComponent {
         return fileRef;
     }
 
-    /*
-    public ReadFileUnmarshalled = (dotNetArrayPtr: any, readFileParamsPtr: any): boolean => {
-        const readFileParams: IReadFileParams = JSON.parse(Blazor.platform.toJavaScriptString(readFileParamsPtr));
-        const callBack = (bytesRead: number, exception: any) => 
-            DotNet.invokeMethodAsync("Blazor.FileReader", "ReadFileUnmarshalledCallback", { callBackId: readFileParams.callBackId, bytesRead, exception });
-        const resolve = (bytesRead: number) => callBack(bytesRead, undefined);
-        const reject = (exception: any) => callBack(0, exception);
-        const dotNetBuffer: IDotNetBuffer = { toUint8Array: (): Uint8Array => Blazor.platform.toUint8Array(dotNetArrayPtr) };
-        const file: File = this.fileStreams[readFileParams.fileRef];
-        try {
-            const reader = new FileReader();
-            reader.onload = ((r) => {
-                return () => {
-                    try {
-                        const contents: ArrayBuffer = <ArrayBuffer>r.result;
-                        const dotNetBufferView: Uint8Array = dotNetBuffer.toUint8Array();
-                        dotNetBufferView.set(new Uint8Array(contents));
-                        resolve(contents.byteLength);
-                    } catch (e) {
-                        reject(e);
-                    }
-                }
-            })(reader);
-            reader.readAsArrayBuffer(file.slice(readFileParams.position, readFileParams.position + readFileParams.count));
-            return true;
-        } catch (e) {
-            reject(e);
-        }
-        return false;
-    }*/
-
     public ReadFileUnmarshalledAsync = (readFileParams: IReadFileParams): Promise<number> => {
         return new Promise<number>((resolve, reject) => {
             if (!FileReaderComponent.getStreamBuffer) {
@@ -209,7 +179,7 @@ class FileReaderComponent {
                                 null,
                                 [Blazor.platform.toDotNetString(readFileParams.callBackId.toString())]) as System_Array<any>;
                             const dotNetBufferView: Uint8Array = Blazor.platform.toUint8Array(dotNetBuffer);
-                            dotNetBufferView.set(new Uint8Array(contents));
+                            dotNetBufferView.set(new Uint8Array(contents), readFileParams.bufferOffset);
                             resolve(contents.byteLength);
                         } catch (e) {
                             reject(e);
