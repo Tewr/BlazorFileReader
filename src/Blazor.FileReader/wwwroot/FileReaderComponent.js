@@ -98,7 +98,7 @@ var FileReaderComponent = (function () {
                                 var contents = r.result;
                                 var dotNetBuffer = Blazor.platform.callMethod(FileReaderComponent.getStreamBuffer, null, [Blazor.platform.toDotNetString(readFileParams.callBackId.toString())]);
                                 var dotNetBufferView = Blazor.platform.toUint8Array(dotNetBuffer);
-                                dotNetBufferView.set(new Uint8Array(contents));
+                                dotNetBufferView.set(new Uint8Array(contents), readFileParams.bufferOffset);
                                 resolve(contents.byteLength);
                             }
                             catch (e) {

@@ -20,7 +20,9 @@ namespace Blazor.FileReader.E2ETestAppShared
         public bool UseBufferSize { get; set; } = false;
         public bool DebugOutput { get; set; } = true;
 
-        public int BufferSize { get; set; } = 4096;
+        public bool OutputString { get; set; } = false;
+
+        public int BufferSize { get; set; } = 32768;
 
         public async Task HashFile()
 
@@ -33,7 +35,18 @@ namespace Blazor.FileReader.E2ETestAppShared
             await HashFile(true);
         }
 
-        public async Task HashFile(bool useMemoryStream)
+        public async Task HashFileOffset()
+
+        {
+            await HashFile(false, true);
+        }
+
+        public async Task HashFileRamOffset()
+        {
+            await HashFile(true, true);
+        }
+
+        public async Task HashFile(bool useMemoryStream, bool offset = false)
         {
             Output = string.Empty;
             this.StateHasChanged();
@@ -41,9 +54,9 @@ namespace Blazor.FileReader.E2ETestAppShared
             foreach (var file in await fileReaderService.CreateReference(inputElement).EnumerateFilesAsync())
             {
                 IFileInfo fileInfo = null;
+                fileInfo = await file.ReadFileInfoAsync();
                 if (DebugOutput)
-                {
-                    fileInfo = await file.ReadFileInfoAsync();
+                {   
                     Output += $"{nameof(IFileInfo)}.{nameof(fileInfo.Name)}: {fileInfo.Name}{nl}";
                     Output += $"{nameof(IFileInfo)}.{nameof(fileInfo.Size)}: {fileInfo.Size}{nl}";
                     Output += $"{nameof(IFileInfo)}.{nameof(fileInfo.Type)}: {fileInfo.Type}{nl}";
@@ -75,18 +88,50 @@ namespace Blazor.FileReader.E2ETestAppShared
                             {
                                 outputBuffer.AppendLine($"Using chunks of size {bufferSize}");
                             }
-                            var buffer = new byte[bufferSize];
-                            int count;
 
-                            while ((count = await fs.ReadAsync(buffer, 0, buffer.Length)) != 0)
+                            var targetBufferSize = bufferSize;
+                            if (offset)
                             {
+                                targetBufferSize = (int)fileInfo?.Size;
+                            }
+                            var buffer = new byte[targetBufferSize];
+                            int count = 0;
+
+                            var targetOffset = 0;
+                            var len = offset ? Math.Min(bufferSize, (int)fileInfo.Size) : buffer.Length;
+                            while ((count = await fs.ReadAsync(buffer, targetOffset, len)) != 0)
+                            {
+                                if (offset)
+                                {
+                                    targetOffset += count;
+                                }
                                 if (DebugOutput)
                                 {
                                     outputBuffer.AppendLine($"Hashing {count} bytes. {fs.Position} / {fs.Length}");
+
                                 }
-                                hash.TransformBlock(buffer, 0, count, buffer, 0);
+                                if (!offset)
+                                {
+                                    hash.TransformBlock(buffer, 0, count, buffer, 0);
+                                }
+
+                                if (OutputString)
+                                {
+                                    outputBuffer.AppendLine("BEGIN BUFFER DUMP");
+                                    outputBuffer.AppendLine(Encoding.UTF8.GetString(buffer));
+                                    outputBuffer.AppendLine("END BUFFER DUMP");
+                                }
                             }
-                            hash.TransformFinalBlock(buffer, 0, count);
+                            if (!offset)
+                            {
+                                hash.TransformFinalBlock(buffer, 0, count);
+                            }
+                            else
+                            {
+                                hash.ComputeHash(buffer);
+                            }
+
+
                         }
                     }
                     var sb = new StringBuilder(hash.HashSize / 4);
