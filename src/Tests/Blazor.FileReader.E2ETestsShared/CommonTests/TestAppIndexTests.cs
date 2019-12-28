@@ -109,7 +109,7 @@ namespace Blazor.FileReader.Tests.Common
         [Fact]
         public void HashFileHotPath_Ms_HashEqualsFxHash()
         {
-            HashFileHotPath(true, null);
+            HashFileHotPath(false, null);
         }
 
         private void HashFileHotPath(bool useMemoryStream,int? bufferSize)
@@ -145,6 +145,33 @@ namespace Blazor.FileReader.Tests.Common
                 var actualList = Browser.FindElement(By.Id("debug-output")).Text.Split(Environment.NewLine);
                 var lineCount = 0;
 
+                //Assert
+                for (int i = 0; i < expectedOutputList.Length; i++)
+                {
+                    var lineInd = $"Line {lineCount.ToString().PadLeft(2)}:";
+                    var expected = expectedOutputList[i];
+                    var actual = actualList.Length > i ? actualList[i] : $"index out of bounds (length={actualList.Length})";
+
+                    Assert.Equal($"{lineInd}:{expected}", $"{lineInd}:{actual}");
+                    lineCount++;
+                }
+
+                // Act 2
+                fileInputElement.SendKeys(filePath);
+                gobutton = Browser.FindElement(By.Id("chunked-offset-button"));
+                gobutton.Click();
+                try
+                {
+                    new WebDriverWait(Browser, TimeSpan.FromSeconds(5)).Until(
+                    driver => driver.FindElement(By.Id("debug-output")).Text.Contains("--DONE"));
+                }
+                catch (OpenQA.Selenium.WebDriverTimeoutException)
+                {
+                    Assert.Equal(expectedOutput, Browser.FindElement(By.Id("debug-output")).Text);
+                }
+
+                actualList = Browser.FindElement(By.Id("debug-output")).Text.Split(Environment.NewLine);
+                lineCount = 0;
                 //Assert
                 for (int i = 0; i < expectedOutputList.Length; i++)
                 {
