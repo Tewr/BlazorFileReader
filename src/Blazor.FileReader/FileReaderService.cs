@@ -29,7 +29,7 @@ namespace Blazor.FileReader
 
     internal class FileReaderServiceOptions : IFileReaderServiceOptions
     {
-        public bool InitializeOnFirstCall { get; set; } = false;
+        public bool InitializeOnFirstCall { get; set; } = true;
 
         public bool UseWasmSharedBuffer { get; set; } = false;
     }
