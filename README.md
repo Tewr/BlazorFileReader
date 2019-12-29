@@ -119,6 +119,8 @@ The code for views looks the same for both [client](src/Demo/Blazor.FileReader.W
 ```
 
 ### Version notes
+Version ```1.2.0.19363``` fixes a bug in how the offset parameter is interpreted - now represents target buffer offset, not source buffer offset. The setup option ```InitializeOnFirstCall``` now defaults to ```true```.
+
 Version ```1.1.0.19274``` adds a parameter to ```IFileReaderRef.RegisterDropEventsAsync``` for specifying additive drag n drop: When called with parameter set to true, will not reset file list of drop target (see [demo](https://github.com/Tewr/BlazorFileReader/blob/821a8307743d23375642bf9db505d3377dcdf8f3/src/Demo/Blazor.FileReader.Demo.Common/DragnDropCommon.razor#L72) for usage). Thanks [@DNF-SaS](https://github.com/DNF-Sas) for the [feature suggestion](https://github.com/Tewr/BlazorFileReader/issues/91).
 
 Version ```1.0.0.19267``` adds support for ```v3.0.100```
