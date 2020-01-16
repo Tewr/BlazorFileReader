@@ -12,7 +12,7 @@ Blazor library exposing read-only file streams in [Blazor](https://github.com/as
 This library exposes read-only streams using ```<input type="file" />```
 and [FileReader](https://developer.mozilla.org/en-US/docs/Web/API/FileReader). Drag and drop targets may also be used to initialize streams.
 
-Here is a [Live demo](https://tewr.github.io/BlazorFileReader/) that contains the output of [the wasm demo project](src/Demo/Blazor.FileReader.Wasm.Demo). Currently, its a build based on ```v1.1.0```.
+Here is a [Live demo](https://tewr.github.io/BlazorFileReader/) that contains the output of [the wasm demo project](src/Demo/Blazor.FileReader.Wasm.Demo). Currently, its a build based on ```v1.2.0```.
 
 ## Installation
 
