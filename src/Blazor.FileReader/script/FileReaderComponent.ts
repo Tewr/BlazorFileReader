@@ -45,9 +45,6 @@ interface IDotNet {
 }
 
 class FileReaderComponent {
-    private readonly assembly = "Blazor.FileReader";
-    private readonly namespace = "Blazor.FileReader";
-    private readonly className = "FileReaderJsInterop";
 
     private newFileStreamReference: number = 0;
     private readonly fileStreams: { [reference: number]: { file: File, arrayBuffer: ArrayBuffer } } = {};
