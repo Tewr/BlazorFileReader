@@ -16,10 +16,6 @@ namespace Blazor.FileReader
         private readonly bool _needsInitialization = false;
         private readonly IFileReaderServiceOptions _options;
 
-        private static readonly object _bufferIdLock = new object();
-        private static readonly IDictionary<int, byte[]> buffers = new Dictionary<int, byte[]>();
-        private static int _nextBufferId = 0;
-
         internal IJSRuntime CurrentJSRuntime { get; }
 
         public FileReaderJsInterop(IJSRuntime jsRuntime, IFileReaderServiceOptions options)
@@ -133,22 +129,17 @@ namespace Blazor.FileReader
             int fileRef, byte[] buffer, long position, long bufferOffset, int count,
             CancellationToken cancellationToken)
         {
-            var callBackId = 0;
-            lock (_bufferIdLock)
-            {
-                callBackId = _nextBufferId++;
-                buffers.Add(callBackId, buffer);
-            }
-            var bytesRead = await CurrentJSRuntime.InvokeAsync<long>(
+            var bytesRead = CurrentJSRuntime.InvokeUnmarshalled<ReadFileParams, int>(
                 $"FileReaderComponent.ReadFileUnmarshalledAsync",
-                new { position, count, fileRef, callBackId, bufferOffset });
+                new ReadFileParams { 
+                    Buffer = buffer, 
+                    BufferOffset = bufferOffset, 
+                    Count = count, 
+                    FileRef = fileRef,
+                    Position = position
+                });
 
-            lock (_bufferIdLock)
-            {
-                buffers.Remove(callBackId);
-            }
-
-            return (int)bytesRead;
+            return bytesRead;
         }
 
         private async Task Initialize()
@@ -196,14 +187,5 @@ namespace Blazor.FileReader
             var bootStrapScript = $"(function(){{var d = document; var s = d.createElement('script'); s.src={blob}; s.async=false; d.head.appendChild(s); d.head.removeChild(s);}})();";
             return await CurrentJSRuntime.InvokeAsync<T>("eval", bootStrapScript);
         }
-
-        /// <remarks>
-        /// While it may be tempting to remove this method because it appears to be unused,
-        /// this method is referenced by client code and must persist.
-        /// </remarks>
-#pragma warning disable IDE0051 // Remove unused private members
-        private static byte[] GetStreamBuffer(string bufferId) => buffers[int.Parse(bufferId)];
-#pragma warning restore IDE0051 // Remove unused private members
-
     }
 }

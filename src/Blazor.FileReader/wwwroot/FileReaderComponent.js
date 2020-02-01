@@ -71,51 +71,54 @@ var FileReaderComponent = (function () {
             return delete (_this.fileStreams[fileRef]);
         };
         this.OpenRead = function (element, fileIndex) {
-            var files = _this.GetFiles(element);
-            if (!files) {
-                throw 'No FileList available.';
-            }
-            var file = files.item(fileIndex);
-            if (!file) {
-                throw "No file with index " + fileIndex + " available.";
-            }
-            var fileRef = _this.newFileStreamReference++;
-            _this.fileStreams[fileRef] = file;
-            return fileRef;
-        };
-        this.ReadFileUnmarshalledAsync = function (readFileParams) {
             return new Promise(function (resolve, reject) {
-                if (!FileReaderComponent.getStreamBuffer) {
-                    FileReaderComponent.getStreamBuffer =
-                        Blazor.platform.findMethod(_this.assembly, _this.namespace, _this.className, "GetStreamBuffer");
+                var files = _this.GetFiles(element);
+                if (!files) {
+                    throw 'No FileList available.';
                 }
-                var file = _this.fileStreams[readFileParams.fileRef];
-                try {
-                    var reader = new FileReader();
-                    reader.onload = (function (r) {
-                        return function () {
-                            try {
-                                var contents = r.result;
-                                var dotNetBuffer = Blazor.platform.callMethod(FileReaderComponent.getStreamBuffer, null, [Blazor.platform.toDotNetString(readFileParams.callBackId.toString())]);
-                                var dotNetBufferView = Blazor.platform.toUint8Array(dotNetBuffer);
-                                dotNetBufferView.set(new Uint8Array(contents), readFileParams.bufferOffset);
-                                resolve(contents.byteLength);
-                            }
-                            catch (e) {
-                                reject(e);
-                            }
-                        };
-                    })(reader);
-                    reader.readAsArrayBuffer(file.slice(readFileParams.position, readFileParams.position + readFileParams.count));
+                var file = files.item(fileIndex);
+                if (!file) {
+                    throw "No file with index " + fileIndex + " available.";
                 }
-                catch (e) {
-                    reject(e);
-                }
+                var fileRef = _this.newFileStreamReference++;
+                var reader = new FileReader();
+                reader.onload = (function (r) {
+                    return function () {
+                        try {
+                            var arrayBuffer = r.result;
+                            _this.fileStreams[fileRef] = { file: file, arrayBuffer: arrayBuffer };
+                            resolve(fileRef);
+                        }
+                        catch (e) {
+                            reject(e);
+                        }
+                    };
+                })(reader);
+                reader.readAsArrayBuffer(file);
+                return fileRef;
             });
+        };
+        this.ReadFileParamsPointer = function (readFileParamsPointer) {
+            return {
+                buffer: Blazor.platform.readInt32Field(readFileParamsPointer, 0),
+                bufferOffset: Blazor.platform.readUint64Field(readFileParamsPointer, 4),
+                count: Blazor.platform.readInt32Field(readFileParamsPointer, 12),
+                fileRef: Blazor.platform.readInt32Field(readFileParamsPointer, 16),
+                position: Blazor.platform.readUint64Field(readFileParamsPointer, 20)
+            };
+        };
+        this.ReadFileUnmarshalledAsync = function (readFileParamsPointer) {
+            var readFileParams = _this.ReadFileParamsPointer(readFileParamsPointer);
+            var fileStream = _this.fileStreams[readFileParams.fileRef];
+            var dotNetBuffer = readFileParams.buffer;
+            var dotNetBufferView = Blazor.platform.toUint8Array(dotNetBuffer);
+            var byteCount = Math.min(fileStream.arrayBuffer.byteLength - readFileParams.position, readFileParams.count);
+            dotNetBufferView.set(new Uint8Array(fileStream.arrayBuffer, readFileParams.position, byteCount), readFileParams.bufferOffset);
+            return byteCount;
         };
         this.ReadFileMarshalledAsync = function (readFileParams) {
             return new Promise(function (resolve, reject) {
-                var file = _this.fileStreams[readFileParams.fileRef];
+                var file = _this.fileStreams[readFileParams.fileRef].file;
                 try {
                     var reader = new FileReader();
                     reader.onload = (function (r) {
