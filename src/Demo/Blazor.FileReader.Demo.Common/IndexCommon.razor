@@ -1,6 +1,7 @@
 ﻿@using System.IO;
 @using System.Diagnostics;
 @inject IFileReaderService fileReaderService
+@inject IJSRuntime CurrentJSRuntime
 <h1>Hello, files!</h1>
 
 Welcome to your new filestreaming app.
@@ -72,7 +73,8 @@ There are other demos in the menu.
                     {
                         stopwatch.Stop();
                         Output += $"Read {count} bytes ({progress:00}%). {fs.Position} / {fs.Length}{nl}";
-                        this.StateHasChanged();
+                        await InvokeAsync(StateHasChanged);
+                        await Task.Delay(1);
                         lastAnnounce = progress;
                         stopwatch.Start();
                     }
