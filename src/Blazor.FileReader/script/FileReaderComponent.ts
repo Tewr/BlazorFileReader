@@ -189,7 +189,6 @@ class FileReaderComponent {
     public ReadFileUnmarshalledAsync = (readFileParamsPointer: Pointer) => {
         const readFileParams = this.ReadFileParamsPointer(readFileParamsPointer);
         const fileStream = this.fileStreams[readFileParams.fileRef];
-           
         const dotNetBuffer = readFileParams.buffer;
         const dotNetBufferView: Uint8Array = Blazor.platform.toUint8Array(dotNetBuffer);
         const byteCount = Math.min(fileStream.arrayBuffer.byteLength - readFileParams.position, readFileParams.count);

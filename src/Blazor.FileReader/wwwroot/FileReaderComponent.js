@@ -3,9 +3,6 @@
 var FileReaderComponent = (function () {
     function FileReaderComponent() {
         var _this = this;
-        this.assembly = "Blazor.FileReader";
-        this.namespace = "Blazor.FileReader";
-        this.className = "FileReaderJsInterop";
         this.newFileStreamReference = 0;
         this.fileStreams = {};
         this.dragElements = new Map();
