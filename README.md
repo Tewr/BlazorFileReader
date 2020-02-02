@@ -120,7 +120,7 @@ The code for views looks the same for both [client](src/Demo/Blazor.FileReader.W
 
 ### Version notes
 
-Version ```1.3.0.20033``` adds compatibility with Blazor 3.2 (CSB / Wasm)
+Version ```1.3.0.20033``` adds compatibility with Blazor 3.2 (CSB / Wasm). Attention, ```ReadAsync``` is no longer fulla async and may run on the UI thread. If you are using a progress bar or similar progress reporting§ it might be necessary to yield back to the renderer. See the demo project for an example using ```await Task.Delay(1);```.
 
 <details><summary>Version ```1.2.0.19363```</summary> fixes a bug in how the offset parameter is interpreted - now represents target buffer offset, not source buffer offset. The setup option ```InitializeOnFirstCall``` now defaults to ```true```.</details>
 
