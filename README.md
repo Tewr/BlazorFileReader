@@ -120,40 +120,40 @@ The code for views looks the same for both [client](src/Demo/Blazor.FileReader.W
 
 ### Version notes
 
-Version ```1.3.0.20033``` adds compatibility with Blazor 3.2 (CSB / Wasm). Attention, ```ReadAsync``` is no longer fulla async and may run on the UI thread. If you are using a progress bar or similar progress reporting§ it might be necessary to yield back to the renderer. See the demo project for an example using ```await Task.Delay(1);```.
+Version <code>1.3.0.20033</code> adds compatibility with Blazor 3.2 (CSB / Wasm). Attention, ```ReadAsync``` is no longer fulla async and may run on the UI thread. If you are using a progress bar or similar progress reporting§ it might be necessary to yield back to the renderer. See the demo project for an example using ```await Task.Delay(1);```.
 
-<details><summary>Version ```1.2.0.19363```</summary> fixes a bug in how the offset parameter is interpreted - now represents target buffer offset, not source buffer offset. The setup option ```InitializeOnFirstCall``` now defaults to ```true```.</details>
+<details><summary>Version <code>1.2.0.19363</code></summary> fixes a bug in how the offset parameter is interpreted - now represents target buffer offset, not source buffer offset. The setup option ```InitializeOnFirstCall``` now defaults to ```true```.</details>
 
-<details><summary>Version ```1.1.0.19274```</summary> adds a parameter to ```IFileReaderRef.RegisterDropEventsAsync``` for specifying additive drag n drop: When called with parameter set to true, will not reset file list of drop target (see [demo](https://github.com/Tewr/BlazorFileReader/blob/821a8307743d23375642bf9db505d3377dcdf8f3/src/Demo/Blazor.FileReader.Demo.Common/DragnDropCommon.razor#L72) for usage). Thanks [@DNF-SaS](https://github.com/DNF-Sas) for the [feature suggestion](https://github.com/Tewr/BlazorFileReader/issues/91).</details>
+<details><summary>Version <code>1.1.0.19274</code></summary> adds a parameter to ```IFileReaderRef.RegisterDropEventsAsync``` for specifying additive drag n drop: When called with parameter set to true, will not reset file list of drop target (see [demo](https://github.com/Tewr/BlazorFileReader/blob/821a8307743d23375642bf9db505d3377dcdf8f3/src/Demo/Blazor.FileReader.Demo.Common/DragnDropCommon.razor#L72) for usage). Thanks [@DNF-SaS](https://github.com/DNF-Sas) for the [feature suggestion](https://github.com/Tewr/BlazorFileReader/issues/91).</details>
 
-<details><summary>Version ```1.0.0.19267```</summary> adds support for ```v3.0.100```</details>
+<details><summary>Version <code>1.0.0.19267</code></summary> adds support for ```v3.0.100```</details>
 
-<details><summary>Version ```0.16.0.19262```</summary> fixes [a packaging issue](https://github.com/Tewr/BlazorFileReader/issues/55).</details>
+<details><summary>Version <code>0.16.0.19262</code></summary> fixes [a packaging issue](https://github.com/Tewr/BlazorFileReader/issues/55).</details>
 
-<details><summary>Version ```0.16.0.19261```</summary> adds support for ```v3.0.100-rc1-014190```</details>
+<details><summary>Version <code>0.16.0.19261</code></summary> adds support for ```v3.0.100-rc1-014190```</details>
 
-<details><summary>Version ```0.15.0.19242```</summary> adds support for ```v3.0.0-preview9-014004```. Also fixes [a minor packaging issue](https://github.com/Tewr/BlazorFileReader/issues/55). New API: [IBase64Stream](https://github.com/Tewr/BlazorFileReader/blob/d9cdea5d954eeac6f3ba2a99ec5dbc9181bc23de/src/Blazor.FileReader/FileReaderRef.cs#L50), for optimizing third-party cloud uploads (data exposed as raw base64 strings). Mostly interesting for server-side deployments.</details>
+<details><summary>Version <code>0.15.0.19242</code></summary> adds support for ```v3.0.0-preview9-014004```. Also fixes [a minor packaging issue](https://github.com/Tewr/BlazorFileReader/issues/55). New API: [IBase64Stream](https://github.com/Tewr/BlazorFileReader/blob/d9cdea5d954eeac6f3ba2a99ec5dbc9181bc23de/src/Blazor.FileReader/FileReaderRef.cs#L50), for optimizing third-party cloud uploads (data exposed as raw base64 strings). Mostly interesting for server-side deployments.</details>
 
-<details><summary>Version ```0.14.19242```</summary> fixes [a possible race condition for server-side initialization](https://github.com/Tewr/BlazorFileReader/issues/71).</details>
+<details><summary>Version <code>0.14.19242</code></summary> fixes [a possible race condition for server-side initialization](https://github.com/Tewr/BlazorFileReader/issues/71).</details>
 
-<details><summary>Version ```0.14.19226```</summary> adds support for sdk  ```3.0.0-preview8-013656```. Adds shared Buffer back again for WASM, this can be activated by setting the ```UseWasmSharedBuffer``` option to true (recommended).</details>
+<details><summary>Version <code>0.14.19226</code></summary> adds support for sdk  ```3.0.0-preview8-013656```. Adds shared Buffer back again for WASM, this can be activated by setting the ```UseWasmSharedBuffer``` option to true (recommended).</details>
 
-<details><summary>Version ```0.13.19207``</summary>` Fixes a regression with the ```ClearValue``` method and adds some essential events to the drag and drop api.</details>
+<details><summary>Version <code>0.13.19207</code></summary>` Fixes a regression with the ```ClearValue``` method and adds some essential events to the drag and drop api.</details>
 
-<details><summary>Version ```0.13.19206```</summary> adds support for sdk ```3.0.0-preview7.19365.7```. New feature: Drag and drop (contribution by [@catlan](https://github.com/catlan))</details>
+<details><summary>Version <code>0.13.19206</code></summary> adds support for sdk ```3.0.0-preview7.19365.7```. New feature: Drag and drop (contribution by [@catlan](https://github.com/catlan))</details>
 
-<details><summary>Version ```0.12.19186```</summary> fixes an issue with server-side setup which was only visible when having multiple users.</details>
+<details><summary>Version <code>0.12.19186</code></summary> fixes an issue with server-side setup which was only visible when having multiple users.</details>
 
-<details><summary>Version ```0.12.19168```</summary> adds support for sdk ```3.0.0-preview6.19307.2```, and several issues are resolved with this release, notably meticulous setup and issues with buffer size for server-side projects. Also, the Wasm helper package has been deprecated.</details>
+<details><summary>Version <code>0.12.19168</code></summary> adds support for sdk ```3.0.0-preview6.19307.2```, and several issues are resolved with this release, notably meticulous setup and issues with buffer size for server-side projects. Also, the Wasm helper package has been deprecated.</details>
 
-<details><summary>Version ```0.11.0```</summary> adds support for sdk ```3.0.0-preview5-19227-01```. It also introduces a tiny feature: The ```IFileReaderRef.ClearValue()``` method, used to clear the value of a referenced file input. Also, fixes a bug in Edge and a package issue.</details>
+<details><summary>Version <code>0.11.0</code></summary> adds support for sdk ```3.0.0-preview5-19227-01```. It also introduces a tiny feature: The ```IFileReaderRef.ClearValue()``` method, used to clear the value of a referenced file input. Also, fixes a bug in Edge and a package issue.</details>
 
-<details><summary>Version ```0.10.0```</summary> adds support for sdk ```v3.0.0-preview-4-19216-03```</details>
+<details><summary>Version <code>0.10.0</code></summary> adds support for sdk ```v3.0.0-preview-4-19216-03```</details>
 
-<details><summary>Versions ```0.9.0```</summary> introduces a small helper-package for the IoC setup of Wasm, injecting an implementation of ```IInvokeUnmarshalled```.</details>
+<details><summary>Versions <code>0.9.0</code></summary> introduces a small helper-package for the IoC setup of Wasm, injecting an implementation of ```IInvokeUnmarshalled```.</details>
 
-<details><summary>Versions ```0.8.0```</summary> requires copy-paste implementation of ```IInvokeUnmarshalled```.</details>
+<details><summary>Versions <code>0.8.0</code></summary> requires copy-paste implementation of ```IInvokeUnmarshalled```.</details>
 
-<details><summary>Versions previous to ```0.7.1```</summary> did not support server-side Blazor and would throw ```[System.PlatformNotSupportedException] Requires MonoWebAssemblyJSRuntime as the JSRuntime```.</details>
+<details><summary>Versions previous to <code>0.7.1</code></summary> did not support server-side Blazor and would throw ```[System.PlatformNotSupportedException] Requires MonoWebAssemblyJSRuntime as the JSRuntime```.</details>
 
-<details><summary>Versions previous to ```0.5.1```</summary> wrapped the input element in a Blazor Component, this has been removed for better configurability and general lack of value.</details>
+<details><summary>Versions previous to <code>0.5.1</code></summary> wrapped the input element in a Blazor Component, this has been removed for better configurability and general lack of value.</details>
