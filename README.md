@@ -12,7 +12,7 @@ Blazor library exposing read-only file streams in [Blazor](https://github.com/as
 This library exposes read-only streams using ```<input type="file" />```
 and [FileReader](https://developer.mozilla.org/en-US/docs/Web/API/FileReader). Drag and drop targets may also be used to initialize streams.
 
-Here is a [Live demo](https://tewr.github.io/BlazorFileReader/) that contains the output of [the wasm demo project](src/Demo/Blazor.FileReader.Wasm.Demo). Currently, its a build based on ```v1.2.0```.
+Here is a [Live demo](https://tewr.github.io/BlazorFileReader/) that contains the output of [the wasm demo project](src/Demo/Blazor.FileReader.Wasm.Demo). Currently, its a build based on ```v1.3.0```.
 
 ## Installation
 
@@ -119,6 +119,8 @@ The code for views looks the same for both [client](src/Demo/Blazor.FileReader.W
 ```
 
 ### Version notes
+
+Version <code>1.3.0.20041</code> fixes a faulty assembly version in the package.
 
 Version <code>1.3.0.20033</code> adds compatibility with Blazor 3.2 (CSB / Wasm). Attention, ```ReadAsync``` is no longer a fully async implementation and may run on the UI thread. If you are using a progress bar or similar progress reporting it might be necessary to yield back to the renderer. See the demo project for an example - it is using ```await Task.Delay(1);``` to render while reading.
 
