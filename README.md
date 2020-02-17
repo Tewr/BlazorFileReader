@@ -119,6 +119,7 @@ The code for views looks the same for both [client](src/Demo/Blazor.FileReader.W
 ```
 
 ### Version notes
+Version <code>1.3.0.20048</code> fixes [a bug]((https://github.com/Tewr/BlazorFileReader/issues/55) that would throw an exception when attempting to use reflection on the assembly (Server-side / SSB).
 
 Version <code>1.3.0.20041</code> fixes a faulty assembly version in the package.
 

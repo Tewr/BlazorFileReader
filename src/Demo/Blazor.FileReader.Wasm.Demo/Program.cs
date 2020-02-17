@@ -11,7 +11,7 @@ namespace Blazor.FileReader.Wasm.Demo
             builder.RootComponents.Add<App>("app");
 
             builder.Services.AddFileReaderService(options => options.UseWasmSharedBuffer = true);
-
+            
             await builder.Build().RunAsync();
         }
     }
