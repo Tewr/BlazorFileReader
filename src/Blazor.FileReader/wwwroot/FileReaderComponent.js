@@ -97,11 +97,11 @@ var FileReaderComponent = (function () {
         };
         this.ReadFileParamsPointer = function (readFileParamsPointer) {
             return {
-                buffer: Blazor.platform.readInt32Field(readFileParamsPointer, 0),
-                bufferOffset: Blazor.platform.readUint64Field(readFileParamsPointer, 4),
-                count: Blazor.platform.readInt32Field(readFileParamsPointer, 12),
-                fileRef: Blazor.platform.readInt32Field(readFileParamsPointer, 16),
-                position: Blazor.platform.readUint64Field(readFileParamsPointer, 20)
+                bufferOffset: Blazor.platform.readUint64Field(readFileParamsPointer, 0),
+                count: Blazor.platform.readInt32Field(readFileParamsPointer, 8),
+                fileRef: Blazor.platform.readInt32Field(readFileParamsPointer, 12),
+                position: Blazor.platform.readUint64Field(readFileParamsPointer, 16),
+                buffer: Blazor.platform.readInt32Field(readFileParamsPointer, 24)
             };
         };
         this.ReadFileUnmarshalledAsync = function (readFileParamsPointer) {
