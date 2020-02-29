@@ -107,9 +107,15 @@ namespace Blazor.FileReader.Tests.Common
 
 
         [Fact]
-        public void HashFileHotPath_Ms_HashEqualsFxHash()
+        public void HashFileHotPath_NoMs_HashEqualsFxHash()
         {
             HashFileHotPath(false, null);
+        }
+
+        [Fact]
+        public void HashFileHotPath_Ms_HashEqualsFxHash()
+        {
+            HashFileHotPath(true, null);
         }
 
         private void HashFileHotPath(bool useMemoryStream,int? bufferSize)
@@ -158,7 +164,7 @@ namespace Blazor.FileReader.Tests.Common
 
                 // Act 2
                 fileInputElement.SendKeys(filePath);
-                gobutton = Browser.FindElement(By.Id("chunked-offset-button"));
+                gobutton = Browser.FindElement(By.Id(useMemoryStream? "full-ram-offset-button" : "chunked-offset-button"));
                 gobutton.Click();
                 try
                 {
