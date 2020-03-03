@@ -7,10 +7,10 @@ using Blazor.FileReader.WasmTestApp.Server;
 
 namespace BlazorFileReader.E2ETests.Tests
 {
-    public class BlazorDragnDropTests : DragNDropTests<Startup, WasmE2ETestFixture>
+    public class WasmTestAppIndexTests : TestSha256<Startup, WasmE2ETestFixture>
     {
 
-        public BlazorDragnDropTests(WasmE2ETestFixture fixture) 
+        public WasmTestAppIndexTests(WasmE2ETestFixture fixture) 
             : base(fixture)
         {
         }
