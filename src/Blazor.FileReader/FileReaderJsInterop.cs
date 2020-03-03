@@ -149,12 +149,6 @@ namespace Blazor.FileReader
             {
                 return;
             }
-
-            string scriptContent;
-            foreach (var resourceName in this.GetType().Assembly.GetManifestResourceNames())
-            {
-                Console.WriteLine(resourceName);
-            }
             
             using (var stream = this.GetType().Assembly.GetManifestResourceStream("blazor:js:FileReaderComponent.js"))
             {
