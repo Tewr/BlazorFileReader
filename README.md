@@ -24,12 +24,10 @@ For a complete use-case, see the [client](src/Demo/Blazor.FileReader.Wasm.Demo) 
 
 ### Client-side / Wasm Project type / "CSB"
 
-Setup IoC for ```IFileReaderService```as in ([Startup.cs](src/Demo/Blazor.FileReader.Wasm.Demo/Startup.cs#L11)):
+Setup IoC for ```IFileReaderService```as in ([Program.cs](/src/Demo/Blazor.FileReader.Wasm.Demo/Program.cs#L13)):
 
 ```cs
-services.AddFileReaderService(options => {
-  options.UseWasmSharedBuffer = true;
- });
+services.AddFileReaderService(options => options.UseWasmSharedBuffer = true);
 
 ```
 
