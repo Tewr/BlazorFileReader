@@ -7,9 +7,8 @@
 </p>
 
 # BlazorFileReader
-Blazor library exposing read-only file streams in [Blazor](https://github.com/aspnet/AspNetCore/tree/master/src/Components). 
-
-This library exposes read-only streams using ```<input type="file" />```
+Blazor library exposing read-only file streams in [Blazor](https://github.com/dotnet/aspnetcore/tree/master/src/Components#blazor) 
+ using ```<input type="file" />```
 and [FileReader](https://developer.mozilla.org/en-US/docs/Web/API/FileReader). Drag and drop targets may also be used to initialize streams.
 
 Here is a [Live demo](https://tewr.github.io/BlazorFileReader/) that contains the output of [the wasm demo project](src/Demo/Blazor.FileReader.Wasm.Demo). Currently, its a build based on ```v1.3.0```.
