@@ -1,4 +1,10 @@
 # Starter pipeline
+- task: DotNetCoreCLI@2
+  inputs:
+    command: 'pack -c Release'
+    packagesToPack: '**/src/Blazor.FileReader/Blazor.FileReader.csproj'
+    includesymbols: true
+    versioningScheme: 'off'
 # Start with a minimal pipeline that you can customize to build and deploy your code.
 # Add steps that build, run tests, deploy, and more:
 # https://aka.ms/yaml
