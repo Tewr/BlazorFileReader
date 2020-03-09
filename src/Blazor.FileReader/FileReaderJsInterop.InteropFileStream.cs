@@ -7,7 +7,7 @@ namespace Blazor.FileReader
 {
     internal partial class FileReaderJsInterop
     {
-        private class InteropFileStream : Stream
+        private class InteropFileStream : AsyncDisposableStream
         {
             private readonly int fileRef;
             private readonly long length;
@@ -129,6 +129,15 @@ namespace Blazor.FileReader
                 ThrowIfDisposed();
 
                 return value;
+            }
+
+            public override async ValueTask DisposeAsync()
+            {
+                if (!isDisposed)
+                {
+                    await this.fileReaderJsInterop.DisposeStream(fileRef);
+                    isDisposed = true;
+                }
             }
         }
     }

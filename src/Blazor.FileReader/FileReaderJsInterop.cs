@@ -37,7 +37,7 @@ namespace Blazor.FileReader
             return await CurrentJSRuntime.InvokeAsync<bool>($"FileReaderComponent.UnregisterDropEvents", elementReference);
         }
 
-        public async Task<Stream> OpenFileStream(ElementReference elementReference, int index)
+        public async Task<AsyncDisposableStream> OpenFileStream(ElementReference elementReference, int index)
         {
             var fileInfo = await GetFileInfoFromElement(elementReference, index);
             return new InteropFileStream(await OpenReadAsync(elementReference, index), fileInfo.Size, this);
