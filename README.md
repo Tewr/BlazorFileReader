@@ -116,11 +116,13 @@ The code for views looks the same for both [client](src/Demo/Blazor.FileReader.W
 ```
 
 ### Version notes
-Version <code>1.3.0.20049</code> fixes [a bug](https://github.com/Tewr/BlazorFileReader/issues/55) that would throw an exception when attempting to use reflection on the assembly (Server-side / SSB).
+Version <code>1.4.0.20072</code> adds compatibility with Blazor 3.2 (CSB / Wasm) preview 2. Also Adds support for the <code>IAsyncDisposable</code> interface.
 
-Version <code>1.3.0.20041</code> fixes a faulty assembly version in the package.
+<details><summary>Version <code>1.3.0.20049</code></summary> fixes [a bug](https://github.com/Tewr/BlazorFileReader/issues/55) that would throw an exception when attempting to use reflection on the assembly (Server-side / SSB).</details>
 
-Version <code>1.3.0.20033</code> adds compatibility with Blazor 3.2 (CSB / Wasm). Attention, ```ReadAsync``` is no longer a fully async implementation and may run on the UI thread. If you are using a progress bar or similar progress reporting it might be necessary to yield back to the renderer. See the demo project for an example - it is using ```await Task.Delay(1);``` to render while reading.
+<details><summary>Version <code>1.3.0.20041</code></summary> fixes a faulty assembly version in the package.</details>
+
+<details><summary>Version <code>1.3.0.20033</code></summary> adds compatibility with Blazor 3.2 (CSB / Wasm). Attention, ```ReadAsync``` is no longer a fully async implementation and may run on the UI thread. If you are using a progress bar or similar progress reporting it might be necessary to yield back to the renderer. See the demo project for an example - it is using ```await Task.Delay(1);``` to render while reading.</details>
 
 <details><summary>Version <code>1.2.0.19363</code></summary> fixes a bug in how the offset parameter is interpreted - now represents target buffer offset, not source buffer offset. The setup option ```InitializeOnFirstCall``` now defaults to ```true```.</details>
 
