@@ -9,7 +9,8 @@ namespace Blazor.FileReader
     internal static class IJSRuntimeExtensions
     {
         private readonly static Type WebAssemblyJSRuntime
-            = Type.GetType("Mono.WebAssembly.Interop.MonoWebAssemblyJSRuntime, Mono.WebAssembly.Interop");
+            = Type.GetType("Microsoft.JSInterop.WebAssembly.WebAssemblyJSRuntime, Microsoft.JSInterop.WebAssembly") ??
+            Type.GetType("Mono.WebAssembly.Interop.MonoWebAssemblyJSRuntime, Mono.WebAssembly.Interop");
 
         private readonly static MethodInfo _invokeUnmarshalled = GetInvokeUnmarshalled();
         private readonly static Dictionary<string, MethodInfo> _genericinvokeUnmarshalledMethods 
