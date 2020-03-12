@@ -48,7 +48,7 @@ namespace Blazor.FileReader
         /// Opens a stream to read the file.
         /// </summary>
         /// <returns></returns>
-        Task<Stream> OpenReadAsync();
+        Task<AsyncDisposableStream> OpenReadAsync();
 
         /// <summary>
         /// Opens a base64-encoded string stream to read the file
@@ -79,7 +79,7 @@ namespace Blazor.FileReader
     /// <summary>
     /// Provides a base64-encoded string view of a sequence of bytes from a file.
     /// </summary>
-    public interface IBase64Stream : IDisposable
+    public interface IBase64Stream : IDisposable, IAsyncDisposable
     {
         /// <summary>
         /// Gets or sets the current byte position in the Stream.
@@ -178,7 +178,7 @@ namespace Blazor.FileReader
             return InnerCreateMemoryStreamAsync(bufferSize);
         }
 
-        public Task<Stream> OpenReadAsync()
+        public Task<AsyncDisposableStream> OpenReadAsync()
         {
             return this.fileLoaderRef.FileReaderJsInterop.OpenFileStream(this.fileLoaderRef.ElementRef, index);
         }
@@ -212,7 +212,7 @@ namespace Blazor.FileReader
 
             var buffer = new byte[bufferSize];
             
-            using (var fs = await OpenReadAsync())
+            await using (var fs = await OpenReadAsync())
             {
                 int count;
                 while ((count = await fs.ReadAsync(buffer, 0, buffer.Length)) != 0)
@@ -245,6 +245,12 @@ namespace Blazor.FileReader
         public long? LastModified { get; set; }
 
         public DateTime? LastModifiedDate => this.lastModifiedDate.Value;
+    }
+
+    public abstract class AsyncDisposableStream : Stream, IAsyncDisposable
+    {
+        /// <inheritdoc/>
+        public abstract ValueTask DisposeAsync();
     }
 
 }

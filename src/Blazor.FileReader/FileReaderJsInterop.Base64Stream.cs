@@ -45,6 +45,14 @@ namespace Blazor.FileReader
                 }
             }
 
+            public async ValueTask DisposeAsync()
+            {
+                if (!this.isDisposed)
+                {
+                    await this.fileReaderJsInterop.DisposeStream(fileRef);
+                }
+            }
+
             public async Task<string> ReadAsync(int offset, int count, CancellationToken cancellationToken)
             {
                 ThrowIfDisposed();
