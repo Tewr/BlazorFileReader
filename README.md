@@ -98,7 +98,7 @@ The code for views looks the same for both [client](src/Demo/Blazor.FileReader.W
         foreach (var file in await fileReaderService.CreateReference(inputTypeFileElement).EnumerateFilesAsync())
         {
             // Read into buffer and act (uses less memory)
-            using (Stream stream = await file.OpenReadAsync()) {
+            await using (Stream stream = await file.OpenReadAsync()) {
                 // Do (async) stuff with stream...
                 await stream.ReadAsync(buffer, ...);
                 // The following will fail. Only async read is allowed.
