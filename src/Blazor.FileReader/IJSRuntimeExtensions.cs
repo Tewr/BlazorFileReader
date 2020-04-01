@@ -26,11 +26,12 @@ namespace Blazor.FileReader
             var cacheKey = $"{typeof(TReturn)}|{typeof(TParam)}";
             if (!_genericinvokeUnmarshalledMethods.TryGetValue(cacheKey, out var genericMethodInfo))
             {
-                genericMethodInfo = _invokeUnmarshalled.MakeGenericMethod(typeof(TParam), typeof(TReturn));
+                // Create InvokeUnmarshalled<T0, T1, T2, TResult>
+                genericMethodInfo = _invokeUnmarshalled.MakeGenericMethod(typeof(TParam), typeof(object), typeof(object), typeof(TReturn));
                 _genericinvokeUnmarshalledMethods.Add(cacheKey, genericMethodInfo);
             }
 
-            return (TReturn)genericMethodInfo.Invoke(jsRuntime, new object[] { methodName, parameter });
+            return (TReturn)genericMethodInfo.Invoke(jsRuntime, new object[] { methodName, parameter, null, null });
         }
 
         private static MethodInfo GetInvokeUnmarshalled()
@@ -43,13 +44,14 @@ namespace Blazor.FileReader
 
             foreach (var methodInfo in WebAssemblyJSRuntime.GetMethods())
             {
-                if (methodInfo.Name == "InvokeUnmarshalled" && methodInfo.GetParameters().Length == 2)
+                // Looking for TResult InvokeUnmarshalled<T0, T1, T2, TResult>(string identifier, T0 arg0, T1 arg1, T2 arg3)
+                if (methodInfo.Name == "InvokeUnmarshalled" && methodInfo.GetParameters().Length == 4)
                 {
                     return methodInfo;
                 }
             }
 
-            System.Diagnostics.Debug.WriteLine($"{nameof(IJSRuntimeExtensions)} : MonoWebAssemblyJSRuntime.InvokeUnmarshalled method not found.");
+            System.Diagnostics.Debug.WriteLine($"{nameof(IJSRuntimeExtensions)} : MonoWebAssemblyJSRuntime.InvokeUnmarshalled<T0, T1, T2, TResult> method not found.");
 
             return null;
         }
