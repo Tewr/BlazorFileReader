@@ -116,7 +116,9 @@ The code for views looks the same for both [client](src/Demo/Blazor.FileReader.W
 ```
 
 ### Version notes
-Version <code>1.4.0.20072</code> adds compatibility with Blazor 3.2 (CSB / Wasm) preview 2. Also Adds support for the <code>IAsyncDisposable</code> interface.
+Version <code>1.5.0.20092</code> adds compatibility with Blazor 3.2 (CSB / Wasm) preview 3. Package now depends on latest version of <code>Microsoft.AspNetCore.Components (3.0.0 -> 5.0.0-preview.1.20124.5)</code>
+
+<details><summary>Version <code>1.4.0.20072</code></summary> adds compatibility with Blazor 3.2 (CSB / Wasm) preview 2. Also Adds support for the <code>IAsyncDisposable</code> interface.</details>
 
 <details><summary>Version <code>1.3.0.20049</code></summary> fixes [a bug](https://github.com/Tewr/BlazorFileReader/issues/55) that would throw an exception when attempting to use reflection on the assembly (Server-side / SSB).</details>
 
