@@ -87,7 +87,7 @@ class FileReaderComponent {
     }
 
     private GetFiles(element: HTMLElement): FileList {
-        var files: FileList = null;
+        let files: FileList = null;
         if (element instanceof HTMLInputElement) {
             files = (element as HTMLInputElement).files;
         } else {
@@ -163,7 +163,7 @@ class FileReaderComponent {
             reader.onload = ((r) => {
                 return () => {
                     try {
-                        const arrayBuffer: ArrayBuffer = <ArrayBuffer>r.result;
+                        const arrayBuffer: ArrayBuffer = r.result as ArrayBuffer;
                         this.fileStreams[fileRef] = { file, arrayBuffer };
                         
                         resolve(fileRef);
@@ -238,12 +238,12 @@ class FileReaderComponent {
                 this[i] = existing[i];
             }
 
-            var eligebleAdditions = [];
+            const eligebleAdditions = [];
 
             // Check for doubles
             for (let i = 0; i < additions.length; i++) {
                 let exists = false;
-                let addition = additions[i];
+                const addition = additions[i];
                 for (let j = 0; j < existing.length; j++) {
                     if (existing[j] === addition) {
                         exists = true;
