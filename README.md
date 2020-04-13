@@ -3,7 +3,7 @@
 [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=AC77J8GFQ6LYA&item_name=Blazor+File+Reader+Project&currency_code=EUR&source=url)
 
 <p align="center">
-  <img width="150" height="150" src="icon.svg">
+  <img width="150" height="150" src="icon.svg" align="right">
 </p>
 
 # BlazorFileReader
@@ -17,7 +17,7 @@ Here is a [Live demo](https://tewr.github.io/BlazorFileReader/) that contains th
 
 Use [Nuget](https://www.nuget.org/packages/Tewr.Blazor.FileReader): ```Install-Package Tewr.Blazor.FileReader```
 
-Make sure your environment is up to date with the appropriate SDK and VS2019 16.4. See [this article](https://devblogs.microsoft.com/aspnet/asp-net-core-and-blazor-updates-in-net-core-3-0/) for more details.
+Make sure your environment is up to date with the appropriate SDK and VS2019 16.6. See [this article](https://devblogs.microsoft.com/aspnet/blazor-webassembly-3-2-0-preview-3-release-now-available/) for more details.
 Depending on your [project type](https://docs.microsoft.com/en-us/aspnet/core/razor-components/faq?view=aspnetcore-3.0), use one of the two examples below. 
 For a complete use-case, see the [client](src/Demo/Blazor.FileReader.Wasm.Demo) or [server-side](/src/Demo/Blazor.FileReader.ServerSide.Demo) demo projects.
 
