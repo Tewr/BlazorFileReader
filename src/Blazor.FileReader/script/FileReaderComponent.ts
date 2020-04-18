@@ -1,5 +1,4 @@
-﻿declare var Blazor: IBlazor;
-declare var DotNet: IDotNet;
+﻿declare const Blazor: IBlazor;
 
 interface IBlazor {
     platform: IBlazorPlatform;
@@ -40,18 +39,14 @@ interface IDotNetBuffer {
     toUint8Array(): Uint8Array;
 }
 
-interface IDotNet {
-    invokeMethodAsync<T>(assemblyName: string, methodIdentifier: string, ...args: any[]): Promise<T>
-}
-
 class FileReaderComponent {
 
-    private newFileStreamReference: number = 0;
+    private newFileStreamReference = 0;
     private readonly fileStreams: { [reference: number]: { file: File, arrayBuffer: ArrayBuffer } } = {};
     private readonly dragElements: Map<HTMLElement, EventListenerOrEventListenerObject> = new Map();
     private readonly elementDataTransfers: Map<HTMLElement, FileList> = new Map();
 
-    public RegisterDropEvents = (element: HTMLElement, additive : boolean): boolean => {
+    public RegisterDropEvents = (element: HTMLElement, additive: boolean): boolean => {
 
         const handler = (ev: DragEvent) => {
             this.PreventDefaultHandler(ev);
@@ -59,13 +54,13 @@ class FileReaderComponent {
                 let list = ev.dataTransfer.files;
 
                 if (additive) {
-                    const existing = this.elementDataTransfers.get(ev.target);
-                    if (existing != null && existing.length > 0) {
+                    const existing = this.elementDataTransfers.get(element);
+                    if (existing !== undefined && existing.length > 0) {
                         list = new FileReaderComponent.ConcatFileList(existing, list);
                     }
                 }
                 
-                this.elementDataTransfers.set(ev.target, list);
+                this.elementDataTransfers.set(element, list);
             }
         };
 

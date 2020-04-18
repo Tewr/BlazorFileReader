@@ -13,12 +13,12 @@ var FileReaderComponent = (function () {
                 if (ev.target instanceof HTMLElement) {
                     var list = ev.dataTransfer.files;
                     if (additive) {
-                        var existing = _this.elementDataTransfers.get(ev.target);
-                        if (existing != null && existing.length > 0) {
+                        var existing = _this.elementDataTransfers.get(element);
+                        if (existing !== undefined && existing.length > 0) {
                             list = new FileReaderComponent.ConcatFileList(existing, list);
                         }
                     }
-                    _this.elementDataTransfers.set(ev.target, list);
+                    _this.elementDataTransfers.set(element, list);
                 }
             };
             _this.dragElements.set(element, handler);
