@@ -6,9 +6,9 @@
   </PropertyGroup>
   
   <ItemGroup>
-    <PackageReference Include="epplus" Version="4.5.3.2" />
+    <PackageReference Include="epplus" Version="5.1.0" />
     
-    <PackageReference Include="Microsoft.AspNetCore.Components" Version="5.0.0-preview.1.20124.5" />
+    <PackageReference Include="Microsoft.AspNetCore.Components" Version="5.0.0-preview.2.20167.3" />
     <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="5.0.0-preview.1.20124.5" />
   </ItemGroup>
   
