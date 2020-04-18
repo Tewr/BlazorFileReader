@@ -40,7 +40,8 @@ This demo reads files that was dropped in without doing anything particular with
      @ondragenter=OnDragEnter
      @ondragleave=OnDragLeave>
 
-    Drop Files here.
+    Drop Files here or on this image. 
+    <img src="animated-icon.svg" width="40" height="36" title="You can drop files on this child element as well." />
 
 
     @foreach (var fileInfo in DropFileList)
@@ -59,7 +60,13 @@ This demo reads files that was dropped in without doing anything particular with
 <button @onclick="ClearDrop" class="btn btn-primary">Clear</button>
 <br /><br />
 <div class="@IpDropClass">
-    <input type="file" class="clickable" @ref=dropTargetInput @onchange="OnInputChange" @ondragenter=OnIpDragEnter @ondragleave=OnIpDragLeave multiple />
+    <input type="file" 
+           class="clickable" 
+           @ref=dropTargetInput 
+           @onchange="OnInputChange" 
+           @ondragenter=OnIpDragEnter 
+           @ondragleave=OnIpDragLeave 
+           multiple />
     Drop Files here or click me.
 
     @foreach (var fileInfo in IpFileList)
