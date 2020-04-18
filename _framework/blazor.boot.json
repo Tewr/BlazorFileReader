@@ -1,5 +1,5 @@
 {
-  "cacheBootResources": true,
+  "cacheBootResources": false,
   "config": [ ],
   "debugBuild": true,
   "entryAssembly": "Blazor.FileReader.Wasm.Demo",
