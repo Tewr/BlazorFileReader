@@ -36,18 +36,16 @@
             /*
              * Loader/splash screen
              * */
-            if (!window.XMLHttpRequest) {
-                return;
-            }
             
             var total = 0;
             var loaded = 0;
             
-            var proxied = window.XMLHttpRequest.prototype.open;
-            window.XMLHttpRequest.prototype.open = function () {
-                var file = arguments[1];
+            var proxied = window.fetch;
+            window.fetch = function (input, init) {
+                var file = input;
                 total++;
-                this.addEventListener("load", function () {
+
+                return proxied(input, init).then(function (response) {
                     loaded++;
                     var progress = Math.floor(((loaded / total) * 100));
                     document.getElementById("pbar").max = total;
@@ -56,11 +54,13 @@
 
                     if (loaded == total) {
                         // Reset override.
-                        window.XMLHttpRequest.prototype.open = proxied;
+                        window.fetch = proxied;
                         document.getElementById("loadingText").innerHTML = "Loading 100%, opening application...";
                     }
+
+                    return response;
                 });
-                return proxied.apply(this, [].slice.call(arguments));
+
             };
         })();
 
