@@ -9,6 +9,7 @@
     <Version>1.0.0.1</Version>
     <BlazorWebAssemblyEnableLinking>false</BlazorWebAssemblyEnableLinking>
     <RazorLangVersion>3.0</RazorLangVersion>
+    <BlazorCacheBootResources>false</BlazorCacheBootResources>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Ghpages|AnyCPU'">
