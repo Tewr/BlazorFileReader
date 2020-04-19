@@ -116,6 +116,8 @@ The code for views looks the same for both [client](src/Demo/Blazor.FileReader.W
 ```
 
 ### Version notes
+Version <code>1.5.0.20109</code> Fixes a [a minor bug](https://github.com/Tewr/BlazorFileReader/issues/124) in drag and drop (before this fix, could not drop on child elements) 
+
 Version <code>1.5.0.20093</code> reverts a dependency to latest stable version of <code>Microsoft.AspNetCore.Components (5.0.0-preview.1.20124.5 -> 3.1.3)</code>
 
 Version <code>1.5.0.20092</code> adds compatibility with Blazor 3.2 (CSB / Wasm) preview 3. Package now depends on latest version of <code>Microsoft.AspNetCore.Components (3.0.0 -> 5.0.0-preview.1.20124.5)</code>
