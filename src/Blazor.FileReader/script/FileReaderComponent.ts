@@ -45,9 +45,16 @@ class FileReaderComponent {
     private readonly fileStreams: { [reference: number]: { file: File, arrayBuffer: ArrayBuffer } } = {};
     private readonly dragElements: Map<HTMLElement, EventListenerOrEventListenerObject> = new Map();
     private readonly elementDataTransfers: Map<HTMLElement, FileList> = new Map();
-
+    
+    private LogIfNull(element: HTMLElement) {
+        if (element == null) {
+            console.log("BlazorFileReader HTMLElement is null. Can't access IFileReaderRef after HTMLElement was removed from DOM.");
+        }
+    }
+    
     public RegisterDropEvents = (element: HTMLElement, additive: boolean): boolean => {
-
+        this.LogIfNull(element);
+        
         const handler = (ev: DragEvent) => {
             this.PreventDefaultHandler(ev);
             if (ev.target instanceof HTMLElement) {
@@ -71,6 +78,7 @@ class FileReaderComponent {
     }
 
     public UnregisterDropEvents = (element: HTMLElement): boolean => {
+        this.LogIfNull(element);
         const handler = this.dragElements.get(element);
         if (handler) {
             element.removeEventListener("drop", handler);
@@ -95,6 +103,7 @@ class FileReaderComponent {
     }
 
     public GetFileCount = (element: HTMLElement): number => {
+        this.LogIfNull(element);
         const files = this.GetFiles(element);
         if (!files) {
             return -1;
@@ -104,6 +113,7 @@ class FileReaderComponent {
     }
 
     public ClearValue = (element: HTMLInputElement): number => {
+        this.LogIfNull(element);
         if (element instanceof HTMLInputElement) {
             element.value = null;
         } else {
@@ -114,6 +124,7 @@ class FileReaderComponent {
     };
 
     public GetFileInfoFromElement = (element: HTMLElement, index: number, property: string): IFileInfo => {
+        this.LogIfNull(element);
         const files = this.GetFiles(element);
         if (!files) {
             return null;
@@ -143,6 +154,7 @@ class FileReaderComponent {
     }
 
     public OpenRead = (element: HTMLElement, fileIndex: number): Promise<number> => {
+        this.LogIfNull(element);
         return new Promise<number>((resolve, reject) => {
             const files = this.GetFiles(element);
             if (!files) {
