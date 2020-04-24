@@ -8,6 +8,7 @@ var FileReaderComponent = (function () {
         this.dragElements = new Map();
         this.elementDataTransfers = new Map();
         this.RegisterDropEvents = function (element, additive) {
+            _this.LogIfNull(element);
             var handler = function (ev) {
                 _this.PreventDefaultHandler(ev);
                 if (ev.target instanceof HTMLElement) {
@@ -27,6 +28,7 @@ var FileReaderComponent = (function () {
             return true;
         };
         this.UnregisterDropEvents = function (element) {
+            _this.LogIfNull(element);
             var handler = _this.dragElements.get(element);
             if (handler) {
                 element.removeEventListener("drop", handler);
@@ -37,6 +39,7 @@ var FileReaderComponent = (function () {
             return true;
         };
         this.GetFileCount = function (element) {
+            _this.LogIfNull(element);
             var files = _this.GetFiles(element);
             if (!files) {
                 return -1;
@@ -45,6 +48,7 @@ var FileReaderComponent = (function () {
             return result;
         };
         this.ClearValue = function (element) {
+            _this.LogIfNull(element);
             if (element instanceof HTMLInputElement) {
                 element.value = null;
             }
@@ -54,6 +58,7 @@ var FileReaderComponent = (function () {
             return 0;
         };
         this.GetFileInfoFromElement = function (element, index, property) {
+            _this.LogIfNull(element);
             var files = _this.GetFiles(element);
             if (!files) {
                 return null;
@@ -68,6 +73,7 @@ var FileReaderComponent = (function () {
             return delete (_this.fileStreams[fileRef]);
         };
         this.OpenRead = function (element, fileIndex) {
+            _this.LogIfNull(element);
             return new Promise(function (resolve, reject) {
                 var files = _this.GetFiles(element);
                 if (!files) {
@@ -141,6 +147,11 @@ var FileReaderComponent = (function () {
             ev.preventDefault();
         };
     }
+    FileReaderComponent.prototype.LogIfNull = function (element) {
+        if (element == null) {
+            console.log("BlazorFileReader HTMLElement is null. Can't access IFileReaderRef after HTMLElement was removed from DOM.");
+        }
+    };
     FileReaderComponent.prototype.GetFiles = function (element) {
         var files = null;
         if (element instanceof HTMLInputElement) {
