@@ -30,6 +30,7 @@ interface IReadFileParams {
 
 interface IFileInfo {
     name: string;
+    webkitRelativePath: string;
     size: number;
     type: string;
     lastModified: number;

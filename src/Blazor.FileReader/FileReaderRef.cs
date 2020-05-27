@@ -116,6 +116,11 @@ namespace Blazor.FileReader
         string Name { get; }
 
         /// <summary>
+        /// Returns the path of the file, relative to the root directory, of the file referenced by the File object.  This value is null unless a folder is being uploaded.
+        /// </summary>
+        string WebkitRelativePath { get; }
+
+        /// <summary>
         /// Returns the size of the file in bytes.
         /// </summary>
         long Size { get; }
@@ -237,6 +242,8 @@ namespace Blazor.FileReader
         }
 
         public string Name { get; set; }
+
+        public string WebkitRelativePath { get; set; }
 
         public long Size { get; set; }
 

@@ -169,6 +169,7 @@ var FileReaderComponent = (function () {
         var result = {
             lastModified: file.lastModified,
             name: file.name,
+            webkitRelativePath: (file.webkitRelativePath || null),
             size: file.size,
             type: file.type
         };
