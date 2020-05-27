@@ -147,6 +147,7 @@ class FileReaderComponent {
         const result = {
             lastModified: file.lastModified,
             name: file.name,
+            webkitRelativePath: ((file as any).webkitRelativePath || null) as string,
             size: file.size,
             type: file.type
         };
