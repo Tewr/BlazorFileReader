@@ -1,5 +1,10 @@
 ;
 ;
+var NonStandardProperty = (function () {
+    function NonStandardProperty() {
+    }
+    return NonStandardProperty;
+}());
 var FileReaderComponent = (function () {
     function FileReaderComponent() {
         var _this = this;
@@ -169,10 +174,17 @@ var FileReaderComponent = (function () {
         var result = {
             lastModified: file.lastModified,
             name: file.name,
-            webkitRelativePath: (file.webkitRelativePath || null),
+            nonStandardProperties: null,
             size: file.size,
             type: file.type
         };
+        var properties = new Object();
+        for (var property in file) {
+            if (Object.getPrototypeOf(file).hasOwnProperty(property) && !(property in result)) {
+                properties[property] = file[property];
+            }
+        }
+        result.nonStandardProperties = properties;
         return result;
     };
     FileReaderComponent.ConcatFileList = (function () {

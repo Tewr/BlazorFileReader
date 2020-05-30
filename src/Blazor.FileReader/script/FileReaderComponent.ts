@@ -30,11 +30,16 @@ interface IReadFileParams {
 
 interface IFileInfo {
     name: string;
-    webkitRelativePath: string;
+    nonStandardProperties: any;
     size: number;
     type: string;
     lastModified: number;
 };
+
+class NonStandardProperty {
+    name: string;
+    value: object;
+}
 
 interface IDotNetBuffer {
     toUint8Array(): Uint8Array;
@@ -144,14 +149,20 @@ class FileReaderComponent {
     }
 
     public GetFileInfoFromFile(file: File): IFileInfo {
-        const result = {
+        var result = {
             lastModified: file.lastModified,
             name: file.name,
-            webkitRelativePath: ((file as any).webkitRelativePath || null) as string,
+            nonStandardProperties: null,
             size: file.size,
             type: file.type
         };
-
+        var properties: any = new Object();
+        for (let property in file) {
+            if (Object.getPrototypeOf(file).hasOwnProperty(property) && !(property in result)) {
+                properties[property] = file[property];
+            }
+        }
+        result.nonStandardProperties = properties;
         return result;
     }
 
