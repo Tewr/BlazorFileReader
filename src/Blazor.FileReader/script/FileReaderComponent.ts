@@ -36,11 +36,6 @@ interface IFileInfo {
     lastModified: number;
 };
 
-class NonStandardProperty {
-    name: string;
-    value: object;
-}
-
 interface IDotNetBuffer {
     toUint8Array(): Uint8Array;
 }

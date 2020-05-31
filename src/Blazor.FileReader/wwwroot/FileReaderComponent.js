@@ -1,10 +1,5 @@
 ;
 ;
-var NonStandardProperty = (function () {
-    function NonStandardProperty() {
-    }
-    return NonStandardProperty;
-}());
 var FileReaderComponent = (function () {
     function FileReaderComponent() {
         var _this = this;
