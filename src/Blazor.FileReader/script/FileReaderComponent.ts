@@ -30,6 +30,7 @@ interface IReadFileParams {
 
 interface IFileInfo {
     name: string;
+    nonStandardProperties: any;
     size: number;
     type: string;
     lastModified: number;
@@ -143,13 +144,20 @@ class FileReaderComponent {
     }
 
     public GetFileInfoFromFile(file: File): IFileInfo {
-        const result = {
+        var result = {
             lastModified: file.lastModified,
             name: file.name,
+            nonStandardProperties: null,
             size: file.size,
             type: file.type
         };
-
+        var properties: any = new Object();
+        for (let property in file) {
+            if (Object.getPrototypeOf(file).hasOwnProperty(property) && !(property in result)) {
+                properties[property] = file[property];
+            }
+        }
+        result.nonStandardProperties = properties;
         return result;
     }
 

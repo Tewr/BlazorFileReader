@@ -116,6 +116,11 @@ namespace Blazor.FileReader
         string Name { get; }
 
         /// <summary>
+        /// Returns a list of non-standard DOM properties attached to the object, like the webkitRelativePath property.
+        /// </summary>
+        Dictionary<string,object> NonStandardProperties { get; }
+
+        /// <summary>
         /// Returns the size of the file in bytes.
         /// </summary>
         long Size { get; }
@@ -237,6 +242,8 @@ namespace Blazor.FileReader
         }
 
         public string Name { get; set; }
+
+        public Dictionary<string,object> NonStandardProperties { get; set; }
 
         public long Size { get; set; }
 
