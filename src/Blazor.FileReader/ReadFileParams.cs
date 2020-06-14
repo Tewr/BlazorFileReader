@@ -5,17 +5,23 @@ namespace Blazor.FileReader
     
     [StructLayout(LayoutKind.Explicit)]
     struct ReadFileParams
-    {   
+    {
         [FieldOffset(0)]
-        internal long BufferOffset;
+        public long TaskId;
+
         [FieldOffset(8)]
-        internal int Count;
-        [FieldOffset(12)]
-        internal int FileRef;
+        public long BufferOffset;
+
         [FieldOffset(16)]
-        public long Position;
+        public int Count;
+
+        [FieldOffset(20)]
+        public int FileRef;
+
         [FieldOffset(24)]
+        public long Position;
+
+        [FieldOffset(32)]
         public byte[] Buffer;
     }
-
 }

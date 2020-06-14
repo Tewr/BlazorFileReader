@@ -5,7 +5,7 @@ using System.Threading;
 
 namespace Blazor.FileReader
 {
-    internal partial class FileReaderJsInterop
+    public partial class FileReaderJsInterop
     {
         private class InteropFileStream : AsyncDisposableStream
         {
