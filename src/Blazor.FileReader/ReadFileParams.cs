@@ -24,11 +24,4 @@ namespace Blazor.FileReader
         [FieldOffset(32)]
         public byte[] Buffer;
     }
-
-    public struct ReadFileResult
-    {
-        public long TaskId;
-        public int BytesRead;
-        public string Error;
-    }
 }
