@@ -117,9 +117,9 @@ The code for views looks the same for both [client](src/Demo/Blazor.FileReader.W
 
 ### Version notes
 Version <code>1.6.0.20166</code> Fixes a [a memory allocation bug](https://github.com/Tewr/BlazorFileReader/issues/124) (before this fix, the browser would allocate the whole file in ram). 
-Also, introduces a new collection property on <code>File</code> for non-standard properties
+Also, introduces a new collection property on <code>File</code> for non-standard properties (thanks to [@DouglasDwyer](https://github.com/DouglasDwyer/) for idea and implementation)
 
-<details><summary>Version <code>1.5.0.20109</code> Fixes a [a minor bug](https://github.com/Tewr/BlazorFileReader/issues/124) in drag and drop (before this fix, could not drop on child elements) </details>
+<details><summary>Version <code>1.5.0.20109</code></summary> Fixes a [a minor bug](https://github.com/Tewr/BlazorFileReader/issues/124) in drag and drop (before this fix, could not drop on child elements) </details>
 
 <details><summary>Version <code>1.5.0.20093</code></summary> reverts a dependency to latest stable version of <code>Microsoft.AspNetCore.Components (5.0.0-preview.1.20124.5 -> 3.1.3)</code></details>
 
