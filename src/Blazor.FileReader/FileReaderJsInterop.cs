@@ -137,7 +137,7 @@ namespace Blazor.FileReader
             var id = ++_readFileUnmarshalledCallIdSource;
             _readFileUnmarshalledCalls[id] = taskCompletionSource;
 
-            await Task.Run(() => CurrentJSRuntime.InvokeUnmarshalled<ReadFileParams, int>(
+            CurrentJSRuntime.InvokeUnmarshalled<ReadFileParams, int>(
                 $"FileReaderComponent.ReadFileUnmarshalledAsync",
                 new ReadFileParams { 
                     Buffer = buffer, 
@@ -146,7 +146,7 @@ namespace Blazor.FileReader
                     FileRef = fileRef,
                     Position = position,
                     TaskId = id
-                }));
+                });
 
             var bytesRead = await taskCompletionSource.Task;
             return bytesRead;
