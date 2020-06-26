@@ -69,6 +69,7 @@ There are other demos in the menu.
                 var buffer = new byte[BufferSize];
                 int count;
                 var lastAnnounce = 0m;
+                var lastAnnouncePos = 0m;
                 while ((count = await fs.ReadAsync(buffer, 0, buffer.Length)) != 0)
                 {
                     value += count;
@@ -76,10 +77,11 @@ There are other demos in the menu.
                     if (progress > (lastAnnounce + 10))
                     {
                         stopwatch.Stop();
-                        Output += $"Read {count} bytes ({progress:00}%). {fs.Position} / {fs.Length}{nl}";
+                        Output += $"Read {(fs.Position- lastAnnouncePos)} bytes ({progress:00}%). {fs.Position} / {fs.Length}{nl}";
                         await InvokeAsync(StateHasChanged);
                         await Task.Delay(1);
                         lastAnnounce = progress;
+                        lastAnnouncePos = fs.Position;
                         stopwatch.Start();
                     }
                 }

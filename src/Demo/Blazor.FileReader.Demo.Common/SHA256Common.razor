@@ -75,7 +75,7 @@ Transfer method : <br/>
         bool UseBase64 { get; set; } = false;
         bool DebugOutput { get; set; } = true;
 
-        int BufferSize { get; set; } = 4096;
+        int BufferSize { get; set; } = 4096 * 16;
 
         protected override async Task OnAfterRenderAsync(bool isFirstRender)
         {
@@ -120,20 +120,28 @@ Transfer method : <br/>
                 {
                     if (CurrentTxMethod == TxMethods.MemoryStream)
                     {
+
                         using (var fs = UseBufferSize ?
                             await file.CreateMemoryStreamAsync(BufferSize) :
                             await file.CreateMemoryStreamAsync())
                         {
+                            stopWatch.Stop();
+                            Output += $"{stopWatch.ElapsedMilliseconds}ms: File read into memory. Hashing...";
+                            await Task.Delay(100);
+                            await this.InvokeAsync(this.StateHasChanged);
+                            await Task.Delay(100);
+                            stopWatch.Start();
                             hash.ComputeHash(fs);
                         }
                     }
                     else
                     {
+                        var lastAnnounce = 0m;
                         if (CurrentTxMethod == TxMethods.Base64)
                         {
                             using (var fs = await file.OpenReadBase64Async())
                             {
-                                var bufferSize = UseBufferSize ? BufferSize : 4096 * 8;
+                                var bufferSize = UseBufferSize ? BufferSize : 4096 * 32;
                                 if (DebugOutput)
                                 {
                                     outputBuffer.AppendLine($"Using chunks of size {bufferSize}");
@@ -149,6 +157,16 @@ Transfer method : <br/>
                                     if (DebugOutput)
                                     {
                                         outputBuffer.AppendLine($"Hashing {buffer.Length} bytes. {fs.Position} / {fs.Length}");
+                                        var progress = Math.Floor(((decimal)fs.Position * 100) / fs.Length);
+                                        if (progress > (lastAnnounce + 10))
+                                        {
+                                            stopWatch.Stop();
+                                            lastAnnounce = progress;
+                                            Output += $"{stopWatch.ElapsedMilliseconds}ms: {progress}%...{nl}";
+                                            await Task.Delay(1);
+                                            await this.InvokeAsync(this.StateHasChanged);
+                                            stopWatch.Start();
+                                        }
                                     }
                                     hash.TransformBlock(buffer, 0, count, buffer, 0);
                                     buffer = new byte[0];
@@ -175,6 +193,17 @@ Transfer method : <br/>
                                     {
                                         outputBuffer.AppendLine($"Hashing {count} bytes. {fs.Position} / {fs.Length}");
                                     }
+                                    var progress = Math.Floor(((decimal)fs.Position * 100) / fs.Length);
+                                    if (progress > (lastAnnounce + 10))
+                                    {
+                                        stopWatch.Stop();
+                                        lastAnnounce = progress;
+                                        Output += $"{stopWatch.ElapsedMilliseconds}ms: {progress}%...{nl}";
+                                        await Task.Delay(1);
+                                        await this.InvokeAsync(this.StateHasChanged);
+                                        stopWatch.Start();
+                                    }
+
                                     hash.TransformBlock(buffer, 0, count, buffer, 0);
                                 }
                                 hash.TransformFinalBlock(buffer, 0, count);
