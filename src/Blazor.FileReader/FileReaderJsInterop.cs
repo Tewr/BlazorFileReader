@@ -10,12 +10,15 @@ using System.Threading.Tasks;
 
 namespace Blazor.FileReader
 {
-    internal partial class FileReaderJsInterop
+    public partial class FileReaderJsInterop
     {
         private static readonly IReadOnlyDictionary<string, string> escapeScriptTextReplacements =
             new Dictionary<string, string> { { @"\", @"\\" }, { "\r", @"\r" }, { "\n", @"\n" }, { "'", @"\'" }, { "\"", @"\""" } };
         private readonly bool _needsInitialization = false;
         private readonly IFileReaderServiceOptions _options;
+        private static long _readFileUnmarshalledCallIdSource;
+        private static readonly Dictionary<long, TaskCompletionSource<int>> _readFileUnmarshalledCalls
+            = new Dictionary<long, TaskCompletionSource<int>>();
 
         internal IJSRuntime CurrentJSRuntime { get; }
 
@@ -119,8 +122,7 @@ namespace Blazor.FileReader
             CancellationToken cancellationToken)
         {
             var data = await CurrentJSRuntime.InvokeAsync<string>(
-                $"FileReaderComponent.ReadFileMarshalledAsync", 
-                cancellationToken,
+                $"FileReaderComponent.ReadFileMarshalledAsync",
                 new { position, count, fileRef });
 
             return data;
@@ -131,17 +133,49 @@ namespace Blazor.FileReader
             int fileRef, byte[] buffer, long position, long bufferOffset, int count,
             CancellationToken cancellationToken)
         {
-            var bytesRead = await Task.Run(() => CurrentJSRuntime.InvokeUnmarshalled<ReadFileParams, int>(
+            var taskCompletionSource = new TaskCompletionSource<int>();
+            var id = ++_readFileUnmarshalledCallIdSource;
+            _readFileUnmarshalledCalls[id] = taskCompletionSource;
+
+            CurrentJSRuntime.InvokeUnmarshalled<ReadFileParams, int>(
                 $"FileReaderComponent.ReadFileUnmarshalledAsync",
                 new ReadFileParams { 
                     Buffer = buffer, 
                     BufferOffset = bufferOffset, 
                     Count = count, 
                     FileRef = fileRef,
-                    Position = position
-                }), cancellationToken);
-            
+                    Position = position,
+                    TaskId = id
+                });
+
+            var bytesRead = await taskCompletionSource.Task;
             return bytesRead;
+        }
+
+        [JSInvokable(nameof(EndReadFileUnmarshalledAsyncResult))]
+        public static void EndReadFileUnmarshalledAsyncResult(long taskId, int bytesRead)
+        {
+            if (!_readFileUnmarshalledCalls.TryGetValue(taskId, out var taskCompletionSource)) {
+                Console.Error.WriteLine($"{nameof(EndReadFileUnmarshalledAsyncResult)}: Unknown {nameof(taskId)} '{taskId}'");
+                return;
+            }
+
+            _readFileUnmarshalledCalls.Remove(taskId);
+            taskCompletionSource.SetResult(bytesRead);
+        }
+
+
+        [JSInvokable(nameof(EndReadFileUnmarshalledAsyncError))]
+        public static void EndReadFileUnmarshalledAsyncError(long taskId, string error)
+        {
+            if (!_readFileUnmarshalledCalls.TryGetValue(taskId, out var taskCompletionSource))
+            {
+                Console.Error.WriteLine($"{nameof(EndReadFileUnmarshalledAsyncError)}: Unknown {nameof(taskId)} '{taskId}'");
+                return;
+            }
+
+            _readFileUnmarshalledCalls.Remove(taskId);
+            taskCompletionSource.SetException(new BrowserFileReaderException(error));
         }
 
         private async Task Initialize()

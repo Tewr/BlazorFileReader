@@ -1,5 +1,9 @@
 ﻿declare const Blazor: IBlazor;
+declare const DotNet: IDotNet;
 
+interface IDotNet {
+    invokeMethodAsync<T>(assemblyName: string, methodIdentifier: string, ...args: any[]): Promise<T>;
+}
 interface IBlazor {
     platform: IBlazorPlatform;
 }
@@ -21,6 +25,7 @@ interface IBlazorPlatform {
 }
 
 interface IReadFileParams {
+    taskId: number;
     buffer: System_Array<any>;
     bufferOffset: number;
     count: number;
@@ -28,8 +33,14 @@ interface IReadFileParams {
     position: number;
 };
 
+interface ReadFileSliceResult {
+    file: File;
+    result: string | ArrayBuffer;
+}
+
 interface IFileInfo {
     name: string;
+    nonStandardProperties: any;
     size: number;
     type: string;
     lastModified: number;
@@ -42,7 +53,7 @@ interface IDotNetBuffer {
 class FileReaderComponent {
 
     private newFileStreamReference = 0;
-    private readonly fileStreams: { [reference: number]: { file: File, arrayBuffer: ArrayBuffer } } = {};
+    private readonly fileStreams: { [reference: number]: File } = {};
     private readonly dragElements: Map<HTMLElement, EventListenerOrEventListenerObject> = new Map();
     private readonly elementDataTransfers: Map<HTMLElement, FileList> = new Map();
     
@@ -123,7 +134,7 @@ class FileReaderComponent {
         return 0;
     };
 
-    public GetFileInfoFromElement = (element: HTMLElement, index: number, property: string): IFileInfo => {
+    public GetFileInfoFromElement = (element: HTMLElement, index: number): IFileInfo => {
         this.LogIfNull(element);
         const files = this.GetFiles(element);
         if (!files) {
@@ -146,81 +157,102 @@ class FileReaderComponent {
         const result = {
             lastModified: file.lastModified,
             name: file.name,
+            nonStandardProperties: null,
             size: file.size,
             type: file.type
         };
-
+        const properties: { [propertyName: string]: object } = {};
+        for (const property in file) {
+            if (Object.getPrototypeOf(file).hasOwnProperty(property) && !(property in result)) {
+                properties[property] = file[property];
+            }
+        }
+        result.nonStandardProperties = properties;
         return result;
     }
 
-    public OpenRead = (element: HTMLElement, fileIndex: number): Promise<number> => {
+    public OpenRead = (element: HTMLElement, fileIndex: number): number => {
         this.LogIfNull(element);
-        return new Promise<number>((resolve, reject) => {
-            const files = this.GetFiles(element);
-            if (!files) {
-                throw 'No FileList available.';
-            }
-            const file = files.item(fileIndex);
-            if (!file) {
-                throw `No file with index ${fileIndex} available.`;
-            }
-
-            const fileRef: number = this.newFileStreamReference++;
-            const reader = new FileReader();
-            reader.onload = ((r) => {
-                return () => {
-                    try {
-                        const arrayBuffer: ArrayBuffer = r.result as ArrayBuffer;
-                        this.fileStreams[fileRef] = { file, arrayBuffer };
-                        
-                        resolve(fileRef);
-                    } catch (e) {
-                        reject(e);
-                    }
-                }
-            })(reader);
-            reader.readAsArrayBuffer(file);
+        
+        const files = this.GetFiles(element);
+        if (!files) {
+            throw 'No FileList available.';
+        }
+        const file = files.item(fileIndex);
+        if (!file) {
+            throw `No file with index ${fileIndex} available.`;
+        }
             
-            return fileRef;
-        });
+        const fileRef: number = this.newFileStreamReference++;
+        this.fileStreams[fileRef] = file;
+        return fileRef;
+        
     }
     public ReadFileParamsPointer = (readFileParamsPointer: Pointer): IReadFileParams => {
         return {
-            bufferOffset: Blazor.platform.readUint64Field(readFileParamsPointer, 0),
-            count: Blazor.platform.readInt32Field(readFileParamsPointer, 8),
-            fileRef: Blazor.platform.readInt32Field(readFileParamsPointer, 12),
-            position: Blazor.platform.readUint64Field(readFileParamsPointer, 16),
-            buffer: Blazor.platform.readInt32Field(readFileParamsPointer, 24) as unknown as System_Array<any>
+            taskId: Blazor.platform.readUint64Field(readFileParamsPointer, 0),
+            bufferOffset: Blazor.platform.readUint64Field(readFileParamsPointer, 8),
+            count: Blazor.platform.readInt32Field(readFileParamsPointer, 16),
+            fileRef: Blazor.platform.readInt32Field(readFileParamsPointer, 20),
+            position: Blazor.platform.readUint64Field(readFileParamsPointer, 24),
+            buffer: Blazor.platform.readInt32Field(readFileParamsPointer, 32) as unknown as System_Array<any>
         };
     }
+
     public ReadFileUnmarshalledAsync = (readFileParamsPointer: Pointer) => {
         const readFileParams = this.ReadFileParamsPointer(readFileParamsPointer);
-        const fileStream = this.fileStreams[readFileParams.fileRef];
-        const dotNetBuffer = readFileParams.buffer;
-        const dotNetBufferView: Uint8Array = Blazor.platform.toUint8Array(dotNetBuffer);
-        const byteCount = Math.min(fileStream.arrayBuffer.byteLength - readFileParams.position, readFileParams.count);
-        dotNetBufferView.set(new Uint8Array(fileStream.arrayBuffer, readFileParams.position, byteCount), readFileParams.bufferOffset);
-        return byteCount;
+
+        const asyncCall = new Promise<number>((resolve, reject) => {
+            return this.ReadFileSlice(readFileParams, (r,b) => r.readAsArrayBuffer(b))
+                .then(r => {
+                    try {
+                        const dotNetBufferView = Blazor.platform.toUint8Array(readFileParams.buffer);
+                        const arrayBuffer = r.result as ArrayBuffer;
+                        dotNetBufferView.set(new Uint8Array(arrayBuffer), readFileParams.bufferOffset);
+
+                        const byteCount = Math.min(arrayBuffer.byteLength, readFileParams.count);
+                        resolve(byteCount);
+                    } catch (e) {
+                        reject(e);
+                    }
+                }, e => reject(e));
+        });
+
+        asyncCall.then(
+            byteCount => DotNet.invokeMethodAsync("Blazor.FileReader", "EndReadFileUnmarshalledAsyncResult", readFileParams.taskId, byteCount),
+            error => {
+                console.error("ReadFileUnmarshalledAsync error", error);
+                DotNet.invokeMethodAsync("Blazor.FileReader", "EndReadFileUnmarshalledAsyncError", readFileParams.taskId, error.toString());
+            });
     }
 
     public ReadFileMarshalledAsync = (readFileParams: IReadFileParams): Promise<string> => {
-        
         return new Promise<string>((resolve, reject) => {
-            const file: File = this.fileStreams[readFileParams.fileRef].file;
+            return this.ReadFileSlice(readFileParams, (r,b) => r.readAsDataURL(b))
+                .then(r => {
+                    const contents = r.result as string;
+                    const data = contents ? contents.split(";base64,")[1] : null;
+                    resolve(data);
+                }, e => reject(e));
+        });
+    }
+    
+
+    private ReadFileSlice = (readFileParams: IReadFileParams, method: (reader: FileReader, blob: Blob) => void): Promise<ReadFileSliceResult> => {
+        return new Promise<ReadFileSliceResult>((resolve, reject) => {
+            const file: File = this.fileStreams[readFileParams.fileRef];
             try {
                 const reader = new FileReader();
                 reader.onload = ((r) => {
                     return () => {
                         try {
-                            const contents = r.result as string;
-                            const data = contents ? contents.split(";base64,")[1] : null;
-                            resolve(data);
+                            resolve({result: r.result, file: file });
                         } catch (e) {
                             reject(e);
                         }
                     }
                 })(reader);
-                reader.readAsDataURL(file.slice(readFileParams.position, readFileParams.position + readFileParams.count));
+                method(reader, file.slice(readFileParams.position, readFileParams.position + readFileParams.count));
             } catch (e) {
                 reject(e);
             }
