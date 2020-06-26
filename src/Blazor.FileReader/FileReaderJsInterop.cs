@@ -121,6 +121,7 @@ namespace Blazor.FileReader
             int fileRef, long position, int count,
             CancellationToken cancellationToken)
         {
+            cancellationToken.ThrowIfCancellationRequested();
             var data = await CurrentJSRuntime.InvokeAsync<string>(
                 $"FileReaderComponent.ReadFileMarshalledAsync",
                 new { position, count, fileRef }, cancellationToken);
