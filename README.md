@@ -76,6 +76,12 @@ services.AddServerSideBlazor().AddHubOptions(o =>
 ```
 ## Gotcha's
 
+### Problems with reading strings using StreamReader in while header
+When publishing or compiling in Release mode, the <code>Optimize</code> flag is set by default. 
+Compiling with this flag set may result in problems if you are using <code>StreamReader</code>.
+An [bug is open on this subject](https://github.com/mono/mono/issues/19936), being investigated by the mono team. Tracked locally [here](https://github.com/Tewr/BlazorFileReader/issues/132).
+A simple workaround is available in [this issue](https://github.com/Tewr/BlazorFileReader/issues/97). Basically, don't call await in the while header, call it somewhere else.
+
 ### IFileReference.CreateMemoryStreamAsync()
 The `IFileReference.CreateMemoryStreamAsync()` method (without any argument) is basically the same as calling `IFileReference.CreateMemoryStreamAsync(bufferSize: file.Size)`.
 Calling `IFileReference.CreateMemoryStreamAsync()` may thus be unsuitable for large files (at least for client-side Blazor as the UI will be blocked during the transfer).
@@ -116,7 +122,7 @@ The code for views looks the same for both [client](src/Demo/Blazor.FileReader.W
 ```
 
 ### Version notes
-Version <code>1.6.0.20166</code> Fixes a [a memory allocation bug](https://github.com/Tewr/BlazorFileReader/issues/124) (before this fix - since v1.3.0.20033 - the browser would allocate the whole file in ram). 
+Version <code>1.6.0.20166</code> Fixes a [a memory allocation bug](https://github.com/Tewr/BlazorFileReader/issues/139) (before this fix - since v1.3.0.20033 - the browser would allocate the whole file in ram). 
 Also, introduces a new collection property on <code>File</code> for non-standard properties (thanks to [@DouglasDwyer](https://github.com/DouglasDwyer/) for idea and implementation)
 
 <details><summary>Version <code>1.5.0.20109</code></summary> Fixes a [a minor bug](https://github.com/Tewr/BlazorFileReader/issues/124) in drag and drop (before this fix, could not drop on child elements) </details>
@@ -131,7 +137,7 @@ Also, introduces a new collection property on <code>File</code> for non-standard
 
 <details><summary>Version <code>1.3.0.20041</code></summary> fixes a faulty assembly version in the package.</details>
 
-<details><summary>Version <code>1.3.0.20033</code></summary> adds compatibility with Blazor 3.2 (CSB / Wasm). Attention, ```ReadAsync``` is no longer a fully async implementation and may run on the UI thread. If you are using a progress bar or similar progress reporting it might be necessary to yield back to the renderer. See the demo project for an example - it is using ```await Task.Delay(1);``` to render while reading.</details>
+<details><summary>Version <code>1.3.0.20033</code></summary> adds compatibility with Blazor 3.2 (CSB / Wasm). Attention, <code>ReadAsync</code> is no longer a fully async implementation and may run on the UI thread. If you are using a progress bar or similar progress reporting it might be necessary to yield back to the renderer. See the demo project for an example - it is using <code>await Task.Delay(1);</code> to render while reading.</details>
 
 <details><summary>Version <code>1.2.0.19363</code></summary> fixes a bug in how the offset parameter is interpreted - now represents target buffer offset, not source buffer offset. The setup option ```InitializeOnFirstCall``` now defaults to ```true```.</details>
 
