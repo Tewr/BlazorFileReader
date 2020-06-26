@@ -121,9 +121,10 @@ namespace Blazor.FileReader
             int fileRef, long position, int count,
             CancellationToken cancellationToken)
         {
+            cancellationToken.ThrowIfCancellationRequested();
             var data = await CurrentJSRuntime.InvokeAsync<string>(
                 $"FileReaderComponent.ReadFileMarshalledAsync",
-                new { position, count, fileRef });
+                new { position, count, fileRef }, cancellationToken);
 
             return data;
 
@@ -136,6 +137,7 @@ namespace Blazor.FileReader
             var taskCompletionSource = new TaskCompletionSource<int>();
             var id = ++_readFileUnmarshalledCallIdSource;
             _readFileUnmarshalledCalls[id] = taskCompletionSource;
+            cancellationToken.Register(() => taskCompletionSource.TrySetCanceled());
 
             CurrentJSRuntime.InvokeUnmarshalled<ReadFileParams, int>(
                 $"FileReaderComponent.ReadFileUnmarshalledAsync",
