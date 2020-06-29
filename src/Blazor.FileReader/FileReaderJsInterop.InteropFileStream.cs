@@ -15,12 +15,15 @@ namespace Blazor.FileReader
             private bool isDisposed;
             private long _position;
 
-            public InteropFileStream(int fileReference, long length, FileReaderJsInterop fileReaderJsInterop)
+            public InteropFileStream(int fileReference, IFileInfo fileInfo, FileReaderJsInterop fileReaderJsInterop)
             {
                 this.fileRef = fileReference;
-                this.length = length;
+                this.FileInfo = fileInfo;
+                this.length = fileInfo.Size;
                 this.fileReaderJsInterop = fileReaderJsInterop;
             }
+
+            public IFileInfo FileInfo { get; private set; }
 
             public override bool CanRead => ThrowIfDisposedOrReturn(true);
 
@@ -34,7 +37,13 @@ namespace Blazor.FileReader
                 get => ThrowIfDisposedOrReturn(_position);
                 set {
                     ThrowIfDisposed();
+                    var oldPosition = _position;
                     _position = value;
+                    if (_position != oldPosition)
+                    {
+                        var filePositionInfo = this.FileInfo.PositionInfo as FilePositionInfo;
+                        filePositionInfo.Update(this, Position, this.FileInfo.Size);
+                    }
                 }
             }
 

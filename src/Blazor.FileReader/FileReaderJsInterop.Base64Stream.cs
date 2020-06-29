@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -14,12 +15,14 @@ namespace Blazor.FileReader
             private bool isDisposed;
             private long position;
 
-            public Base64Stream(int fileReference, long length, FileReaderJsInterop fileReaderJsInterop)
+            public Base64Stream(int fileReference, IFileInfo fileInfo, FileReaderJsInterop fileReaderJsInterop)
             {
                 this.fileRef = fileReference;
-                this.length = length;
+                this.FileInfo = fileInfo;
+                this.length = fileInfo.Size;
                 this.fileReaderJsInterop = fileReaderJsInterop;
             }
+            public IFileInfo FileInfo { get; private set; }
 
             public long Position
             {
@@ -27,7 +30,13 @@ namespace Blazor.FileReader
                 set
                 {
                     ThrowIfDisposed();
+                    var oldPosition = position;
                     position = value;
+                    if (position != oldPosition)
+                    {
+                        var filePositionInfo = this.FileInfo.PositionInfo as FilePositionInfo;
+                        filePositionInfo.Update(this, Position, this.FileInfo.Size);
+                    }
                 }
             }
 
@@ -58,6 +67,7 @@ namespace Blazor.FileReader
                 ThrowIfDisposed();
                 var result = await this.fileReaderJsInterop.ReadFileMarshalledBase64Async(this.fileRef, Position + offset, count, cancellationToken);
                 Position = Math.Min(position + offset + count, length);
+
                 return result ?? string.Empty;
             }
 

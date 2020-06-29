@@ -139,6 +139,11 @@ namespace Blazor.FileReader
         /// Returns the last modified time of the file.
         /// </summary>
         DateTime? LastModifiedDate { get; }
+
+        /// <summary>
+        /// Returns information of the position of any stream related to this file.
+        /// </summary>
+        IFilePositionInfo PositionInfo { get; }
     }
     
     internal class FileReaderRef : IFileReaderRef
@@ -235,10 +240,13 @@ namespace Blazor.FileReader
     {
         private static readonly DateTime Epoch = new DateTime(1970, 01, 01);
         private readonly Lazy<DateTime?> lastModifiedDate;
+        private readonly FilePositionInfo filePositionInfo;
+
         public FileInfo()
         {
             this.lastModifiedDate = new Lazy<DateTime?>(() =>
                 LastModified == null ? null : (DateTime?)Epoch.AddMilliseconds(this.LastModified.Value));
+            this.filePositionInfo = new FilePositionInfo();
         }
 
         public string Name { get; set; }
@@ -252,6 +260,8 @@ namespace Blazor.FileReader
         public long? LastModified { get; set; }
 
         public DateTime? LastModifiedDate => this.lastModifiedDate.Value;
+
+        public IFilePositionInfo PositionInfo => filePositionInfo;
     }
 
     public abstract class AsyncDisposableStream : Stream, IAsyncDisposable

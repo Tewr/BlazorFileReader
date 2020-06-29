@@ -44,13 +44,13 @@ namespace Blazor.FileReader
         public async Task<AsyncDisposableStream> OpenFileStream(ElementReference elementReference, int index)
         {
             var fileInfo = await GetFileInfoFromElement(elementReference, index);
-            return new InteropFileStream(await OpenReadAsync(elementReference, index), fileInfo.Size, this);
+            return new InteropFileStream(await OpenReadAsync(elementReference, index), fileInfo, this);
         }
 
         public async Task<IBase64Stream> OpenBase64Stream(ElementReference elementReference, int index)
         {
             var fileInfo = await GetFileInfoFromElement(elementReference, index);
-            return new Base64Stream(await OpenReadAsync(elementReference, index), fileInfo.Size, this);
+            return new Base64Stream(await OpenReadAsync(elementReference, index), fileInfo, this);
         }
 
         public async Task<int> GetFileCount(ElementReference elementReference)
