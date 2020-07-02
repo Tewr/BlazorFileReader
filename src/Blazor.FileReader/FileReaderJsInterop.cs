@@ -212,7 +212,7 @@ namespace Blazor.FileReader
 
         private async Task<bool> IsLoaded()
         {
-            return await CurrentJSRuntime.InvokeAsync<bool>("eval", "(function() { return !!window.FileReaderComponent })()");
+            return await CurrentJSRuntime.InvokeAsync<bool>("window.hasOwnProperty", "FileReaderComponent");
         }
 
         private async Task<T> ExecuteRawScriptAsync<T>(string scriptContent)
