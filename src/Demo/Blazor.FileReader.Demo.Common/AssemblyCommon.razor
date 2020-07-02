@@ -7,8 +7,7 @@ This demo reads a .net Standard assembly and takes a look inside.
 <br />
 <br />
 <strong>Note:</strong> This demo requires the full <a href="https://www.nuget.org/packages/NETStandard.Library/">.net standard dll</a>
- to be loaded, so this demo only runs if the linker is turned off,
-using the <code>&lt;BlazorLinkOnBuild&gt;false&lt;/BlazorLinkOnBuild&gt;</code> directive in the <code>.csproj</code> file.
+ to be loaded, so this demo only runs if the linker does not remove the netstandard.dll.
 <br />
 <br />
 <input type="file" @ref=inputElement accept=".dll,.exe" />
@@ -23,6 +22,8 @@ using the <code>&lt;BlazorLinkOnBuild&gt;false&lt;/BlazorLinkOnBuild&gt;</code> 
 
     public async Task ReadFile()
     {
+        // This tricks the linker into keeping netstandard. Using the LinkerConfig.xml is currently not enough.
+        string HackToTrickLinkerIntoKeepingDotNetStandard = typeof(System.Web.HttpUtility).FullName.Substring(0,0);
         Output = string.Empty;
         this.StateHasChanged();
         var nl = Environment.NewLine;
