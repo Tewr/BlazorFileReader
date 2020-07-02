@@ -35,7 +35,7 @@ namespace Blazor.FileReader
                     if (position != oldPosition)
                     {
                         var filePositionInfo = this.FileInfo.PositionInfo as FilePositionInfo;
-                        filePositionInfo.Update(this, Position, this.FileInfo.Size);
+                        filePositionInfo.Update(this, Position);
                     }
                 }
             }
@@ -59,6 +59,7 @@ namespace Blazor.FileReader
                 if (!this.isDisposed)
                 {
                     await this.fileReaderJsInterop.DisposeStream(fileRef);
+                    this.isDisposed = true;
                 }
             }
 

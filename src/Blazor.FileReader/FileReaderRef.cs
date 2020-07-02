@@ -188,9 +188,9 @@ namespace Blazor.FileReader
             return InnerCreateMemoryStreamAsync(bufferSize);
         }
 
-        public Task<AsyncDisposableStream> OpenReadAsync()
+        public async Task<AsyncDisposableStream> OpenReadAsync()
         {
-            return this.fileLoaderRef.FileReaderJsInterop.OpenFileStream(this.fileLoaderRef.ElementRef, index);
+            return await this.fileLoaderRef.FileReaderJsInterop.OpenFileStream(this.fileLoaderRef.ElementRef, index, await ReadFileInfoAsync());
         }
 
         public async Task<IFileInfo> ReadFileInfoAsync()
@@ -205,7 +205,7 @@ namespace Blazor.FileReader
 
         public async Task<IBase64Stream> OpenReadBase64Async()
         {
-            return await this.fileLoaderRef.FileReaderJsInterop.OpenBase64Stream(fileLoaderRef.ElementRef, index);
+            return await this.fileLoaderRef.FileReaderJsInterop.OpenBase64Stream(fileLoaderRef.ElementRef, index, await ReadFileInfoAsync());
         }
 
         private async Task<MemoryStream> InnerCreateMemoryStreamAsync(int bufferSize)
@@ -241,6 +241,7 @@ namespace Blazor.FileReader
         private static readonly DateTime Epoch = new DateTime(1970, 01, 01);
         private readonly Lazy<DateTime?> lastModifiedDate;
         private readonly FilePositionInfo filePositionInfo;
+        private long size;
 
         public FileInfo()
         {
@@ -251,9 +252,15 @@ namespace Blazor.FileReader
 
         public string Name { get; set; }
 
-        public Dictionary<string,object> NonStandardProperties { get; set; }
+        public Dictionary<string, object> NonStandardProperties { get; set; }
 
-        public long Size { get; set; }
+        public long Size { 
+            get => size; 
+            set { 
+                size = value;
+                this.filePositionInfo.FileSize = size;
+            } 
+        }
 
         public string Type { get; set; }
 
@@ -264,6 +271,9 @@ namespace Blazor.FileReader
         public IFilePositionInfo PositionInfo => filePositionInfo;
     }
 
+    /// <summary>
+    /// Stream that implements <see cref="IAsyncDisposable"/>
+    /// </summary>
     public abstract class AsyncDisposableStream : Stream, IAsyncDisposable
     {
         /// <inheritdoc/>

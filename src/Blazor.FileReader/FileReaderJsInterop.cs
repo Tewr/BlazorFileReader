@@ -6,7 +6,6 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-//using Microsoft.JSInterop.WebAssembly;
 
 namespace Blazor.FileReader
 {
@@ -41,15 +40,13 @@ namespace Blazor.FileReader
             return await CurrentJSRuntime.InvokeAsync<bool>($"FileReaderComponent.UnregisterDropEvents", elementReference);
         }
 
-        public async Task<AsyncDisposableStream> OpenFileStream(ElementReference elementReference, int index)
+        public async Task<AsyncDisposableStream> OpenFileStream(ElementReference elementReference, int index, IFileInfo fileInfo)
         {
-            var fileInfo = await GetFileInfoFromElement(elementReference, index);
             return new InteropFileStream(await OpenReadAsync(elementReference, index), fileInfo, this);
         }
 
-        public async Task<IBase64Stream> OpenBase64Stream(ElementReference elementReference, int index)
+        public async Task<IBase64Stream> OpenBase64Stream(ElementReference elementReference, int index, IFileInfo fileInfo)
         {
-            var fileInfo = await GetFileInfoFromElement(elementReference, index);
             return new Base64Stream(await OpenReadAsync(elementReference, index), fileInfo, this);
         }
 

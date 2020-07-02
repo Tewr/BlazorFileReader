@@ -42,7 +42,7 @@ namespace Blazor.FileReader
                     if (_position != oldPosition)
                     {
                         var filePositionInfo = this.FileInfo.PositionInfo as FilePositionInfo;
-                        filePositionInfo.Update(this, Position, this.FileInfo.Size);
+                        filePositionInfo.Update(this, Position);
                     }
                 }
             }
@@ -115,13 +115,13 @@ namespace Blazor.FileReader
             protected override void Dispose(bool disposing)
             {
                 base.Dispose(disposing);
-                if (!isDisposed)
+                if (!this.isDisposed)
                 {
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                     // Fire-and-forget dispose as the only impact is the js GC
                     this.fileReaderJsInterop.DisposeStream(fileRef);
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                    isDisposed = true;
+                    this.isDisposed = true;
                 }
             }
 
@@ -145,7 +145,7 @@ namespace Blazor.FileReader
                 if (!isDisposed)
                 {
                     await this.fileReaderJsInterop.DisposeStream(fileRef);
-                    isDisposed = true;
+                    this.isDisposed = true;
                 }
             }
         }
