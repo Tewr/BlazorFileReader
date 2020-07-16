@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Components;
 using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using Tewr.Blazor.FileReader;
 
 namespace Blazor.FileReader.E2ETestAppShared
 {
