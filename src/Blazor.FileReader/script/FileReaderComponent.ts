@@ -59,7 +59,7 @@ class FileReaderComponent {
     
     private LogIfNull(element: HTMLElement) {
         if (element == null) {
-            console.log("BlazorFileReader HTMLElement is null. Can't access IFileReaderRef after HTMLElement was removed from DOM.");
+            console.log("Tewr.Blazor.FileReader: HTMLElement is null. Can't access IFileReaderRef after HTMLElement was removed from DOM.");
         }
     }
     
@@ -219,10 +219,10 @@ class FileReaderComponent {
         });
 
         asyncCall.then(
-            byteCount => DotNet.invokeMethodAsync("Blazor.FileReader", "EndReadFileUnmarshalledAsyncResult", readFileParams.taskId, byteCount),
+            byteCount => DotNet.invokeMethodAsync("Tewr.Blazor.FileReader", "EndReadFileUnmarshalledAsyncResult", readFileParams.taskId, byteCount),
             error => {
                 console.error("ReadFileUnmarshalledAsync error", error);
-                DotNet.invokeMethodAsync("Blazor.FileReader", "EndReadFileUnmarshalledAsyncError", readFileParams.taskId, error.toString());
+                DotNet.invokeMethodAsync("Tewr.Blazor.FileReader", "EndReadFileUnmarshalledAsyncError", readFileParams.taskId, error.toString());
             });
     }
 

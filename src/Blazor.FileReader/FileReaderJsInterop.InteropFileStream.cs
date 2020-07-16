@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using System.IO;
 using System.Threading;
 
-namespace Blazor.FileReader
+namespace Tewr.Blazor.FileReader
 {
     public partial class FileReaderJsInterop
     {

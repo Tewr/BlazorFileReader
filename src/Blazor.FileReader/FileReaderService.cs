@@ -2,7 +2,7 @@
 using Microsoft.JSInterop;
 using System.Threading.Tasks;
 
-namespace Blazor.FileReader
+namespace Tewr.Blazor.FileReader
 {
     /// <summary>
     /// Provides configuration options for <see cref="IFileReaderService"/>

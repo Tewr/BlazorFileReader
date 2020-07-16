@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace Blazor.FileReader
+namespace Tewr.Blazor.FileReader
 {
     /// <summary>
     /// Provides information on the position of a Stream currently reading this file.

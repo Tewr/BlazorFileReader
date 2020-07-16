@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
 
-namespace Blazor.FileReader
+namespace Tewr.Blazor.FileReader
 {
     internal static class IJSRuntimeExtensions
     {

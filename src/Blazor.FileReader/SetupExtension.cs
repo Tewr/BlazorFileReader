@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using System;
 
-namespace Blazor.FileReader
+namespace Tewr.Blazor.FileReader
 {
     /// <summary>
     /// Provides extension methods for setting up <see cref="IFileReaderService"/>

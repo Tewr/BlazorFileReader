@@ -1,6 +1,6 @@
 ﻿using System.Runtime.InteropServices;
 
-namespace Blazor.FileReader
+namespace Tewr.Blazor.FileReader
 {
     
     [StructLayout(LayoutKind.Explicit)]
