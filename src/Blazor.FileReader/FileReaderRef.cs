@@ -17,25 +17,25 @@ namespace Tewr.Blazor.FileReader
         /// Register for drop events on the source element
         /// </summary>
         /// <param name="additive">If set to true, drop target file list becomes additive. Defaults to false.</param>
-        /// <returns></returns>
+        /// <returns>An awaitable task representing the operation</returns>
         Task RegisterDropEventsAsync(bool additive = false);
 
         /// <summary>
         /// Unregister drop events on the source element
         /// </summary>
-        /// <returns></returns>
+        /// <returns>An awaitable Task representing the operation</returns>
         Task UnregisterDropEventsAsync();
 
         /// <summary>
         /// Clears any value set on the source element
         /// </summary>
-        /// <returns></returns>
+        /// <returns>An awaitable Task representing the operation</returns>
         Task ClearValue();
 
         /// <summary>
         /// Enumerates the currently selected file references
         /// </summary>
-        /// <returns></returns>
+        /// <returns>An awaitable Task that provides an enumeration of the currently selected file references</returns>
         Task<IEnumerable<IFileReference>> EnumerateFilesAsync();
     }
 
@@ -45,34 +45,55 @@ namespace Tewr.Blazor.FileReader
     public interface IFileReference
     {
         /// <summary>
-        /// Opens a stream to read the file.
+        /// Opens a read-only <see cref="Stream"/> to read the file.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>A read-only <see cref="Stream"/> to read the file.</returns>
         Task<AsyncDisposableStream> OpenReadAsync();
 
         /// <summary>
-        /// Opens a base64-encoded string stream to read the file
+        /// Opens a read-only base64-encoded string stream to read the file
         /// </summary>
-        /// <returns></returns>
+        /// <returns>A read-only <see cref="IBase64Stream"/> to read the file.</returns>
         Task<IBase64Stream> OpenReadBase64Async();
 
         /// <summary>
-        /// Convenience method to read the file into memory using a single interop call 
-        /// and returns it as a MemoryStream. Buffer size will be equal to the file size.
+        /// Convenience method to read the file fully into memory using a single interop call 
+        /// and returns it as a <see cref="MemoryStream"/>. Buffer size will be equal to the file size.
+        /// The length of the resulting <see cref="MemoryStream"/> will be the same as the file size.
         /// </summary>
-        /// <returns></returns>
+        /// <remarks>In most cases the fastest way to read a file into ram, but also the method that uses the most memory. 
+        /// Will use at least twice the file size of memory at the end of the read operation.</remarks>
+        /// <returns>A <see cref="MemoryStream"/> representing the full file, with <see cref="MemoryStream.Position"/> set to 0.</returns>
         Task<MemoryStream> CreateMemoryStreamAsync();
 
         /// <summary>
-        /// Convenience method to read the file into memory and returns it as a MemoryStream, using the specified buffersize.
+        /// Convenience method to read the file fully into memory using a single interop call 
+        /// and returns it as a <see cref="MemoryStream"/>. Buffer size will be equal to the file size.
+        /// The length of the resulting <see cref="MemoryStream"/> will be the same as the file size.
         /// </summary>
-        /// <returns></returns>
+        /// <remarks>In most cases the fastest way to read a file into ram, but the most expensive in memory usage. 
+        /// Will use at least twice the file size of memory at the end of the read operation.</remarks>
+        /// <returns>A <see cref="MemoryStream"/> representing the full file, with <see cref="MemoryStream.Position"/> set to 0.</returns>
+        Task<MemoryStream> CreateMemoryStreamAsync(CancellationToken cancellationToken);
+
+        /// <summary>
+        /// Convenience method to read the file fully into memory represented as a <see cref="MemoryStream"/>, using the specified <paramref name="bufferSize"/>.
+        /// The length of the resulting <see cref="MemoryStream"/> will be the same as the file size.
+        /// </summary>
+        /// <returns>A <see cref="MemoryStream"/> representing the full file, with <see cref="MemoryStream.Position"/> set to 0.</returns>
         Task<MemoryStream> CreateMemoryStreamAsync(int bufferSize);
 
         /// <summary>
-        /// Reads the file metadata
+        /// Convenience method to read the file fully into memory represented as a <see cref="MemoryStream"/>, using the specified <paramref name="bufferSize"/>.
+        /// The length of the resulting <see cref="MemoryStream"/> will be the same as the file size.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>A <see cref="MemoryStream"/> representing the full file, with <see cref="MemoryStream.Position"/> set to 0.</returns>
+        Task<MemoryStream> CreateMemoryStreamAsync(int bufferSize, CancellationToken cancellationToken);
+
+        /// <summary>
+        /// Reads the file metadata.
+        /// </summary>
+        /// <returns>An object containing the file metadata</returns>
         Task<IFileInfo> ReadFileInfoAsync();
     }
 
@@ -180,12 +201,23 @@ namespace Tewr.Blazor.FileReader
             this.index = index;
         }
 
-        public async Task<MemoryStream> CreateMemoryStreamAsync() {
-            return await InnerCreateMemoryStreamAsync((int)(await ReadFileInfoAsync()).Size);
+        public async Task<MemoryStream> CreateMemoryStreamAsync()
+        {
+            return await CreateMemoryStreamAsync(CancellationToken.None);
         }
+
+        public async Task<MemoryStream> CreateMemoryStreamAsync(CancellationToken cancellationToken) {
+            return await CreateMemoryStreamAsync((int)(await ReadFileInfoAsync()).Size, cancellationToken);
+        }
+
         public Task<MemoryStream> CreateMemoryStreamAsync(int bufferSize)
         {
-            return InnerCreateMemoryStreamAsync(bufferSize);
+            return CreateMemoryStreamAsync(bufferSize, CancellationToken.None);
+        }
+
+        public Task<MemoryStream> CreateMemoryStreamAsync(int bufferSize, CancellationToken cancellationToken)
+        {
+            return InnerCreateMemoryStreamAsync(bufferSize, cancellationToken);
         }
 
         public async Task<AsyncDisposableStream> OpenReadAsync()
@@ -208,7 +240,7 @@ namespace Tewr.Blazor.FileReader
             return await this.fileLoaderRef.FileReaderJsInterop.OpenBase64Stream(fileLoaderRef.ElementRef, index, await ReadFileInfoAsync());
         }
 
-        private async Task<MemoryStream> InnerCreateMemoryStreamAsync(int bufferSize)
+        private async Task<MemoryStream> InnerCreateMemoryStreamAsync(int bufferSize, CancellationToken cancellationToken)
         {
             MemoryStream memoryStream;
             if (bufferSize < 1)
@@ -219,16 +251,10 @@ namespace Tewr.Blazor.FileReader
             {
                 memoryStream = new MemoryStream(bufferSize);
             }
-
-            var buffer = new byte[bufferSize];
             
             await using (var fs = await OpenReadAsync())
             {
-                int count;
-                while ((count = await fs.ReadAsync(buffer, 0, buffer.Length)) != 0)
-                {
-                    await memoryStream.WriteAsync(buffer, 0, count);
-                }
+                await fs.CopyToAsync(memoryStream, bufferSize, cancellationToken);
             }
             memoryStream.Position = 0;
             return memoryStream;
