@@ -24,7 +24,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Blazor.FileReader\Blazor.FileReader.csproj" />
     <ProjectReference Include="..\Blazor.FileReader.Demo.Common\Blazor.FileReader.Demo.Common.csproj" />
   </ItemGroup>
   

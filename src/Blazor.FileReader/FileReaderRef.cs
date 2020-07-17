@@ -6,7 +6,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Blazor.FileReader
+namespace Tewr.Blazor.FileReader
 {
     /// <summary>
     /// Provides methods for interacting with an element that provides file streams.

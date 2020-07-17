@@ -1,8 +1,9 @@
 ﻿using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
-using Microsoft.Extensions.DependencyInjection;
 using System.Threading.Tasks;
+using Tewr.Blazor.FileReader;
 
-namespace Blazor.FileReader.WasmTestApp.Client { 
+namespace Blazor.FileReader.WasmTestApp.Client
+{
     public class Program
     {
         public static async Task Main(string[] args)

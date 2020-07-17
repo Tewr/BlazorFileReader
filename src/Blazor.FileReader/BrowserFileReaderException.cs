@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Blazor.FileReader
+namespace Tewr.Blazor.FileReader
 {
     /// <summary>
     /// Exception that is thrown if an exception occurs in the browser during file reader operations
