@@ -11,10 +11,10 @@ Blazor library exposing read-only file streams in [Blazor](https://github.com/do
  using ```<input type="file" />```
 and [FileReader](https://developer.mozilla.org/en-US/docs/Web/API/FileReader). Drag and drop targets may also be used to initialize streams.
 
-Here is a [Live demo](https://tewr.github.io/BlazorFileReader/) that contains the output of [the wasm demo project](src/Demo/Blazor.FileReader.Wasm.Demo). Currently, its a build based on ```v1.5.0```.
+Here is a [Live demo](https://tewr.github.io/BlazorFileReader/) that contains the output of [the wasm demo project](src/Demo/Blazor.FileReader.Wasm.Demo). Currently, its a build based on ```v2.0.0```.
 
 ## Installation
-Version <code>2.0.0.20200</code> ⚠️ Breaking changes: Changes Root Namespace from `Blazor.FileReader` to `Tewr.Blazor.FileReader`
+⚠️ Breaking changes in version <code>2.0.0.20200</code> : Changes Root Namespace from `Blazor.FileReader` to `Tewr.Blazor.FileReader`. Update your using statements and / or type references.
 
 Use [Nuget](https://www.nuget.org/packages/Tewr.Blazor.FileReader): ```Install-Package Tewr.Blazor.FileReader```
 
