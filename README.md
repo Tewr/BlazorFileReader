@@ -14,6 +14,7 @@ and [FileReader](https://developer.mozilla.org/en-US/docs/Web/API/FileReader). D
 Here is a [Live demo](https://tewr.github.io/BlazorFileReader/) that contains the output of [the wasm demo project](src/Demo/Blazor.FileReader.Wasm.Demo). Currently, its a build based on ```v1.5.0```.
 
 ## Installation
+Version <code>2.0.0.20200</code> ⚠️ Breaking changes: Changes Root Namespace from `Blazor.FileReader` to `Tewr.Blazor.FileReader`
 
 Use [Nuget](https://www.nuget.org/packages/Tewr.Blazor.FileReader): ```Install-Package Tewr.Blazor.FileReader```
 
@@ -87,7 +88,7 @@ The code for views looks the same for both [client](src/Demo/Blazor.FileReader.W
                 stream.Read(buffer, ...)
             }
 
-            // Read into memory and act
+            // Read file fully into memory and act
             using (MemoryStream memoryStream = await file.CreateMemoryStreamAsync(4096)) {
                 // Sync calls are ok once file is in memory
                 memoryStream.Read(buffer, ...)
@@ -98,8 +99,12 @@ The code for views looks the same for both [client](src/Demo/Blazor.FileReader.W
 ```
 
 ### Version notes
-Version <code>1.6.0.20166</code> Fixes a <a href="https://github.com/Tewr/BlazorFileReader/issues/139">a memory allocation bug</a> (before this fix - since v1.3.0.20033 - the browser would allocate the whole file in ram). 
-Also, introduces a new collection property on <code>File</code> for non-standard properties (thanks to <a href="https://github.com/DouglasDwyer/">@DouglasDwyer</a> for idea and implementation)
+Version <code>2.0.0.20200</code> ⚠️ Breaking changes: Changes Root Namespace from `Blazor.FileReader` to `Tewr.Blazor.FileReader` to avoid conflicts.
+- `CancellationToken` can now be used in most relevant methods to cancel ongoing upload.
+- Native support for displaying progress. See <a href="/src/Demo/Blazor.FileReader.Demo.Common/IndexCommon.razor#L74">demo project</a> for usage.
+
+<details><summary>Version <code>1.6.0.20166</code></summary> Fixes a <a href="https://github.com/Tewr/BlazorFileReader/issues/139">a memory allocation bug</a> (before this fix - since <code>v1.3.0.20033</code> - the browser would allocate the whole file in ram). 
+Also, introduces a new collection property on <code>File</code> for non-standard properties (thanks to <a href="https://github.com/DouglasDwyer/">@DouglasDwyer</a> for idea and implementation)</details>
 
 <details><summary>Version <code>1.5.0.20109</code></summary> Fixes a <a href="https://github.com/Tewr/BlazorFileReader/issues/124">a minor bug</a> in drag and drop (before this fix, could not drop on child elements) </details>
 
