@@ -188,10 +188,8 @@ namespace Tewr.Blazor.FileReader
             string scriptContent;
             using (var stream = this.GetType().Assembly.GetManifestResourceStream("blazor:js:FileReaderComponent.js"))
             {
-                using (var streamReader = new StreamReader(stream))
-                {
-                    scriptContent = await streamReader.ReadToEndAsync();
-                }
+                using var streamReader = new StreamReader(stream);
+                scriptContent = await streamReader.ReadToEndAsync();
             }
 
             // Load the script

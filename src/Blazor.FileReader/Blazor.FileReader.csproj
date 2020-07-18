@@ -14,7 +14,8 @@
     <PackageTags>blazor blazor-component stream filestream file-stream read-file filereader</PackageTags>
     <Configurations>Debug;Release;Ghpages</Configurations>
     <PackageId>Tewr.Blazor.FileReader</PackageId>
-    <PackageReleaseNotes>Breaking Change: root namespace: from Blazor.FileReader to Tewr.Blazor.FileReader</PackageReleaseNotes>
+    <PackageReleaseNotes>Breaking Change: root namespace: from Blazor.FileReader to Tewr.Blazor.FileReader.
+Replace all "using Blazor.FileReader" statements with "using Tewr.Blazor.FileReader"</PackageReleaseNotes>
     <AssemblyVersion>2.0.0.20198</AssemblyVersion>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageIcon>icon.png</PackageIcon>
