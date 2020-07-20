@@ -1,0 +1,162 @@
+﻿@using System.IO;
+@inject IFileReaderService fileReaderService;
+
+<style>
+    .@dropTargetClass {
+        display: block;
+        padding: 20px;
+        margin-bottom: 10px;
+        border: 1px dashed black;
+        border-radius: 5px;
+        position: relative;
+    }
+
+    .@dropTargetDragClass {
+        border-color: orangered;
+        font-weight: bold;
+    }
+
+    input.clickable {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        margin-top: -20px;
+        margin-left: -20px;
+        cursor: pointer;
+    }
+
+</style>
+
+<div class="@IpDropClass">
+    <input type="file"
+           class="clickable"
+           @ref=dropTargetInput
+           @onchange="OnInputChange"
+           @ondragenter=OnIpDragEnter
+           @ondragleave=OnIpDragLeave
+           multiple />
+    Drop Files here or click me.
+
+    @foreach (var fileInfo in IpFileList.Select(x => x.FileInfo))
+    {
+        <br />@fileInfo.Name
+    }
+</div>
+
+<input id="additiveinput" type="checkbox" checked=@Additive @onchange="OnAdditiveChange" />
+<label for="additiveinput">Additive</label>
+<button @onclick="ReadClick" class="btn btn-primary">Read file</button>
+<button @onclick="ClearClick" class="btn btn-primary">Clear</button>
+
+
+<br />
+<br />
+<textarea style="max-width: 100%;" cols="50" rows="20">@Output</textarea>
+
+
+@code {
+    ElementReference dropTargetInput;
+    IFileReaderRef ipReference;
+    bool Additive { get; set; }
+    private List<string> _ipdropClasses = new List<string>() { dropTargetClass };
+    string IpDropClass => string.Join(" ", _ipdropClasses);
+
+    string Output { get; set; }
+    private static readonly string nl = Environment.NewLine;
+
+    const string dropTargetDragClass = "droptarget-drag";
+    const string dropTargetClass = "droptarget";
+
+    private class FileWithStream { public IFileInfo FileInfo { get; set; } public AsyncDisposableStream Stream { get; set; } }
+    List<FileWithStream> IpFileList { get; } = new List<FileWithStream>();
+
+    protected override async Task OnAfterRenderAsync(bool isFirstRender)
+    {
+        if (isFirstRender)
+        {
+            ipReference = fileReaderService.CreateReference(dropTargetInput);
+        }
+    }
+
+    public async Task OnAdditiveChange(ChangeEventArgs e)
+    {
+        Additive = (bool)e.Value;
+        StateHasChanged();
+    }
+
+    public async Task ClearClick()
+    {
+        await this.ClearAsync();
+        await this.RefreshFileList();
+    }
+
+    private async Task ClearAsync()
+    {
+        foreach (var disposable in IpFileList.Select(x => x.Stream))
+        {
+            await disposable.DisposeAsync();
+        }
+
+        IpFileList.Clear();
+    }
+
+    public void OnIpDragEnter(EventArgs e) => _ipdropClasses.Add(dropTargetDragClass);
+
+    public void OnIpDragLeave(EventArgs e) => _ipdropClasses.Remove(dropTargetDragClass);
+
+    public async Task OnInputChange(EventArgs e)
+    {
+        Output += $"Dropped a file on the Clickable.{nl}";
+        _ipdropClasses.Remove(dropTargetDragClass);
+        this.StateHasChanged();
+        await this.RefreshFileList();
+    }
+
+    private async Task RefreshFileList()
+    {
+        if (!Additive)
+        {
+            await this.ClearAsync();
+        }
+        foreach (var file in await ipReference.EnumerateFilesAsync())
+        {
+            var fileInfo = await file.ReadFileInfoAsync();
+            IpFileList.Add(new FileWithStream { FileInfo = fileInfo, Stream = await file.OpenReadAsync() });
+        }
+        this.StateHasChanged();
+    }
+    public async Task ReadClick() => await ReadFile(ipReference);
+
+    public async Task ReadFile(IFileReaderRef list)
+    {
+        Output = string.Empty;
+        this.StateHasChanged();
+
+        foreach (var pair in IpFileList)
+        {
+            var fileInfo = pair.FileInfo;
+
+            Output += $"{nameof(IFileInfo)}.{nameof(fileInfo.Name)}: {fileInfo.Name}{nl}";
+            Output += $"{nameof(IFileInfo)}.{nameof(fileInfo.Size)}: {fileInfo.Size}{nl}";
+            Output += $"{nameof(IFileInfo)}.{nameof(fileInfo.Type)}: {fileInfo.Type}{nl}";
+            Output += $"{nameof(IFileInfo)}.{nameof(fileInfo.LastModifiedDate)}: {fileInfo.LastModifiedDate?.ToString() ?? "(N/A)"}{nl}";
+            Output += $"Reading file...";
+            this.StateHasChanged();
+            fileInfo.PositionInfo.PositionChanged += (s, e) =>
+            {
+                Output += $"Read {e.PositionDeltaSinceAcknowledge}, {e.Position} / {fileInfo.Size} ({e.Percentage:0.00}%){nl}";
+                this.StateHasChanged();
+            };
+
+            var bufferSize = 20480;
+            using (var ps = new PositionStream())
+            using (var fs = pair.Stream)
+            {
+                await fs.CopyToAsync(ps, bufferSize);
+                Output += $"Done reading file {fileInfo.Name}.{nl}";
+            }
+            this.StateHasChanged();
+        }
+    }
+}
