@@ -6,12 +6,54 @@ Welcome to your new filestreaming app.
 <br />
 This demo reads files that was dropped in without doing anything particular with it.
 <br />
+<br />
+<div class="btn-group btn-group-toggle">
+    @foreach (var item in possibleOptions)
+    {
+        <label class="@defaultClasses @(item.IsActive() ? "active":"")" @key="item.Id">
+            <input type="radio" name="options" id="@item.Id" autocomplete="off" checked="@(item.IsActive() ? "checked":"")" @onclick="_ => OnChange(item.Id)"> @item.Description
+        </label>
+    }
+</div>
+<br />
+<br />
 
-<DragnDropDivCommon />
-<DragnDropInputCommon />
+@if (currentOption == "DragnDropDivCommon")
+{
+    <DragnDropDivCommon />
+}
+else if (currentOption == "DragnDropInputCommon")
+{
+    <DragnDropInputCommon />
+}
 
 @code {
- 
+
+    private class PossibleOption { public string Id { get; set; } public string Description { get; set; } public Func<bool> IsActive { get; set; } }
+    List<PossibleOption> possibleOptions = new List<PossibleOption> {
+        new PossibleOption { Id = "DragnDropDivCommon", Description= "Drag and Drop on Element" },
+        new PossibleOption { Id = "DragnDropInputCommon", Description= "Drag and Drop on Hidden input" },
+    };
+
+    string defaultClasses = "btn btn-primary";
+    string currentOption;
+    protected override void OnInitialized()
+    {
+        currentOption = possibleOptions.First().Id;
+        foreach (var item in possibleOptions)
+        {
+            item.IsActive = () => currentOption == item.Id;
+
+        }
+        base.OnInitialized();
+    }
+
+    public void OnChange(string id)
+    {
+        currentOption = id;
+        StateHasChanged();
+    }
+
 }
 
 
