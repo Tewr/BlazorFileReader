@@ -182,7 +182,7 @@ var FileReaderComponent = (function () {
         };
         var properties = {};
         for (var property in file) {
-            if (Object.getPrototypeOf(file).hasOwnProperty(property) && !(property in result)) {
+            if (Object.prototype.hasOwnProperty.call(file, property) && !(property in result)) {
                 properties[property] = file[property];
             }
         }
