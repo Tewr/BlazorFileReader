@@ -69,12 +69,15 @@ The code for views looks the same for both [client](src/Demo/Blazor.FileReader.W
 
 ```cs
 @page "/MyPage"
+@using Tewr.Blazor.FileReader
 @using System.IO;
 @inject IFileReaderService fileReaderService;
 
 <input type="file" @ref=inputTypeFileElement /><button @onclick=ReadFile>Read file</button>
 
-@functions {
+@code
+{
+    private ElementReference inputTypeFileElement;
 
     public async Task ReadFile()
     {
