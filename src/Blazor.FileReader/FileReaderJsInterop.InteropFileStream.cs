@@ -7,7 +7,7 @@ namespace Tewr.Blazor.FileReader
 {
     public partial class FileReaderJsInterop
     {
-        private class InteropFileStream : AsyncDisposableStream
+        internal class InteropFileStream : AsyncDisposableStream
         {
             private readonly int fileRef;
             private readonly long length;
@@ -69,34 +69,36 @@ namespace Tewr.Blazor.FileReader
             {
                 ThrowIfDisposed();
                 if (offset > Length)
-                    throw new ArgumentOutOfRangeException("offset");
+                    throw new ArgumentOutOfRangeException(nameof(offset));
                 switch (origin)
                 {
                     case SeekOrigin.Begin:
                         {
                             if (offset < 0)
-                                throw new IOException("SeekBeforeBegin");
+                                throw new IOException("An attempt was made to move the position before the beginning of the stream");
                             Position = offset;
                             break;
                         }
                     case SeekOrigin.Current:
                         {
-                            int tempPosition = unchecked((int)Position + (int)offset);
-                            if (unchecked((int)Position + offset) < 0 || tempPosition < 0)
-                                throw new IOException("SeekBeforeBegin");
+                            var tempPosition = unchecked(Position + offset);
+                            if (tempPosition < 0)
+                            {
+                                throw new IOException("An attempt was made to move the position before the beginning of the stream");
+                            }
                             Position = tempPosition;
                             break;
                         }
                     case SeekOrigin.End:
                         {
-                            int tempPosition = unchecked((int)(Length + (int)offset));
-                            if (unchecked(Length + offset) < 0 || tempPosition < 0)
-                                throw new IOException("IO.IO_SeekBeforeBegin");
+                            var tempPosition = unchecked(Length + offset);
+                            if (tempPosition < 0)
+                                throw new IOException("An attempt was made to move the position before the beginning of the stream");
                             Position = tempPosition;
                             break;
                         }
                     default:
-                        throw new ArgumentException("Argument_InvalidSeekOrigin");
+                        throw new ArgumentException("Invalid Seek Origin");
                 }
 
                 return Position;
