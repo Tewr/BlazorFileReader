@@ -15,7 +15,7 @@
     <Configurations>Debug;Release;Ghpages</Configurations>
     <PackageId>Tewr.Blazor.FileReader</PackageId>
     <PackageReleaseNotes>Fixes Seek for files/position larger than int32 (~2Gb)</PackageReleaseNotes>
-    <AssemblyVersion>2.0.0.20200</AssemblyVersion>
+    <AssemblyVersion>2.0.0.20242</AssemblyVersion>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageIcon>icon.png</PackageIcon>
     <RazorLangVersion>3.0</RazorLangVersion>
