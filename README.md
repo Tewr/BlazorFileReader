@@ -102,6 +102,8 @@ The code for views looks the same for both [client](src/Demo/Blazor.FileReader.W
 ```
 
 ### Version notes
+Version <code>2.0.0.20242</code> Fixes a bug when working with file larger than 2Gb in InteropStream.Seek (#153)
+
 Version <code>2.0.0.20200</code> ⚠️ Breaking changes: Changes Root Namespace from `Blazor.FileReader` to `Tewr.Blazor.FileReader` to avoid conflicts.
 - `CancellationToken` can now be used in most relevant methods to cancel ongoing upload.
 - Native support for displaying progress. See <a href="/src/Demo/Blazor.FileReader.Demo.Common/IndexCommon.razor#L74">demo project</a> for usage.
