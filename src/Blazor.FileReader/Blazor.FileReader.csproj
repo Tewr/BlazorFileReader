@@ -6,7 +6,7 @@
     <TypeScriptToolsVersion>2.8</TypeScriptToolsVersion>
     <LangVersion>latest</LangVersion>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-    <Version>2.0.0.20200</Version>
+    <Version>2.0.0.20242</Version>
     <Authors>Tor Knutsson (Tewr)</Authors>
     <PackageProjectUrl>https://github.com/Tewr/BlazorFileReader</PackageProjectUrl>
     <RepositoryUrl>https://github.com/Tewr/BlazorFileReader</RepositoryUrl>
@@ -14,8 +14,7 @@
     <PackageTags>blazor blazor-component stream filestream file-stream read-file filereader</PackageTags>
     <Configurations>Debug;Release;Ghpages</Configurations>
     <PackageId>Tewr.Blazor.FileReader</PackageId>
-    <PackageReleaseNotes>This release changes root namespace from  "Blazor.FileReader" to "Tewr.Blazor.FileReader".
-To upgrade, replace all occurances of "using Blazor.FileReader" statements with "using Tewr.Blazor.FileReader"</PackageReleaseNotes>
+    <PackageReleaseNotes>Fixes Seek for files/position larger than int32 (~2Gb)</PackageReleaseNotes>
     <AssemblyVersion>2.0.0.20200</AssemblyVersion>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageIcon>icon.png</PackageIcon>
