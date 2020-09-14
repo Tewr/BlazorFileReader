@@ -120,8 +120,8 @@ namespace Tewr.Blazor.FileReader
         {
             cancellationToken.ThrowIfCancellationRequested();
             var data = await CurrentJSRuntime.InvokeAsync<string>(
-                $"FileReaderComponent.ReadFileMarshalledAsync",
-                new { position, count, fileRef }, cancellationToken);
+                $"FileReaderComponent.ReadFileMarshalledAsync", cancellationToken,
+                new { position, count, fileRef });
 
             return data;
 
