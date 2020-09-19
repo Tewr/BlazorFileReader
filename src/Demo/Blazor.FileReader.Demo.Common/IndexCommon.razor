@@ -89,12 +89,14 @@ There are other demos in the menu.
             {
                 // PositionStream is a stream created only for this demo, 
                 // That does nothing with the data other then updating its position property.
-                var ps = new PositionStream();
-
-                using (var fs = await file.OpenReadAsync())
+                //var ps = System.IO.File.OpenWrite(@"c:\temp\text.bin");
+                using (var fs = new System.IO.FileStream($@"c:\temp\{Guid.NewGuid()}.bin", System.IO.FileMode.CreateNew))
                 {
-                    await fs.CopyToAsync(ps, BufferSize, cancellationTokenSource.Token);
-                    stopwatch.Stop();
+                    using (var fi = await file.OpenReadAsync())
+                    {
+                        await fi.CopyToAsync(fs, BufferSize, cancellationTokenSource.Token);
+                        stopwatch.Stop();
+                    }
                 }
 
                 value = max;

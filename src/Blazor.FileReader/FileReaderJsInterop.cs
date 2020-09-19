@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -101,19 +102,64 @@ namespace Tewr.Blazor.FileReader
             int fileRef, byte[] buffer, long position, long bufferOffset, int count,
             CancellationToken cancellationToken)
         {
-            var result = await ReadFileMarshalledBase64Async(fileRef, position, count, cancellationToken);
-            
-            var bytesRead = 0;
-            if (!string.IsNullOrEmpty(result))
-            {
-                var byteResult = Convert.FromBase64String(result);
-                bytesRead = byteResult.Length;
-                Array.Copy(byteResult, 0, buffer, bufferOffset, bytesRead);
-            }
+            const int MaxCallSize = 20 * 1024;
+            string result;
 
-            return bytesRead;
+            if (count > MaxCallSize)
+            {
+                var tasks = new List<Task<byte[]>>();
+                var chunkPosition = position;
+                var chunkCount = count;
+                while (chunkCount > 0)
+                {
+                    var smallChunkSize = Math.Min(chunkCount, MaxCallSize);
+                    var taskChunkPos = chunkPosition;
+                    tasks.Add(Task.Run(async () =>
+                    {
+                         var chunk = await ReadFileMarshalledBase64Async(fileRef, taskChunkPos, smallChunkSize, cancellationToken);
+                         return string.IsNullOrEmpty(chunk) ? new byte[0]: Convert.FromBase64String(chunk);
+                    }, cancellationToken));
+                    chunkPosition += smallChunkSize;
+                    chunkCount -= smallChunkSize;
+                }
+
+                var allBytes = await Task.WhenAll(tasks);
+                
+                var bytesRead = 0;
+                foreach (var array in allBytes)
+                {
+                    Array.Copy(array, 0, buffer, bufferOffset + bytesRead, array.Length);
+                    bytesRead += array.Length;
+                }
+
+                return bytesRead;
+            }
+            else
+            {
+                result = await ReadFileMarshalledBase64Async(fileRef, position, count, cancellationToken);
+                var bytesRead = 0;
+                if (!string.IsNullOrEmpty(result))
+                {
+                    var byteResult = Convert.FromBase64String(result);
+                    bytesRead = byteResult.Length;
+                    Array.Copy(byteResult, 0, buffer, bufferOffset, bytesRead);
+                }
+                return bytesRead;
+            }
         }
 
+
+        private byte[] Combine(byte[][] arrays)
+        {
+            var result = new byte[arrays.Sum(a => a.Length)];
+            int offset = 0;
+            foreach (var array in arrays)
+            {
+                Buffer.BlockCopy(array, 0, result, offset, array.Length);
+                offset += array.Length;
+            }
+            return result;
+        }
         private async Task<string> ReadFileMarshalledBase64Async(
             int fileRef, long position, int count,
             CancellationToken cancellationToken)
