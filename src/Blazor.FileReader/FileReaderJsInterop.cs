@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.Options;
 using Microsoft.JSInterop;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -21,6 +21,7 @@ namespace Tewr.Blazor.FileReader
             = new Dictionary<long, TaskCompletionSource<int>>();
 
         internal IJSRuntime CurrentJSRuntime { get; }
+        public long? MaximumMessageSize { get; private set; }
 
         public FileReaderJsInterop(IJSRuntime jsRuntime, IFileReaderServiceOptions options)
         {
@@ -63,6 +64,16 @@ namespace Tewr.Blazor.FileReader
             return (int)await CurrentJSRuntime.InvokeAsync<long>($"FileReaderComponent.ClearValue", elementReference);
         }
 
+        internal void TryReadDefaultMaximumMessageSize(IServiceProvider serviceProvider)
+        {
+            if (MaximumMessageSize == null)
+            {
+                MaximumMessageSize = ServerSideBlazorConfiguration
+                    .TryReadMaximumReceiveMessageSize(serviceProvider, out long maximumRecieveMessageSize) ?
+                    maximumRecieveMessageSize : MaximumMessageSize;
+            }
+        }
+
         public async Task<IFileInfo> GetFileInfoFromElement(ElementReference elementReference, int index)
         {
             return await CurrentJSRuntime.InvokeAsync<FileInfo>($"FileReaderComponent.GetFileInfoFromElement", elementReference, index);
@@ -102,7 +113,8 @@ namespace Tewr.Blazor.FileReader
             int fileRef, byte[] buffer, long position, long bufferOffset, int count,
             CancellationToken cancellationToken)
         {
-            const int MaxCallSize = 20 * 1024;
+            // At 60% we should be pretty safe to acccount for metadata size.
+            var MaxCallSize = MaximumMessageSize == -1 ? 20 * 1024 : (int)Math.Floor(MaximumMessageSize.GetValueOrDefault() * 0.6);
             string result;
 
             if (count > MaxCallSize)
@@ -148,18 +160,6 @@ namespace Tewr.Blazor.FileReader
             }
         }
 
-
-        private byte[] Combine(byte[][] arrays)
-        {
-            var result = new byte[arrays.Sum(a => a.Length)];
-            int offset = 0;
-            foreach (var array in arrays)
-            {
-                Buffer.BlockCopy(array, 0, result, offset, array.Length);
-                offset += array.Length;
-            }
-            return result;
-        }
         private async Task<string> ReadFileMarshalledBase64Async(
             int fileRef, long position, int count,
             CancellationToken cancellationToken)

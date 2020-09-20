@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
+using System;
 using System.Threading.Tasks;
 
 namespace Tewr.Blazor.FileReader
@@ -59,10 +60,14 @@ namespace Tewr.Blazor.FileReader
     {
         private readonly FileReaderJsInterop _fileReaderJsInterop;
 
-        public FileReaderService(IJSRuntime jsRuntime, IFileReaderServiceOptions options)
+        public FileReaderService(IJSRuntime jsRuntime, IFileReaderServiceOptions options, IServiceProvider serviceProvider)
         {
             this.Options = options;
             this._fileReaderJsInterop = new FileReaderJsInterop(jsRuntime, options);
+            if (!options.UseWasmSharedBuffer)
+            {
+                this._fileReaderJsInterop.TryReadDefaultMaximumMessageSize(serviceProvider);
+            }
         }
 
         public IFileReaderServiceOptions Options { get; }
