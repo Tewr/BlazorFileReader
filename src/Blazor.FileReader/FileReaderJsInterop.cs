@@ -15,15 +15,14 @@ namespace Tewr.Blazor.FileReader
         private static readonly IReadOnlyDictionary<string, string> escapeScriptTextReplacements =
             new Dictionary<string, string> { { @"\", @"\\" }, { "\r", @"\r" }, { "\n", @"\n" }, { "'", @"\'" }, { "\"", @"\""" } };
         private readonly bool _needsInitialization = false;
-        private readonly IFileReaderServiceOptions _options;
+        private readonly InternalFileReaderServiceOptions _options;
         private static long _readFileUnmarshalledCallIdSource;
         private static readonly Dictionary<long, TaskCompletionSource<int>> _readFileUnmarshalledCalls
             = new Dictionary<long, TaskCompletionSource<int>>();
 
         internal IJSRuntime CurrentJSRuntime { get; }
-        public long? MaximumMessageSize { get; private set; }
 
-        public FileReaderJsInterop(IJSRuntime jsRuntime, IFileReaderServiceOptions options)
+        internal FileReaderJsInterop(IJSRuntime jsRuntime, InternalFileReaderServiceOptions options)
         {
             CurrentJSRuntime = jsRuntime;
             _options = options;
@@ -62,16 +61,6 @@ namespace Tewr.Blazor.FileReader
         {
             await EnsureInitializedAsync();
             return (int)await CurrentJSRuntime.InvokeAsync<long>($"FileReaderComponent.ClearValue", elementReference);
-        }
-
-        internal void TryReadDefaultMaximumMessageSize(IServiceProvider serviceProvider)
-        {
-            if (MaximumMessageSize == null)
-            {
-                MaximumMessageSize = ServerSideBlazorConfiguration
-                    .TryReadMaximumReceiveMessageSize(serviceProvider, out long maximumRecieveMessageSize) ?
-                    maximumRecieveMessageSize : MaximumMessageSize;
-            }
         }
 
         public async Task<IFileInfo> GetFileInfoFromElement(ElementReference elementReference, int index)
@@ -114,10 +103,11 @@ namespace Tewr.Blazor.FileReader
             CancellationToken cancellationToken)
         {
             // At 60% we should be pretty safe to acccount for metadata size.
-            var MaxCallSize = MaximumMessageSize == -1 ? 20 * 1024 : (int)Math.Floor(MaximumMessageSize.GetValueOrDefault() * 0.6);
+            // Theoretically, MaximumRecieveMessageSize could be larger than int32, so this is accounted for.
+            var MaxCallSize = (int)Math.Min(int.MaxValue, (long)Math.Floor(_options.MaximumRecieveMessageSize * 0.6));
             string result;
 
-            if (count > MaxCallSize)
+            if (_options.UseBufferChunking && count > MaxCallSize)
             {
                 var tasks = new List<Task<byte[]>>();
                 var chunkPosition = position;

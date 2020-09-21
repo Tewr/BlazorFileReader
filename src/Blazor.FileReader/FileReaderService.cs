@@ -2,6 +2,7 @@
 using Microsoft.JSInterop;
 using System;
 using System.Threading.Tasks;
+using System.Xml.Schema;
 
 namespace Tewr.Blazor.FileReader
 {
@@ -33,6 +34,41 @@ namespace Tewr.Blazor.FileReader
         public bool InitializeOnFirstCall { get; set; } = true;
 
         public bool UseWasmSharedBuffer { get; set; } = false;
+
+    }
+
+
+    internal class InternalFileReaderServiceOptions : IFileReaderServiceOptions
+    {
+
+        private readonly IFileReaderServiceOptions userProvidedOptions;
+
+        public InternalFileReaderServiceOptions(IFileReaderServiceOptions userProvidedOptions)
+        {
+            this.userProvidedOptions = userProvidedOptions;
+        }
+
+        public bool InitializeOnFirstCall
+        {
+            get => userProvidedOptions.InitializeOnFirstCall;
+            set => userProvidedOptions.InitializeOnFirstCall = value;
+        }
+
+        public bool UseWasmSharedBuffer { 
+            get => userProvidedOptions.UseWasmSharedBuffer; 
+            set => userProvidedOptions.UseWasmSharedBuffer = value; 
+        }
+
+        /// <summary>
+        /// Activates server-side buffer chunking
+        /// </summary>
+        public bool UseBufferChunking { get; set; } = false;
+
+        /// <summary>
+        /// SignalR
+        /// </summary>
+        public long MaximumRecieveMessageSize { get; set; }
+        
     }
 
     /// <summary>
@@ -59,15 +95,34 @@ namespace Tewr.Blazor.FileReader
     internal class FileReaderService : IFileReaderService
     {
         private readonly FileReaderJsInterop _fileReaderJsInterop;
+        private const long DefaultMaximumReceiveMessageSize = 32 * 1024;
+        private static long? MaximumReceiveMessageSize;
 
         public FileReaderService(IJSRuntime jsRuntime, IFileReaderServiceOptions options, IServiceProvider serviceProvider)
         {
             this.Options = options;
-            this._fileReaderJsInterop = new FileReaderJsInterop(jsRuntime, options);
-            if (!options.UseWasmSharedBuffer)
+
+            var internalOptions = new InternalFileReaderServiceOptions(options);
+            if (!PlatformConfig.IsWasm)
             {
-                this._fileReaderJsInterop.TryReadDefaultMaximumMessageSize(serviceProvider);
+                if (MaximumReceiveMessageSize == null)
+                {
+                    if (!PlatformConfig.TryReadMaximumReceiveMessageSize(serviceProvider, out var maximumRecieveMessageSize))
+                    {
+                        System.Diagnostics.Trace.TraceWarning($"{typeof(FileReaderService).FullName}: Unable to read SignalR MaximumReceiveMessageSize, defaulting to {DefaultMaximumReceiveMessageSize}");
+                        MaximumReceiveMessageSize = DefaultMaximumReceiveMessageSize;
+                    }
+                    else
+                    {
+                        MaximumReceiveMessageSize = maximumRecieveMessageSize;
+                    }
+                }
+
+                internalOptions.UseBufferChunking = true;
+                internalOptions.MaximumRecieveMessageSize = MaximumReceiveMessageSize.Value;
             }
+
+            this._fileReaderJsInterop = new FileReaderJsInterop(jsRuntime, internalOptions);
         }
 
         public IFileReaderServiceOptions Options { get; }
