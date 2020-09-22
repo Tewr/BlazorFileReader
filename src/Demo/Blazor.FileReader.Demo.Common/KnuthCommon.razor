@@ -80,12 +80,16 @@ This demo calculates a Knuth hash.
 
             using (var fs = await file.OpenReadAsync())
             {
-                var knuthHash = await CalculateKnuthHashAsync(fs, BufferSize);
-                Output += $"Knuth hash for {fileInfo.Name} : {knuthHash}";
+                var kHash = await CalculateKnuthHashAsync(fs, BufferSize);
+                value = fs.Position;
+                Output += $"Read 100%). {fileInfo.Size} / {fileInfo.Size}{nl}";
+                Output += $"Knuth hash for {fileInfo.Name} : {kHash}";
                 stopwatch.Stop();
+                this.InvokeAsync(this.StateHasChanged);
             }
         }
     }
+
 
     async Task<ulong> CalculateKnuthHashAsync(Stream stream, int bufferSize)
     {
