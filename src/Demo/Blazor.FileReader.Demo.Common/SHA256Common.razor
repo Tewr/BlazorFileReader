@@ -95,6 +95,18 @@ Transfer method : <br/>
 
         public async Task HashFile()
         {
+            try
+            {
+                await InnerHashFile();
+            }
+            catch (Exception e)
+            {
+                Output += e.ToString();
+            }
+        }
+
+        public async Task InnerHashFile()
+        {
             Output = string.Empty;
             this.StateHasChanged();
             var nl = Environment.NewLine;

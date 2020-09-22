@@ -16,7 +16,6 @@
             <br /><br />
             <p id="loadingText">Loading...</p>
             <br />
-            <progress id="pbar"></progress>
         </div>
         <style>
             .loader-box {
@@ -32,37 +31,7 @@
 
     <script type="text/javascript">
 
-        (function () {
-            /*
-             * Loader/splash screen
-             * */
-            
-            var total = 0;
-            var loaded = 0;
-            
-            var proxied = window.fetch;
-            window.fetch = function (input, init) {
-                var file = input;
-                total++;
 
-                return proxied(input, init).then(function (response) {
-                    loaded++;
-                    var progress = Math.floor(((loaded / total) * 100));
-                    document.getElementById("pbar").max = total;
-                    document.getElementById("pbar").value = loaded;
-                    document.getElementById("loadingText").innerHTML = "Loaded " + file + ", " + progress + " %..."
-
-                    if (loaded == total) {
-                        // Reset override.
-                        window.fetch = proxied;
-                        document.getElementById("loadingText").innerHTML = "Loading 100%, opening application...";
-                    }
-
-                    return response;
-                });
-
-            };
-        })();
 
         // Single Page Apps for GitHub Pages
         // https://github.com/rafrex/spa-github-pages

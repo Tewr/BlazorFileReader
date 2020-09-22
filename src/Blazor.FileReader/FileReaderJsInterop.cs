@@ -136,7 +136,8 @@ namespace Tewr.Blazor.FileReader
             _readFileUnmarshalledCalls[id] = taskCompletionSource;
             cancellationToken.Register(() => taskCompletionSource.TrySetCanceled());
 
-            CurrentJSRuntime.InvokeUnmarshalled<ReadFileParams, int>(
+            ((IJSUnmarshalledRuntime) CurrentJSRuntime)
+                .InvokeUnmarshalled<ReadFileParams, int>(
                 $"FileReaderComponent.ReadFileUnmarshalledAsync",
                 new ReadFileParams { 
                     Buffer = buffer, 

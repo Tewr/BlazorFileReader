@@ -62,6 +62,12 @@ namespace Tewr.Blazor.FileReader
         public FileReaderService(IJSRuntime jsRuntime, IFileReaderServiceOptions options)
         {
             this.Options = options;
+            if (options.UseWasmSharedBuffer && jsRuntime as IJSUnmarshalledRuntime is null)
+            {
+                throw new System.PlatformNotSupportedException(
+                    $"{nameof(IFileReaderServiceOptions)}.{nameof(options.UseWasmSharedBuffer)}=true " +
+                    $"is not supported on the current JSRuntime.");
+            }
             this._fileReaderJsInterop = new FileReaderJsInterop(jsRuntime, options);
         }
 

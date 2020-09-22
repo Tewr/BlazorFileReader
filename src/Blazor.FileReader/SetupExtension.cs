@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using System;
 
 namespace Tewr.Blazor.FileReader
@@ -32,14 +33,14 @@ namespace Tewr.Blazor.FileReader
             {
                 throw new ArgumentNullException(nameof(setOptions));
             }
-
+            
             services.AddSingleton<IFileReaderServiceOptions, FileReaderServiceOptions>(si => {
                 var o = new FileReaderServiceOptions();
                 setOptions(o);
-                if (o.UseWasmSharedBuffer && !IJSRuntimeExtensions.IsInvokeUnmarshalledSupported())
+                /*if (o.UseWasmSharedBuffer && !IJSRuntimeExtensions.IsInvokeAsyncSupported())
                 {
                     throw new PlatformNotSupportedException($"{nameof(o.UseWasmSharedBuffer)}=true is not supported on this platform.");
-                }
+                }*/
                 return o;
             });
 
