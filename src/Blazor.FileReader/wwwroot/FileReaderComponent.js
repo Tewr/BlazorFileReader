@@ -1,5 +1,6 @@
 ;
 ;
+;
 var FileReaderComponent = (function () {
     function FileReaderComponent() {
         var _this = this;
@@ -7,6 +8,7 @@ var FileReaderComponent = (function () {
         this.fileStreams = {};
         this.dragElements = new Map();
         this.elementDataTransfers = new Map();
+        this.readResultByTaskId = new Map();
         this.RegisterDropEvents = function (element, additive) {
             _this.LogIfNull(element);
             var handler = function (ev) {
@@ -74,6 +76,10 @@ var FileReaderComponent = (function () {
         };
         this.OpenRead = function (element, fileIndex) {
             _this.LogIfNull(element);
+            if (!FileReaderComponent.endTask) {
+                FileReaderComponent.endTask =
+                    Module.mono_bind_static_method('[Tewr.Blazor.FileReader] Tewr.Blazor.FileReader.FileReaderJsInterop:EndTask');
+            }
             var files = _this.GetFiles(element);
             if (!files) {
                 throw 'No FileList available.';
@@ -92,8 +98,13 @@ var FileReaderComponent = (function () {
                 bufferOffset: Blazor.platform.readUint64Field(readFileParamsPointer, 8),
                 count: Blazor.platform.readInt32Field(readFileParamsPointer, 16),
                 fileRef: Blazor.platform.readInt32Field(readFileParamsPointer, 20),
-                position: Blazor.platform.readUint64Field(readFileParamsPointer, 24),
-                buffer: Blazor.platform.readInt32Field(readFileParamsPointer, 32)
+                position: Blazor.platform.readUint64Field(readFileParamsPointer, 24)
+            };
+        };
+        this.ReadBufferPointer = function (readBufferPointer) {
+            return {
+                taskId: Blazor.platform.readUint64Field(readBufferPointer, 0),
+                buffer: Blazor.platform.readInt32Field(readBufferPointer, 8)
             };
         };
         this.ReadFileUnmarshalledAsync = function (readFileParamsPointer) {
@@ -101,22 +112,27 @@ var FileReaderComponent = (function () {
             var asyncCall = new Promise(function (resolve, reject) {
                 return _this.ReadFileSlice(readFileParams, function (r, b) { return r.readAsArrayBuffer(b); })
                     .then(function (r) {
-                    try {
-                        var dotNetBufferView = Blazor.platform.toUint8Array(readFileParams.buffer);
-                        var arrayBuffer = r.result;
-                        dotNetBufferView.set(new Uint8Array(arrayBuffer), readFileParams.bufferOffset);
-                        var byteCount = Math.min(arrayBuffer.byteLength, readFileParams.count);
-                        resolve(byteCount);
-                    }
-                    catch (e) {
-                        reject(e);
-                    }
+                    _this.readResultByTaskId.set(readFileParams.taskId, {
+                        arrayBuffer: r.result,
+                        params: readFileParams
+                    });
+                    resolve();
                 }, function (e) { return reject(e); });
             });
-            asyncCall.then(function (byteCount) { return DotNet.invokeMethodAsync("Tewr.Blazor.FileReader", "EndReadFileUnmarshalledAsyncResult", readFileParams.taskId, byteCount); }, function (error) {
+            asyncCall.then(function () { return FileReaderComponent.endTask(readFileParams.taskId); }, function (error) {
                 console.error("ReadFileUnmarshalledAsync error", error);
                 DotNet.invokeMethodAsync("Tewr.Blazor.FileReader", "EndReadFileUnmarshalledAsyncError", readFileParams.taskId, error.toString());
             });
+            return 0;
+        };
+        this.FillBufferUnmarshalled = function (bufferPointer) {
+            var readBufferParams = _this.ReadBufferPointer(bufferPointer);
+            var dotNetBufferView = Blazor.platform.toUint8Array(readBufferParams.buffer);
+            var data = _this.readResultByTaskId.get(readBufferParams.taskId);
+            _this.readResultByTaskId.delete(readBufferParams.taskId);
+            dotNetBufferView.set(new Uint8Array(data.arrayBuffer), data.params.bufferOffset);
+            var byteCount = Math.min(data.arrayBuffer.byteLength, data.params.count);
+            return byteCount;
         };
         this.ReadFileMarshalledAsync = function (readFileParams) {
             return new Promise(function (resolve, reject) {
