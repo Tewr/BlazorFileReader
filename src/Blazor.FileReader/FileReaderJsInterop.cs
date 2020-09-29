@@ -19,7 +19,7 @@ namespace Tewr.Blazor.FileReader
         private static readonly Dictionary<long, TaskCompletionSource<int>> _readFileUnmarshalledCalls
             = new Dictionary<long, TaskCompletionSource<int>>();
 
-        internal static IJSRuntime CurrentJSRuntime;
+        internal IJSRuntime CurrentJSRuntime;
 
         public FileReaderJsInterop(IJSRuntime jsRuntime, IFileReaderServiceOptions options)
         {
