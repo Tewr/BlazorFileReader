@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Tewr.Blazor.FileReader;
 
@@ -12,9 +13,9 @@ namespace Blazor.FileReader.Wasm.Demo
             builder.RootComponents.Add<App>("app");
 
             builder.Services.AddFileReaderService(options => options.UseWasmSharedBuffer = true);
-            
 
-            await builder.Build().RunAsync();
+
+                        await builder.Build().RunAsync();
         }
     }
 }
