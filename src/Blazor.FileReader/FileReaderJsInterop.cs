@@ -15,14 +15,14 @@ namespace Tewr.Blazor.FileReader
         private static readonly IReadOnlyDictionary<string, string> escapeScriptTextReplacements =
             new Dictionary<string, string> { { @"\", @"\\" }, { "\r", @"\r" }, { "\n", @"\n" }, { "'", @"\'" }, { "\"", @"\""" } };
         private readonly bool _needsInitialization = false;
-        private readonly InternalFileReaderServiceOptions _options;
+        private readonly FileReaderServiceOptions _options;
         private static long _readFileUnmarshalledCallIdSource;
         private static readonly Dictionary<long, TaskCompletionSource<int>> _readFileUnmarshalledCalls
             = new Dictionary<long, TaskCompletionSource<int>>();
 
         internal IJSRuntime CurrentJSRuntime;
 
-        internal FileReaderJsInterop(IJSRuntime jsRuntime, InternalFileReaderServiceOptions options)
+        internal FileReaderJsInterop(IJSRuntime jsRuntime, FileReaderServiceOptions options)
         {
             CurrentJSRuntime = jsRuntime;
             _options = options;
@@ -80,7 +80,7 @@ namespace Tewr.Blazor.FileReader
 
         private async Task<int> OpenReadAsync(ElementReference elementReference, int fileIndex)
         {
-            return (int)await CurrentJSRuntime.InvokeAsync<long>($"FileReaderComponent.OpenRead", elementReference, fileIndex);
+            return (int)await CurrentJSRuntime.InvokeAsync<long>($"FileReaderComponent.OpenRead", elementReference, fileIndex, _options.UseWasmSharedBuffer);
         }
 
         private async Task<bool> DisposeStream(int fileRef)
@@ -109,14 +109,14 @@ namespace Tewr.Blazor.FileReader
 
             if (_options.UseBufferChunking && count > MaxCallSize)
             {
-                var tasks = new List<Task<byte[]>>();
+                var tasks = new Queue<Task<byte[]>>();
                 var chunkPosition = position;
                 var chunkCount = count;
                 while (chunkCount > 0)
                 {
                     var smallChunkSize = Math.Min(chunkCount, MaxCallSize);
                     var taskChunkPos = chunkPosition;
-                    tasks.Add(Task.Run(async () =>
+                    tasks.Enqueue(Task.Run(async () =>
                     {
                          var chunk = await ReadFileMarshalledBase64Async(fileRef, taskChunkPos, smallChunkSize, cancellationToken);
                          return string.IsNullOrEmpty(chunk) ? new byte[0]: Convert.FromBase64String(chunk);
@@ -124,12 +124,12 @@ namespace Tewr.Blazor.FileReader
                     chunkPosition += smallChunkSize;
                     chunkCount -= smallChunkSize;
                 }
-
-                var allBytes = await Task.WhenAll(tasks);
                 
                 var bytesRead = 0;
-                foreach (var array in allBytes)
+                while(tasks.Any())
                 {
+                    // Start waiting for the first task, it can be copied to consumer buffer even if the others are not done
+                    var array = await tasks.Dequeue();
                     Array.Copy(array, 0, buffer, bufferOffset + bytesRead, array.Length);
                     bytesRead += array.Length;
                 }

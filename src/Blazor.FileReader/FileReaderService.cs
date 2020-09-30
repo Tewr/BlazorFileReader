@@ -35,40 +35,16 @@ namespace Tewr.Blazor.FileReader
 
         public bool UseWasmSharedBuffer { get; set; } = false;
 
-    }
-
-
-    internal class InternalFileReaderServiceOptions : IFileReaderServiceOptions
-    {
-
-        private readonly IFileReaderServiceOptions userProvidedOptions;
-
-        public InternalFileReaderServiceOptions(IFileReaderServiceOptions userProvidedOptions)
-        {
-            this.userProvidedOptions = userProvidedOptions;
-        }
-
-        public bool InitializeOnFirstCall
-        {
-            get => userProvidedOptions.InitializeOnFirstCall;
-            set => userProvidedOptions.InitializeOnFirstCall = value;
-        }
-
-        public bool UseWasmSharedBuffer { 
-            get => userProvidedOptions.UseWasmSharedBuffer; 
-            set => userProvidedOptions.UseWasmSharedBuffer = value; 
-        }
-
         /// <summary>
-        /// Activates server-side buffer chunking
+        /// Activates server-side buffer chunking. Activated if not running on WASM.
         /// </summary>
         public bool UseBufferChunking { get; set; } = false;
 
         /// <summary>
-        /// SignalR
+        /// SignalR setting
         /// </summary>
         public long MaximumRecieveMessageSize { get; set; }
-        
+
     }
 
     /// <summary>
@@ -98,11 +74,10 @@ namespace Tewr.Blazor.FileReader
         private const long DefaultMaximumReceiveMessageSize = 32 * 1024;
         private static long? MaximumReceiveMessageSize;
 
-        public FileReaderService(IJSRuntime jsRuntime, IFileReaderServiceOptions options, IServiceProvider serviceProvider)
+        public FileReaderService(IJSRuntime jsRuntime, FileReaderServiceOptions options, IServiceProvider serviceProvider)
         {
             this.Options = options;
 
-            var internalOptions = new InternalFileReaderServiceOptions(options);
             if (!PlatformConfig.IsWasm)
             {
                 if (MaximumReceiveMessageSize == null)
@@ -118,11 +93,11 @@ namespace Tewr.Blazor.FileReader
                     }
                 }
 
-                internalOptions.UseBufferChunking = true;
-                internalOptions.MaximumRecieveMessageSize = MaximumReceiveMessageSize.Value;
+                options.UseBufferChunking = true;
+                options.MaximumRecieveMessageSize = MaximumReceiveMessageSize.Value;
             }
 
-            this._fileReaderJsInterop = new FileReaderJsInterop(jsRuntime, internalOptions);
+            this._fileReaderJsInterop = new FileReaderJsInterop(jsRuntime, options);
         }
 
         public IFileReaderServiceOptions Options { get; }
