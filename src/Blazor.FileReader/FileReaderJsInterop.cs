@@ -20,7 +20,7 @@ namespace Tewr.Blazor.FileReader
         private static readonly Dictionary<long, TaskCompletionSource<int>> _readFileUnmarshalledCalls
             = new Dictionary<long, TaskCompletionSource<int>>();
 
-        internal IJSRuntime CurrentJSRuntime { get; }
+        internal IJSRuntime CurrentJSRuntime;
 
         internal FileReaderJsInterop(IJSRuntime jsRuntime, InternalFileReaderServiceOptions options)
         {
@@ -171,11 +171,10 @@ namespace Tewr.Blazor.FileReader
             var id = ++_readFileUnmarshalledCallIdSource;
             _readFileUnmarshalledCalls[id] = taskCompletionSource;
             cancellationToken.Register(() => taskCompletionSource.TrySetCanceled());
-
+            // Do not try to push over the buffer here...
             CurrentJSRuntime.InvokeUnmarshalled<ReadFileParams, int>(
                 $"FileReaderComponent.ReadFileUnmarshalledAsync",
                 new ReadFileParams { 
-                    Buffer = buffer, 
                     BufferOffset = bufferOffset, 
                     Count = count, 
                     FileRef = fileRef,
@@ -183,22 +182,36 @@ namespace Tewr.Blazor.FileReader
                     TaskId = id
                 });
 
-            var bytesRead = await taskCompletionSource.Task;
+            // as it might not survive the heap charge of the following statement
+            await taskCompletionSource.Task;
+            
+            // Charge the buffer here instead, once its loadeg on the js side
+            var bytesRead = CurrentJSRuntime.InvokeUnmarshalled<BufferParams, int>(
+                $"FileReaderComponent.FillBufferUnmarshalled",
+                new BufferParams
+                {
+                    TaskId = id,
+                    Buffer = buffer
+                });
+            
             return bytesRead;
         }
 
-        [JSInvokable(nameof(EndReadFileUnmarshalledAsyncResult))]
-        public static void EndReadFileUnmarshalledAsyncResult(long taskId, int bytesRead)
+        /// <summary>
+        /// Called from Js
+        /// </summary>
+        /// <param name="taskId"></param>
+        public static void EndTask(long taskId)
         {
-            if (!_readFileUnmarshalledCalls.TryGetValue(taskId, out var taskCompletionSource)) {
-                Console.Error.WriteLine($"{nameof(EndReadFileUnmarshalledAsyncResult)}: Unknown {nameof(taskId)} '{taskId}'");
+            if (!_readFileUnmarshalledCalls.TryGetValue(taskId, out var taskCompletionSource))
+            {
+                Console.Error.WriteLine($"{nameof(EndTask)}: Unknown {nameof(taskId)} '{taskId}'");
                 return;
             }
 
             _readFileUnmarshalledCalls.Remove(taskId);
-            taskCompletionSource.SetResult(bytesRead);
+            taskCompletionSource.SetResult(0);
         }
-
 
         [JSInvokable(nameof(EndReadFileUnmarshalledAsyncError))]
         public static void EndReadFileUnmarshalledAsyncError(long taskId, string error)

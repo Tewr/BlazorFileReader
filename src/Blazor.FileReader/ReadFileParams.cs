@@ -20,8 +20,15 @@ namespace Tewr.Blazor.FileReader
 
         [FieldOffset(24)]
         public long Position;
+    }
 
-        [FieldOffset(32)]
+    [StructLayout(LayoutKind.Explicit)]
+    struct BufferParams
+    {
+        [FieldOffset(0)]
+        public long TaskId;
+
+        [FieldOffset(8)]
         public byte[] Buffer;
     }
 }

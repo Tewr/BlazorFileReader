@@ -1,11 +1,15 @@
 ﻿declare const Blazor: IBlazor;
 declare const DotNet: IDotNet;
+declare const Module: IModule;
 
 interface IDotNet {
     invokeMethodAsync<T>(assemblyName: string, methodIdentifier: string, ...args: any[]): Promise<T>;
 }
 interface IBlazor {
     platform: IBlazorPlatform;
+}
+interface IModule {
+    mono_bind_static_method(fqn: string, signature?: any): (...args: any[]) => any;
 }
 interface MethodHandle { MethodHandle__DO_NOT_IMPLEMENT: any }
 interface System_Object { System_Object__DO_NOT_IMPLEMENT: any }
@@ -26,12 +30,21 @@ interface IBlazorPlatform {
 
 interface IReadFileParams {
     taskId: number;
-    buffer: System_Array<any>;
     bufferOffset: number;
     count: number;
     fileRef: number;
     position: number;
 };
+
+interface IBufferParams {
+    taskId: number;
+    buffer: System_Array<object>;
+};
+
+interface IReadFileData {
+    arrayBuffer: ArrayBuffer;
+    params: IReadFileParams;
+}
 
 interface ReadFileSliceResult {
     file: File;
@@ -50,13 +63,32 @@ interface IDotNetBuffer {
     toUint8Array(): Uint8Array;
 }
 
+/**
+ * Proxy class for the c# class Tewr.Blazor.FileReader.FileReaderJsInterop
+ * */
+class FileReaderJsInterop {
+    
+    static initialized = false;
+    static initialize() {
+        FileReaderJsInterop.endTask =
+            Module.mono_bind_static_method('[Tewr.Blazor.FileReader] Tewr.Blazor.FileReader.FileReaderJsInterop:EndTask');
+        FileReaderJsInterop.initialized = true;
+    }
+
+    /**
+     * Unmarshalled callback for ending the current read task
+     * */
+    static endTask: (taskId: number) => void;
+}
+
 class FileReaderComponent {
 
     private newFileStreamReference = 0;
     private readonly fileStreams: { [reference: number]: File } = {};
     private readonly dragElements: Map<HTMLElement, EventListenerOrEventListenerObject> = new Map();
     private readonly elementDataTransfers: Map<HTMLElement, FileList> = new Map();
-    
+    private readonly readResultByTaskId: Map<number, IReadFileData> = new Map();
+
     private LogIfNull(element: HTMLElement) {
         if (element == null) {
             console.log("Tewr.Blazor.FileReader: HTMLElement is null. Can't access IFileReaderRef after HTMLElement was removed from DOM.");
@@ -173,7 +205,10 @@ class FileReaderComponent {
 
     public OpenRead = (element: HTMLElement, fileIndex: number): number => {
         this.LogIfNull(element);
-        
+        if (!FileReaderJsInterop.initialized) {
+            FileReaderJsInterop.initialize();
+        }
+
         const files = this.GetFiles(element);
         if (!files) {
             throw 'No FileList available.';
@@ -194,36 +229,53 @@ class FileReaderComponent {
             bufferOffset: Blazor.platform.readUint64Field(readFileParamsPointer, 8),
             count: Blazor.platform.readInt32Field(readFileParamsPointer, 16),
             fileRef: Blazor.platform.readInt32Field(readFileParamsPointer, 20),
-            position: Blazor.platform.readUint64Field(readFileParamsPointer, 24),
-            buffer: Blazor.platform.readInt32Field(readFileParamsPointer, 32) as unknown as System_Array<any>
+            position: Blazor.platform.readUint64Field(readFileParamsPointer, 24)
+        };
+    }
+
+    public ReadBufferPointer = (readBufferPointer: Pointer): IBufferParams => {
+        return {
+            taskId: Blazor.platform.readUint64Field(readBufferPointer, 0),
+            buffer: Blazor.platform.readInt32Field(readBufferPointer, 8) as unknown as System_Array<any>
         };
     }
 
     public ReadFileUnmarshalledAsync = (readFileParamsPointer: Pointer) => {
         const readFileParams = this.ReadFileParamsPointer(readFileParamsPointer);
 
-        const asyncCall = new Promise<number>((resolve, reject) => {
+        const asyncCall = new Promise<void>((resolve, reject) => {
             return this.ReadFileSlice(readFileParams, (r,b) => r.readAsArrayBuffer(b))
                 .then(r => {
-                    try {
-                        const dotNetBufferView = Blazor.platform.toUint8Array(readFileParams.buffer);
-                        const arrayBuffer = r.result as ArrayBuffer;
-                        dotNetBufferView.set(new Uint8Array(arrayBuffer), readFileParams.bufferOffset);
-
-                        const byteCount = Math.min(arrayBuffer.byteLength, readFileParams.count);
-                        resolve(byteCount);
-                    } catch (e) {
-                        reject(e);
-                    }
+                    this.readResultByTaskId.set(readFileParams.taskId,
+                    {
+                        arrayBuffer: r.result as ArrayBuffer,
+                        params: readFileParams
+                    });
+                    resolve();
                 }, e => reject(e));
         });
 
         asyncCall.then(
-            byteCount => DotNet.invokeMethodAsync("Tewr.Blazor.FileReader", "EndReadFileUnmarshalledAsyncResult", readFileParams.taskId, byteCount),
+            () => FileReaderJsInterop.endTask(readFileParams.taskId),
             error => {
                 console.error("ReadFileUnmarshalledAsync error", error);
                 DotNet.invokeMethodAsync("Tewr.Blazor.FileReader", "EndReadFileUnmarshalledAsyncError", readFileParams.taskId, error.toString());
             });
+
+        return 0;
+    }
+
+    public FillBufferUnmarshalled = (bufferPointer: Pointer) => {
+        const readBufferParams = this.ReadBufferPointer(bufferPointer);
+
+        const dotNetBufferView = Blazor.platform.toUint8Array(readBufferParams.buffer);
+        const data = this.readResultByTaskId.get(readBufferParams.taskId);
+        this.readResultByTaskId.delete(readBufferParams.taskId);
+
+        dotNetBufferView.set(new Uint8Array(data.arrayBuffer), data.params.bufferOffset);
+
+        const byteCount = Math.min(data.arrayBuffer.byteLength, data.params.count);
+        return byteCount;
     }
 
     public ReadFileMarshalledAsync = (readFileParams: IReadFileParams): Promise<string> => {
