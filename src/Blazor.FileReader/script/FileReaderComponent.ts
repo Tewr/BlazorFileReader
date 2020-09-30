@@ -67,11 +67,11 @@ interface IDotNetBuffer {
  * Proxy class for the c# class Tewr.Blazor.FileReader.FileReaderJsInterop
  * */
 class FileReaderJsInterop {
-    
+    static assembly = 'Tewr.Blazor.FileReader';
     static initialized = false;
     static initialize() {
         FileReaderJsInterop.endTask =
-            Module.mono_bind_static_method('[Tewr.Blazor.FileReader] Tewr.Blazor.FileReader.FileReaderJsInterop:EndTask');
+            Module.mono_bind_static_method(`[${this.assembly}] Tewr.Blazor.FileReader.FileReaderJsInterop:EndTask`);
         FileReaderJsInterop.initialized = true;
     }
 
@@ -91,7 +91,7 @@ class FileReaderComponent {
 
     private LogIfNull(element: HTMLElement) {
         if (element == null) {
-            console.log("Tewr.Blazor.FileReader: HTMLElement is null. Can't access IFileReaderRef after HTMLElement was removed from DOM.");
+            console.log(`${FileReaderJsInterop.assembly}: HTMLElement is null. Can't access IFileReaderRef after HTMLElement was removed from DOM.`);
         }
     }
     
@@ -203,9 +203,9 @@ class FileReaderComponent {
         return result;
     }
 
-    public OpenRead = (element: HTMLElement, fileIndex: number): number => {
+    public OpenRead = (element: HTMLElement, fileIndex: number, useWasmSharedBuffer: boolean): number => {
         this.LogIfNull(element);
-        if (!FileReaderJsInterop.initialized) {
+        if (useWasmSharedBuffer && !FileReaderJsInterop.initialized) {
             FileReaderJsInterop.initialize();
         }
 
@@ -259,7 +259,7 @@ class FileReaderComponent {
             () => FileReaderJsInterop.endTask(readFileParams.taskId),
             error => {
                 console.error("ReadFileUnmarshalledAsync error", error);
-                DotNet.invokeMethodAsync("Tewr.Blazor.FileReader", "EndReadFileUnmarshalledAsyncError", readFileParams.taskId, error.toString());
+                DotNet.invokeMethodAsync(FileReaderJsInterop.assembly, "EndReadFileUnmarshalledAsyncError", readFileParams.taskId, error.toString());
             });
 
         return 0;
