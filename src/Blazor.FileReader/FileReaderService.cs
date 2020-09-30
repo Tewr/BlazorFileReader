@@ -2,7 +2,6 @@
 using Microsoft.JSInterop;
 using System;
 using System.Threading.Tasks;
-using System.Xml.Schema;
 
 namespace Tewr.Blazor.FileReader
 {
