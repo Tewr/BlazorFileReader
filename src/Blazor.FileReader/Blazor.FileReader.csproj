@@ -6,7 +6,7 @@
     <TypeScriptToolsVersion>2.8</TypeScriptToolsVersion>
     <LangVersion>latest</LangVersion>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-    <Version>3.0.0.20266-5rc1</Version>
+    <Version>3.0.0.20274-5rc1</Version>
     <Authors>Tor Knutsson (Tewr)</Authors>
     <PackageProjectUrl>https://github.com/Tewr/BlazorFileReader</PackageProjectUrl>
     <RepositoryUrl>https://github.com/Tewr/BlazorFileReader</RepositoryUrl>
@@ -14,14 +14,14 @@
     <PackageTags>blazor blazor-component stream filestream file-stream read-file filereader</PackageTags>
     <Configurations>Debug;Release;Ghpages</Configurations>
     <PackageId>Tewr.Blazor.FileReader</PackageId>
-    <PackageReleaseNotes>Update to 5rc1</PackageReleaseNotes>
-    <AssemblyVersion>3.0.0.20266</AssemblyVersion>
+    <PackageReleaseNotes>Update to 5rc1, first preview release.</PackageReleaseNotes>
+    <AssemblyVersion>3.0.0.20274</AssemblyVersion>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageIcon>icon.png</PackageIcon>
     <RazorLangVersion>3.0</RazorLangVersion>
     <AssemblyName>Tewr.Blazor.FileReader</AssemblyName>
     <RootNamespace>Tewr.Blazor.FileReader</RootNamespace>
-    <FileVersion>3.0.0.20266</FileVersion>
+    <FileVersion>3.0.0.20274</FileVersion>
   </PropertyGroup>
   <ItemGroup>
     <None Include="icon.png" Pack="true" Visible="false" PackagePath="" />
