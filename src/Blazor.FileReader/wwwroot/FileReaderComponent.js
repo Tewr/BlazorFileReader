@@ -1,6 +1,18 @@
 ;
 ;
 ;
+var FileReaderJsInterop = (function () {
+    function FileReaderJsInterop() {
+    }
+    FileReaderJsInterop.initialize = function () {
+        FileReaderJsInterop.endTask =
+            Module.mono_bind_static_method("[" + this.assembly + "] Tewr.Blazor.FileReader.FileReaderJsInterop:EndTask");
+        FileReaderJsInterop.initialized = true;
+    };
+    FileReaderJsInterop.assembly = 'Tewr.Blazor.FileReader';
+    FileReaderJsInterop.initialized = false;
+    return FileReaderJsInterop;
+}());
 var FileReaderComponent = (function () {
     function FileReaderComponent() {
         var _this = this;
@@ -74,12 +86,8 @@ var FileReaderComponent = (function () {
         this.Dispose = function (fileRef) {
             return delete (_this.fileStreams[fileRef]);
         };
-        this.OpenRead = function (element, fileIndex) {
+        this.OpenRead = function (element, fileIndex, useWasmSharedBuffer) {
             _this.LogIfNull(element);
-            if (!FileReaderComponent.endTask) {
-                FileReaderComponent.endTask =
-                    Module.mono_bind_static_method('[Tewr.Blazor.FileReader] Tewr.Blazor.FileReader.FileReaderJsInterop:EndTask');
-            }
             var files = _this.GetFiles(element);
             if (!files) {
                 throw 'No FileList available.';
@@ -119,9 +127,9 @@ var FileReaderComponent = (function () {
                     resolve();
                 }, function (e) { return reject(e); });
             });
-            asyncCall.then(function () { return FileReaderComponent.endTask(readFileParams.taskId); }, function (error) {
+            asyncCall.then(function (byteCount) { return DotNet.invokeMethodAsync("Tewr.Blazor.FileReader", "EndReadFileUnmarshalledAsyncResult", readFileParams.taskId, byteCount); }, function (error) {
                 console.error("ReadFileUnmarshalledAsync error", error);
-                DotNet.invokeMethodAsync("Tewr.Blazor.FileReader", "EndReadFileUnmarshalledAsyncError", readFileParams.taskId, error.toString());
+                DotNet.invokeMethodAsync(FileReaderJsInterop.assembly, "EndReadFileUnmarshalledAsyncError", readFileParams.taskId, error.toString());
             });
             return 0;
         };
@@ -172,7 +180,7 @@ var FileReaderComponent = (function () {
     }
     FileReaderComponent.prototype.LogIfNull = function (element) {
         if (element == null) {
-            console.log("Tewr.Blazor.FileReader: HTMLElement is null. Can't access IFileReaderRef after HTMLElement was removed from DOM.");
+            console.log(FileReaderJsInterop.assembly + ": HTMLElement is null. Can't access IFileReaderRef after HTMLElement was removed from DOM.");
         }
     };
     FileReaderComponent.prototype.GetFiles = function (element) {

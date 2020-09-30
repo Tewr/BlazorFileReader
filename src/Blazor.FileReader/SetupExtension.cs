@@ -16,7 +16,7 @@ namespace Tewr.Blazor.FileReader
         /// <param name="services"></param>
         public static IServiceCollection AddFileReaderService(this IServiceCollection services)
         {
-            services.AddSingleton<IFileReaderServiceOptions, FileReaderServiceOptions>();
+            services.AddSingleton<FileReaderServiceOptions>();
             services.AddScoped<IFileReaderService, FileReaderService>();
             return services;
         }
@@ -33,8 +33,8 @@ namespace Tewr.Blazor.FileReader
             {
                 throw new ArgumentNullException(nameof(setOptions));
             }
-            
-            services.AddSingleton<IFileReaderServiceOptions, FileReaderServiceOptions>(si => {
+
+            services.AddSingleton(si => {
                 var o = new FileReaderServiceOptions();
                 setOptions(o);
                 /*if (o.UseWasmSharedBuffer && !IJSRuntimeExtensions.IsInvokeAsyncSupported())

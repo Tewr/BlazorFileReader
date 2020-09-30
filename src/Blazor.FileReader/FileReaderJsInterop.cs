@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.Options;
 using Microsoft.JSInterop;
 using System;
 using System.Collections.Generic;
@@ -14,18 +15,32 @@ namespace Tewr.Blazor.FileReader
         private static readonly IReadOnlyDictionary<string, string> escapeScriptTextReplacements =
             new Dictionary<string, string> { { @"\", @"\\" }, { "\r", @"\r" }, { "\n", @"\n" }, { "'", @"\'" }, { "\"", @"\""" } };
         private readonly bool _needsInitialization = false;
-        private readonly IFileReaderServiceOptions _options;
+        private readonly FileReaderServiceOptions _options;
         private static long _readFileUnmarshalledCallIdSource;
         private static readonly Dictionary<long, TaskCompletionSource<int>> _readFileUnmarshalledCalls
             = new Dictionary<long, TaskCompletionSource<int>>();
 
         internal IJSRuntime CurrentJSRuntime;
+        internal IJSUnmarshalledRuntime UnmarshalledRuntime;
 
-        public FileReaderJsInterop(IJSRuntime jsRuntime, IFileReaderServiceOptions options)
+        internal FileReaderJsInterop(IJSRuntime jsRuntime, FileReaderServiceOptions options)
         {
             CurrentJSRuntime = jsRuntime;
             _options = options;
             _needsInitialization = options.InitializeOnFirstCall;
+
+        }
+
+        internal void Initialize()
+        {
+            if (_options.UseWasmSharedBuffer)
+            {
+                UnmarshalledRuntime = CurrentJSRuntime as IJSUnmarshalledRuntime;
+                if (UnmarshalledRuntime is null)
+                {
+                    throw new PlatformNotSupportedException($"{nameof(_options.UseWasmSharedBuffer)}=true is not supported on this platform: Unable to acquire {nameof(IJSUnmarshalledRuntime)}.");
+                }
+            }
         }
 
         public async Task<bool> RegisterDropEvents(ElementReference elementReference, bool additive)
@@ -74,12 +89,12 @@ namespace Tewr.Blazor.FileReader
                 return;
             }
 
-            await Initialize();
+            await InitializeAsync();
         }
 
         private async Task<int> OpenReadAsync(ElementReference elementReference, int fileIndex)
         {
-            return (int)await CurrentJSRuntime.InvokeAsync<long>($"FileReaderComponent.OpenRead", elementReference, fileIndex);
+            return (int)await CurrentJSRuntime.InvokeAsync<long>($"FileReaderComponent.OpenRead", elementReference, fileIndex, _options.UseWasmSharedBuffer);
         }
 
         private async Task<bool> DisposeStream(int fileRef)
@@ -101,17 +116,52 @@ namespace Tewr.Blazor.FileReader
             int fileRef, byte[] buffer, long position, long bufferOffset, int count,
             CancellationToken cancellationToken)
         {
-            var result = await ReadFileMarshalledBase64Async(fileRef, position, count, cancellationToken);
-            
-            var bytesRead = 0;
-            if (!string.IsNullOrEmpty(result))
-            {
-                var byteResult = Convert.FromBase64String(result);
-                bytesRead = byteResult.Length;
-                Array.Copy(byteResult, 0, buffer, bufferOffset, bytesRead);
-            }
+            // At 60% we should be pretty safe to acccount for metadata size.
+            // Theoretically, MaximumRecieveMessageSize could be larger than int32, so this is accounted for.
+            var MaxCallSize = (int)Math.Min(int.MaxValue, (long)Math.Floor(_options.MaximumRecieveMessageSize * 0.6));
+            string result;
 
-            return bytesRead;
+            if (_options.UseBufferChunking && count > MaxCallSize)
+            {
+                var tasks = new Queue<Task<byte[]>>();
+                var chunkPosition = position;
+                var chunkCount = count;
+                while (chunkCount > 0)
+                {
+                    var smallChunkSize = Math.Min(chunkCount, MaxCallSize);
+                    var taskChunkPos = chunkPosition;
+                    tasks.Enqueue(Task.Run(async () =>
+                    {
+                         var chunk = await ReadFileMarshalledBase64Async(fileRef, taskChunkPos, smallChunkSize, cancellationToken);
+                         return string.IsNullOrEmpty(chunk) ? new byte[0]: Convert.FromBase64String(chunk);
+                    }, cancellationToken));
+                    chunkPosition += smallChunkSize;
+                    chunkCount -= smallChunkSize;
+                }
+                
+                var bytesRead = 0;
+                while(tasks.Any())
+                {
+                    // Start waiting for the first task, it can be copied to consumer buffer even if the others are not done
+                    var array = await tasks.Dequeue();
+                    Array.Copy(array, 0, buffer, bufferOffset + bytesRead, array.Length);
+                    bytesRead += array.Length;
+                }
+
+                return bytesRead;
+            }
+            else
+            {
+                result = await ReadFileMarshalledBase64Async(fileRef, position, count, cancellationToken);
+                var bytesRead = 0;
+                if (!string.IsNullOrEmpty(result))
+                {
+                    var byteResult = Convert.FromBase64String(result);
+                    bytesRead = byteResult.Length;
+                    Array.Copy(byteResult, 0, buffer, bufferOffset, bytesRead);
+                }
+                return bytesRead;
+            }
         }
 
         private async Task<string> ReadFileMarshalledBase64Async(
@@ -191,7 +241,7 @@ namespace Tewr.Blazor.FileReader
             taskCompletionSource.SetException(new BrowserFileReaderException(error));
         }
 
-        private async Task Initialize()
+        private async Task InitializeAsync()
         {
             var isLoaded = await IsLoaded();
             if (isLoaded)
