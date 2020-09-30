@@ -6,7 +6,7 @@
     <TypeScriptToolsVersion>2.8</TypeScriptToolsVersion>
     <LangVersion>latest</LangVersion>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-    <Version>2.0.0.20242</Version>
+    <Version>2.0.1.20274</Version>
     <Authors>Tor Knutsson (Tewr)</Authors>
     <PackageProjectUrl>https://github.com/Tewr/BlazorFileReader</PackageProjectUrl>
     <RepositoryUrl>https://github.com/Tewr/BlazorFileReader</RepositoryUrl>
@@ -15,12 +15,13 @@
     <Configurations>Debug;Release;Ghpages</Configurations>
     <PackageId>Tewr.Blazor.FileReader</PackageId>
     <PackageReleaseNotes>Fixes Seek for files/position larger than int32 (~2Gb)</PackageReleaseNotes>
-    <AssemblyVersion>2.0.0.20242</AssemblyVersion>
+    <AssemblyVersion>2.1.0.20274</AssemblyVersion>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageIcon>icon.png</PackageIcon>
     <RazorLangVersion>3.0</RazorLangVersion>
     <AssemblyName>Tewr.Blazor.FileReader</AssemblyName>
     <RootNamespace>Tewr.Blazor.FileReader</RootNamespace>
+    <FileVersion>2.1.0.20274</FileVersion>
   </PropertyGroup>
   <ItemGroup>
     <None Include="icon.png" Pack="true" Visible="false" PackagePath="" />
