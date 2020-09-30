@@ -6,7 +6,7 @@
     <TypeScriptToolsVersion>2.8</TypeScriptToolsVersion>
     <LangVersion>latest</LangVersion>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-    <Version>2.0.1.20274</Version>
+    <Version>2.1.0.20274</Version>
     <Authors>Tor Knutsson (Tewr)</Authors>
     <PackageProjectUrl>https://github.com/Tewr/BlazorFileReader</PackageProjectUrl>
     <RepositoryUrl>https://github.com/Tewr/BlazorFileReader</RepositoryUrl>
@@ -14,7 +14,7 @@
     <PackageTags>blazor blazor-component stream filestream file-stream read-file filereader</PackageTags>
     <Configurations>Debug;Release;Ghpages</Configurations>
     <PackageId>Tewr.Blazor.FileReader</PackageId>
-    <PackageReleaseNotes>Fixes Seek for files/position larger than int32 (~2Gb)</PackageReleaseNotes>
+    <PackageReleaseNotes></PackageReleaseNotes>
     <AssemblyVersion>2.1.0.20274</AssemblyVersion>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageIcon>icon.png</PackageIcon>
