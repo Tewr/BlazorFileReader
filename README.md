@@ -58,6 +58,7 @@ When publishing or compiling in Release mode, the <code>Optimize</code> flag is 
 Compiling with this flag set may result in problems if you are using <code>StreamReader</code>.
 An [bug is open on this subject](https://github.com/mono/mono/issues/19936), being investigated by the mono team. Tracked locally [here](https://github.com/Tewr/BlazorFileReader/issues/132).
 A simple workaround is available in [this issue](https://github.com/Tewr/BlazorFileReader/issues/97). Basically, don't call await in the while header, call it somewhere else.
+This has been fixed in Blazor 5rc1.
 
 ### IFileReference.CreateMemoryStreamAsync()
 The `IFileReference.CreateMemoryStreamAsync()` method (without any argument) is basically the same as calling `IFileReference.CreateMemoryStreamAsync(bufferSize: file.Size)`.
