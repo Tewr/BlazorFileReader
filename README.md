@@ -40,7 +40,10 @@ services.AddFileReaderService();
 
 ```
 
+<details><summary>Serverside/SSB: Important usage notice for versions prior to 2.1</summary>
 #### Optional SignalR Configuration for large buffer sizes
+
+The following notice is important for versions prior to 2.1. As of 2.1, it is no longer neccessary to modify `MaximumReceiveMessageSize`.
 For server-side hosting, `bufferSize` + metadata (up to ~30%, depending on `buffersize`) should not exceed the SignalR `MaximumReceiveMessageSize` setting, or you will encounter a client-side exception if the file is larger than `bufferSize`.
 Make sure `MaximumReceiveMessageSize` exceeds your `bufferSize` with 30% to be on the safe side. It is also recommended to set a fixed upper file size in the input tag or validate `file.Size` in code before starting the uploading. The default settings is `32KB`. Thus, if you leave this setting untouched, you should not use a buffer size exceeding `22KB`.
 
@@ -51,6 +54,8 @@ services.AddServerSideBlazor().AddHubOptions(o =>
     o.MaximumReceiveMessageSize = 10 * 1024 * 1024; // 10MB
 });
 ```
+</details>
+
 ## Gotcha's
 
 ### Problems with reading strings using StreamReader in while header
