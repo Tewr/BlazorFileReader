@@ -41,7 +41,7 @@ services.AddFileReaderService();
 ```
 
 <details><summary>Serverside/SSB: Important usage notice for versions prior to 2.1</summary>
-#### Optional SignalR Configuration for large buffer sizes
+Optional SignalR Configuration for large buffer sizes
 
 The following notice is important for versions prior to 2.1. As of 2.1, it is no longer neccessary to modify `MaximumReceiveMessageSize`.
 For server-side hosting, `bufferSize` + metadata (up to ~30%, depending on `buffersize`) should not exceed the SignalR `MaximumReceiveMessageSize` setting, or you will encounter a client-side exception if the file is larger than `bufferSize`.
