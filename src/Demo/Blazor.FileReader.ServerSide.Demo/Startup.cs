@@ -14,10 +14,7 @@ namespace Blazor.FileReader.ServerSide.Demo
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddRazorPages();
-            services.AddServerSideBlazor().AddHubOptions(o =>
-            {
-                o.MaximumReceiveMessageSize = 10 * 1024 * 1024; // 10MB
-            });
+            services.AddServerSideBlazor();
             services.AddFileReaderService();
         }
 

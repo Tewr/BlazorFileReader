@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
+using System;
 using System.Threading.Tasks;
 
 namespace Tewr.Blazor.FileReader
@@ -32,6 +33,17 @@ namespace Tewr.Blazor.FileReader
         public bool InitializeOnFirstCall { get; set; } = true;
 
         public bool UseWasmSharedBuffer { get; set; } = false;
+
+        /// <summary>
+        /// Activates server-side buffer chunking. Activated if not running on WASM.
+        /// </summary>
+        public bool UseBufferChunking { get; set; } = false;
+
+        /// <summary>
+        /// SignalR setting
+        /// </summary>
+        public long MaximumRecieveMessageSize { get; set; }
+
     }
 
     /// <summary>
@@ -58,10 +70,32 @@ namespace Tewr.Blazor.FileReader
     internal class FileReaderService : IFileReaderService
     {
         private readonly FileReaderJsInterop _fileReaderJsInterop;
+        private const long DefaultMaximumReceiveMessageSize = 32 * 1024;
+        private static long? MaximumReceiveMessageSize;
 
-        public FileReaderService(IJSRuntime jsRuntime, IFileReaderServiceOptions options)
+        public FileReaderService(IJSRuntime jsRuntime, FileReaderServiceOptions options, IServiceProvider serviceProvider)
         {
             this.Options = options;
+
+            if (!PlatformConfig.IsWasm)
+            {
+                if (MaximumReceiveMessageSize == null)
+                {
+                    if (!PlatformConfig.TryReadMaximumReceiveMessageSize(serviceProvider, out var maximumRecieveMessageSize))
+                    {
+                        System.Diagnostics.Trace.TraceWarning($"{typeof(FileReaderService).FullName}: Unable to read SignalR MaximumReceiveMessageSize, defaulting to {DefaultMaximumReceiveMessageSize}");
+                        MaximumReceiveMessageSize = DefaultMaximumReceiveMessageSize;
+                    }
+                    else
+                    {
+                        MaximumReceiveMessageSize = maximumRecieveMessageSize;
+                    }
+                }
+
+                options.UseBufferChunking = true;
+                options.MaximumRecieveMessageSize = MaximumReceiveMessageSize.Value;
+            }
+
             this._fileReaderJsInterop = new FileReaderJsInterop(jsRuntime, options);
         }
 
