@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Components;
-using Microsoft.Extensions.Options;
 using Microsoft.JSInterop;
 using System;
 using System.Collections.Generic;
@@ -28,7 +27,6 @@ namespace Tewr.Blazor.FileReader
             CurrentJSRuntime = jsRuntime;
             _options = options;
             _needsInitialization = options.InitializeOnFirstCall;
-
         }
 
         internal void Initialize()
@@ -186,8 +184,8 @@ namespace Tewr.Blazor.FileReader
             _readFileUnmarshalledCalls[id] = taskCompletionSource;
             cancellationToken.Register(() => taskCompletionSource.TrySetCanceled());
 
-            ((IJSUnmarshalledRuntime) CurrentJSRuntime)
-                .InvokeUnmarshalled<ReadFileParams, int>(
+            // Buffer is not allocated here, 
+            UnmarshalledRuntime.InvokeUnmarshalled<ReadFileParams, int>(
                 $"FileReaderComponent.ReadFileUnmarshalledAsync",
                 new ReadFileParams { 
                     BufferOffset = bufferOffset, 
@@ -197,11 +195,11 @@ namespace Tewr.Blazor.FileReader
                     TaskId = id
                 });
 
-            // as it might not survive the heap charge of the following statement
+            // as the corresponding TypeArray might not survive the heap charge of the following statement
             await taskCompletionSource.Task;
-            
-            // Charge the buffer here instead, once its loadeg on the js side
-            var bytesRead = ((IJSUnmarshalledRuntime)CurrentJSRuntime).InvokeUnmarshalled<BufferParams, int>(
+         
+            // It is safely filled up here instead
+            var bytesRead = UnmarshalledRuntime.InvokeUnmarshalled<BufferParams, int>(
                 $"FileReaderComponent.FillBufferUnmarshalled",
                 new BufferParams
                 {
