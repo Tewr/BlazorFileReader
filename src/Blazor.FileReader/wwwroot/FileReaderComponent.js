@@ -88,6 +88,9 @@ var FileReaderComponent = (function () {
         };
         this.OpenRead = function (element, fileIndex, useWasmSharedBuffer) {
             _this.LogIfNull(element);
+            if (useWasmSharedBuffer && !FileReaderJsInterop.initialized) {
+                FileReaderJsInterop.initialize();
+            }
             var files = _this.GetFiles(element);
             if (!files) {
                 throw 'No FileList available.';
@@ -127,7 +130,7 @@ var FileReaderComponent = (function () {
                     resolve();
                 }, function (e) { return reject(e); });
             });
-            asyncCall.then(function (byteCount) { return DotNet.invokeMethodAsync("Tewr.Blazor.FileReader", "EndReadFileUnmarshalledAsyncResult", readFileParams.taskId, byteCount); }, function (error) {
+            asyncCall.then(function () { return FileReaderJsInterop.endTask(readFileParams.taskId); }, function (error) {
                 console.error("ReadFileUnmarshalledAsync error", error);
                 DotNet.invokeMethodAsync(FileReaderJsInterop.assembly, "EndReadFileUnmarshalledAsyncError", readFileParams.taskId, error.toString());
             });

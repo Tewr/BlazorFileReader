@@ -82,8 +82,8 @@ This demo calculates a Knuth hash.
             {
                 var kHash = await CalculateKnuthHashAsync(fs, BufferSize);
                 value = fs.Position;
-                Output += $"Read 100%). {fileInfo.Size} / {fileInfo.Size}{nl}";
-                Output += $"Knuth hash for {fileInfo.Name} : {kHash}";
+                Output += $"Read 100%. {fileInfo.Size} / {fileInfo.Size}{nl}";
+                Output += $"Knuth hash for {fileInfo.Name} : {kHash.ToString("X")}";
                 stopwatch.Stop();
                 this.InvokeAsync(this.StateHasChanged);
             }

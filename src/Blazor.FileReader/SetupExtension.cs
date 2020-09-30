@@ -37,10 +37,6 @@ namespace Tewr.Blazor.FileReader
             services.AddSingleton(si => {
                 var o = new FileReaderServiceOptions();
                 setOptions(o);
-                /*if (o.UseWasmSharedBuffer && !IJSRuntimeExtensions.IsInvokeAsyncSupported())
-                {
-                    throw new PlatformNotSupportedException($"{nameof(o.UseWasmSharedBuffer)}=true is not supported on this platform.");
-                }*/
                 return o;
             });
 
