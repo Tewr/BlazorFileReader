@@ -103,11 +103,14 @@ The code for views looks the same for both [client](src/Demo/Blazor.FileReader.W
 ```
 
 ### Version notes
-Version <code>2.0.0.20242</code> Fixes a bug when working with file larger than 2Gb in InteropStream.Seek (#153)
+Version <code>2.1.0.20274</code> WASM/CSB: Fixes a problem with large files and small buffer sizes.
+SSB: Simplifies Setup, removes need for SignalR max size setting. Adds multithreaded fetch.
 
-Version <code>2.0.0.20200</code> ⚠️ Breaking changes: Changes Root Namespace from `Blazor.FileReader` to `Tewr.Blazor.FileReader` to avoid conflicts.
+<details><summary>Version <code>2.0.0.20242</code></summary> Fixes a bug when working with file larger than 2Gb in InteropStream.Seek (#153)</details>
+
+<details><summary>Version <code>2.0.0.20200</code></summary> ⚠️ Breaking changes: Changes Root Namespace from `Blazor.FileReader` to `Tewr.Blazor.FileReader` to avoid conflicts.
 - `CancellationToken` can now be used in most relevant methods to cancel ongoing upload.
-- Native support for displaying progress. See <a href="/src/Demo/Blazor.FileReader.Demo.Common/IndexCommon.razor#L74">demo project</a> for usage.
+- Native support for displaying progress. See <a href="/src/Demo/Blazor.FileReader.Demo.Common/IndexCommon.razor#L74">demo project</a> for usage.</details>
 
 <details><summary>Version <code>1.6.0.20166</code></summary> Fixes a <a href="https://github.com/Tewr/BlazorFileReader/issues/139">a memory allocation bug</a> (before this fix - since <code>v1.3.0.20033</code> - the browser would allocate the whole file in ram). 
 Also, introduces a new collection property on <code>File</code> for non-standard properties (thanks to <a href="https://github.com/DouglasDwyer/">@DouglasDwyer</a> for idea and implementation)</details>
