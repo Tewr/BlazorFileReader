@@ -41,9 +41,11 @@ services.AddFileReaderService();
 ```
 
 <details><summary>Serverside/SSB: Important usage notice for versions prior to 2.1</summary>
+
 Optional SignalR Configuration for large buffer sizes
 
-The following notice is important for versions prior to 2.1. As of 2.1, it is no longer neccessary to modify `MaximumReceiveMessageSize`.
+The following notice is important for versions prior to 2.1. As of 2.1, it is no longer neccessary to modify `MaximumReceiveMessageSize`. While doing so may slightly increase transfer speed, _"we recommend < 32K per message since they are being stored in a ring buffer (default size 5000). Storing larger messages will be awful for performance"_ (<a href="https://github.com/SignalR/SignalR/issues/1205">@DavidFowl, msft, 2012</a>).
+
 For server-side hosting, `bufferSize` + metadata (up to ~30%, depending on `buffersize`) should not exceed the SignalR `MaximumReceiveMessageSize` setting, or you will encounter a client-side exception if the file is larger than `bufferSize`.
 Make sure `MaximumReceiveMessageSize` exceeds your `bufferSize` with 30% to be on the safe side. It is also recommended to set a fixed upper file size in the input tag or validate `file.Size` in code before starting the uploading. The default settings is `32KB`. Thus, if you leave this setting untouched, you should not use a buffer size exceeding `22KB`.
 
@@ -107,9 +109,9 @@ The code for views looks the same for both [client](src/Demo/Blazor.FileReader.W
 }
 ```
 
-### Version notes
+## Version notes
 Version <code>2.1.0.20274</code> WASM/CSB: Fixes a problem with large files and small buffer sizes.
-SSB: Simplifies Setup, removes need for SignalR max size setting. Adds multithreaded fetch.
+Server-side/SSB: Simplifies Setup, removes need for SignalR max size setting (`MaximumReceiveMessageSize`). It is recommended to remove the modification of this value, if present. Adds multithreaded fetch & message chunking for SignalR.
 
 <details><summary>Older versions</summary>
 <details><summary>Version <code>2.0.0.20242</code></summary> Fixes a bug when working with file larger than 2Gb in InteropStream.Seek (#153)</details>
