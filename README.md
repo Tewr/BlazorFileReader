@@ -111,6 +111,7 @@ The code for views looks the same for both [client](src/Demo/Blazor.FileReader.W
 Version <code>2.1.0.20274</code> WASM/CSB: Fixes a problem with large files and small buffer sizes.
 SSB: Simplifies Setup, removes need for SignalR max size setting. Adds multithreaded fetch.
 
+<details><summary>Older versions</summary>
 <details><summary>Version <code>2.0.0.20242</code></summary> Fixes a bug when working with file larger than 2Gb in InteropStream.Seek (#153)</details>
 
 <details><summary>Version <code>2.0.0.20200</code></summary> ⚠️ Breaking changes: Changes Root Namespace from `Blazor.FileReader` to `Tewr.Blazor.FileReader` to avoid conflicts.
@@ -169,3 +170,4 @@ Also, introduces a new collection property on <code>File</code> for non-standard
 <details><summary>Versions previous to <code>0.7.1</code></summary> did not support server-side Blazor and would throw <code>[System.PlatformNotSupportedException] Requires MonoWebAssemblyJSRuntime as the JSRuntime</code>.</details>
 
 <details><summary>Versions previous to <code>0.5.1</code></summary> wrapped the input element in a Blazor Component, this has been removed for better configurability and general lack of value.</details>
+</details>
