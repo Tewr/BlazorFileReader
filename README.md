@@ -14,7 +14,7 @@ and [FileReader](https://developer.mozilla.org/en-US/docs/Web/API/FileReader). D
 Here is a [Live demo](https://tewr.github.io/BlazorFileReader/) that contains the output of [the wasm demo project](src/Demo/Blazor.FileReader.Wasm.Demo). Currently, its a build based on ```v2.0.0```.
 
 # Read before using!
-📰 01.10.2020 Microsoft has finally released a built-in file upload component called [InputFile](https://docs.microsoft.com/en-us/aspnet/core/blazor/file-uploads?view=aspnetcore-5.0). An 1st-party component strongly diminishes this component's raison d'etre, and I strongly recommend all new development to use the built-in component, and current users to migrate. The natural course of action is to stop actively developing this project. If you feel that this decision is somehow wrong, feel free to comment in [this issue](https://github.com/Tewr/BlazorFileReader/issues/166) to convince me otherwise.
+📰 01.10.2020 Microsoft has finally released a built-in file upload component called [InputFile](https://docs.microsoft.com/en-us/aspnet/core/blazor/file-uploads?view=aspnetcore-5.0). A 1st-party component strongly diminishes this component's raison d'etre, and I strongly recommend all new development to use the built-in component, and current users to migrate. The natural course of action is to stop actively developing this project. If you feel that this decision is somehow wrong, feel free to comment in [this issue](https://github.com/Tewr/BlazorFileReader/issues/166) to convince me otherwise.
 
 ## Installation
 ⚠️ Breaking changes in version <code>2.0.0.20200</code> : Changes Root Namespace from `Blazor.FileReader` to `Tewr.Blazor.FileReader`. Update your using statements and / or type references.
