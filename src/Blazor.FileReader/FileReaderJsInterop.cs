@@ -33,7 +33,15 @@ namespace Tewr.Blazor.FileReader
         {
             if (_options.UseWasmSharedBuffer)
             {
+#if NET5
                 UnmarshalledRuntime = CurrentJSRuntime as IJSUnmarshalledRuntime;
+#endif
+#if NETSTANDARD20
+                if (JSUnmarshalledRuntime.IsInvokeUnmarshalledSupported())
+                {
+                    UnmarshalledRuntime = new JSUnmarshalledRuntime(CurrentJSRuntime);
+                }
+#endif
                 if (UnmarshalledRuntime is null)
                 {
                     throw new PlatformNotSupportedException($"{nameof(_options.UseWasmSharedBuffer)}=true is not supported on this platform: Unable to acquire {nameof(IJSUnmarshalledRuntime)}.");
