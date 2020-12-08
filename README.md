@@ -13,11 +13,10 @@ and [FileReader](https://developer.mozilla.org/en-US/docs/Web/API/FileReader). D
 
 Here is a [Live demo](https://tewr.github.io/BlazorFileReader/) that contains the output of [the wasm demo project](src/Demo/Blazor.FileReader.Wasm.Demo). Currently, its a build based on ```v2.0.0```.
 
-# Read before using!
-📰 01.10.2020 Microsoft has finally released a built-in file upload component called [InputFile](https://docs.microsoft.com/en-us/aspnet/core/blazor/file-uploads?view=aspnetcore-5.0). A 1st-party component strongly diminishes this component's raison d'etre, and I strongly recommend all new development to use the built-in component, and current users to migrate. The natural course of action is to stop actively developing this project. If you feel that this decision is somehow wrong, feel free to comment in [this issue](https://github.com/Tewr/BlazorFileReader/issues/166) to convince me otherwise.
+# Standard upload component
+📰 01.10.2020 Microsoft has released a built-in file upload component called [InputFile](https://docs.microsoft.com/en-us/aspnet/core/blazor/file-uploads?view=aspnetcore-5.0). For the most common and simple scenarios, I'd recommend using the built-in component rather than <code>BlazorFileReader</code>. The <code>BlazorFileReader</code> library gives more control over buffer size and memory usage, which may be to your advantage when working with large files. Also, not really being a blazor component, but rather a service that binds to an element, it may at times offer more flexibility.
 
 ## Installation
-⚠️ Breaking changes in version <code>2.0.0.20200</code> : Changes Root Namespace from `Blazor.FileReader` to `Tewr.Blazor.FileReader`. Update your using statements and / or type references.
 
 Use [Nuget](https://www.nuget.org/packages/Tewr.Blazor.FileReader): ```Install-Package Tewr.Blazor.FileReader```
 
@@ -113,10 +112,13 @@ The code for views looks the same for both [client](src/Demo/Blazor.FileReader.W
 ```
 
 ## Version notes
-Version <code>2.1.0.20274</code> WASM/CSB: Fixes a problem with large files and small buffer sizes.
-Server-side/SSB: Simplifies Setup, removes need for SignalR max size setting (`MaximumReceiveMessageSize`). It is recommended to remove the modification of this value, if present. Adds multithreaded fetch & message chunking for SignalR.
+
+Version <code>3.0.0.20340</code> Add support for .NET5 and fixes a small issue with Platform detection.
 
 <details><summary>Older versions</summary>
+<details><summary>Version <code>2.1.0.20274</code></summary>  WASM/CSB: Fixes a problem with large files and small buffer sizes.
+Server-side/SSB: Simplifies Setup, removes need for SignalR max size setting (`MaximumReceiveMessageSize`). It is recommended to remove the modification of this value, if present. Adds multithreaded fetch & message chunking for SignalR.</details>
+  
 <details><summary>Version <code>2.0.0.20242</code></summary> Fixes a bug when working with file larger than 2Gb in InteropStream.Seek (#153)</details>
 
 <details><summary>Version <code>2.0.0.20200</code></summary> ⚠️ Breaking changes: Changes Root Namespace from `Blazor.FileReader` to `Tewr.Blazor.FileReader` to avoid conflicts.
