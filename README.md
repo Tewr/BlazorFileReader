@@ -13,6 +13,9 @@ and [FileReader](https://developer.mozilla.org/en-US/docs/Web/API/FileReader). D
 
 Here is a [Live demo](https://tewr.github.io/BlazorFileReader/) that contains the output of [the wasm demo project](src/Demo/Blazor.FileReader.Wasm.Demo). Currently, its a build based on ```v2.0.0```.
 
+# Read before using!
+📰 01.10.2020 Microsoft has finally released a built-in file upload component called [InputFile](https://docs.microsoft.com/en-us/aspnet/core/blazor/file-uploads?view=aspnetcore-5.0). A 1st-party component strongly diminishes this component's raison d'etre, and I strongly recommend all new development to use the built-in component, and current users to migrate. The natural course of action is to stop actively developing this project. If you feel that this decision is somehow wrong, feel free to comment in [this issue](https://github.com/Tewr/BlazorFileReader/issues/166) to convince me otherwise.
+
 ## Installation
 ⚠️ Breaking changes in version <code>2.0.0.20200</code> : Changes Root Namespace from `Blazor.FileReader` to `Tewr.Blazor.FileReader`. Update your using statements and / or type references.
 
@@ -40,7 +43,12 @@ services.AddFileReaderService();
 
 ```
 
-#### Optional SignalR Configuration for large buffer sizes
+<details><summary>Serverside/SSB: Important usage notice for versions prior to 2.1</summary>
+
+Optional SignalR Configuration for large buffer sizes
+
+The following notice is important for versions prior to 2.1. As of 2.1, it is no longer neccessary to modify `MaximumReceiveMessageSize`. While doing so may slightly increase transfer speed, _"we recommend < 32K per message since they are being stored in a ring buffer (default size 5000). Storing larger messages will be awful for performance"_ (<a href="https://github.com/SignalR/SignalR/issues/1205">@DavidFowl, msft, 2012</a>).
+
 For server-side hosting, `bufferSize` + metadata (up to ~30%, depending on `buffersize`) should not exceed the SignalR `MaximumReceiveMessageSize` setting, or you will encounter a client-side exception if the file is larger than `bufferSize`.
 Make sure `MaximumReceiveMessageSize` exceeds your `bufferSize` with 30% to be on the safe side. It is also recommended to set a fixed upper file size in the input tag or validate `file.Size` in code before starting the uploading. The default settings is `32KB`. Thus, if you leave this setting untouched, you should not use a buffer size exceeding `22KB`.
 
@@ -51,6 +59,8 @@ services.AddServerSideBlazor().AddHubOptions(o =>
     o.MaximumReceiveMessageSize = 10 * 1024 * 1024; // 10MB
 });
 ```
+</details>
+
 ## Gotcha's
 
 ### Problems with reading strings using StreamReader in while header
@@ -58,6 +68,7 @@ When publishing or compiling in Release mode, the <code>Optimize</code> flag is 
 Compiling with this flag set may result in problems if you are using <code>StreamReader</code>.
 An [bug is open on this subject](https://github.com/mono/mono/issues/19936), being investigated by the mono team. Tracked locally [here](https://github.com/Tewr/BlazorFileReader/issues/132).
 A simple workaround is available in [this issue](https://github.com/Tewr/BlazorFileReader/issues/97). Basically, don't call await in the while header, call it somewhere else.
+This has been fixed in Blazor 5rc1.
 
 ### IFileReference.CreateMemoryStreamAsync()
 The `IFileReference.CreateMemoryStreamAsync()` method (without any argument) is basically the same as calling `IFileReference.CreateMemoryStreamAsync(bufferSize: file.Size)`.
@@ -101,12 +112,16 @@ The code for views looks the same for both [client](src/Demo/Blazor.FileReader.W
 }
 ```
 
-### Version notes
-Version <code>2.0.0.20242</code> Fixes a bug when working with file larger than 2Gb in InteropStream.Seek (#153)
+## Version notes
+Version <code>2.1.0.20274</code> WASM/CSB: Fixes a problem with large files and small buffer sizes.
+Server-side/SSB: Simplifies Setup, removes need for SignalR max size setting (`MaximumReceiveMessageSize`). It is recommended to remove the modification of this value, if present. Adds multithreaded fetch & message chunking for SignalR.
 
-Version <code>2.0.0.20200</code> ⚠️ Breaking changes: Changes Root Namespace from `Blazor.FileReader` to `Tewr.Blazor.FileReader` to avoid conflicts.
+<details><summary>Older versions</summary>
+<details><summary>Version <code>2.0.0.20242</code></summary> Fixes a bug when working with file larger than 2Gb in InteropStream.Seek (#153)</details>
+
+<details><summary>Version <code>2.0.0.20200</code></summary> ⚠️ Breaking changes: Changes Root Namespace from `Blazor.FileReader` to `Tewr.Blazor.FileReader` to avoid conflicts.
 - `CancellationToken` can now be used in most relevant methods to cancel ongoing upload.
-- Native support for displaying progress. See <a href="/src/Demo/Blazor.FileReader.Demo.Common/IndexCommon.razor#L74">demo project</a> for usage.
+- Native support for displaying progress. See <a href="/src/Demo/Blazor.FileReader.Demo.Common/IndexCommon.razor#L74">demo project</a> for usage.</details>
 
 <details><summary>Version <code>1.6.0.20166</code></summary> Fixes a <a href="https://github.com/Tewr/BlazorFileReader/issues/139">a memory allocation bug</a> (before this fix - since <code>v1.3.0.20033</code> - the browser would allocate the whole file in ram). 
 Also, introduces a new collection property on <code>File</code> for non-standard properties (thanks to <a href="https://github.com/DouglasDwyer/">@DouglasDwyer</a> for idea and implementation)</details>
@@ -160,3 +175,4 @@ Also, introduces a new collection property on <code>File</code> for non-standard
 <details><summary>Versions previous to <code>0.7.1</code></summary> did not support server-side Blazor and would throw <code>[System.PlatformNotSupportedException] Requires MonoWebAssemblyJSRuntime as the JSRuntime</code>.</details>
 
 <details><summary>Versions previous to <code>0.5.1</code></summary> wrapped the input element in a Blazor Component, this has been removed for better configurability and general lack of value.</details>
+</details>
