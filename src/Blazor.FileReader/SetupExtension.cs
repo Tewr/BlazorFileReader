@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using System;
 
 namespace Tewr.Blazor.FileReader
@@ -36,10 +37,6 @@ namespace Tewr.Blazor.FileReader
             services.AddSingleton(si => {
                 var o = new FileReaderServiceOptions();
                 setOptions(o);
-                if (o.UseWasmSharedBuffer && !IJSRuntimeExtensions.IsInvokeUnmarshalledSupported())
-                {
-                    throw new PlatformNotSupportedException($"{nameof(o.UseWasmSharedBuffer)}=true is not supported on this platform.");
-                }
                 return o;
             });
 

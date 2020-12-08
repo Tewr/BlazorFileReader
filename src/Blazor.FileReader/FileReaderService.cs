@@ -96,7 +96,10 @@ namespace Tewr.Blazor.FileReader
                 options.MaximumRecieveMessageSize = MaximumReceiveMessageSize.Value;
             }
 
+            
+
             this._fileReaderJsInterop = new FileReaderJsInterop(jsRuntime, options);
+            this._fileReaderJsInterop.Initialize();
         }
 
         public IFileReaderServiceOptions Options { get; }

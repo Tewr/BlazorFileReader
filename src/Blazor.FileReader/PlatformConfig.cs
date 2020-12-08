@@ -19,7 +19,9 @@ namespace Tewr.Blazor.FileReader
         /// <summary>
         /// Returns true if the application is running on WASM.
         /// </summary>
-        public static bool IsWasm => _isWasm ??= RuntimeInformation.IsOSPlatform(OSPlatform.Create("WEBASSEMBLY"));
+        public static bool IsWasm => _isWasm ??=
+            RuntimeInformation.IsOSPlatform(OSPlatform.Create("BROWSER")) ||
+            RuntimeInformation.IsOSPlatform(OSPlatform.Create("WEBASSEMBLY"));
 
         /// <summary>
         /// Tries reading HubOptions&lt;ComponentHub&gt;.MaximumReceiveMessageSize using reflection.

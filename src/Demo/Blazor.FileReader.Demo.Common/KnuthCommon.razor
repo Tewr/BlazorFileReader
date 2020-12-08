@@ -1,0 +1,110 @@
+@using System.Diagnostics;
+@using System.IO; 
+@inject IFileReaderService fileReaderService
+@inject IJSRuntime CurrentJSRuntime
+
+<h1>Hello, Donald Knuth!</h1>
+
+This demo calculates a Knuth hash.
+<br />
+
+<input type="file" @ref=inputElement />
+<button @onclick=ReadFile class="btn btn-primary">Calculate knuth hash</button>
+<br />
+<br />
+<progress max="@max" value="@value" />
+<br />
+<textarea style="max-width: 100%;" cols="50" rows="20">@Output</textarea>
+@code {
+    private static string nl = Environment.NewLine;
+    [Parameter]
+    public int BufferSize { get; set; } = 20480;
+    public long max;
+    public long value;
+    ElementReference inputElement;
+    public System.Threading.CancellationTokenSource cancellationTokenSource;
+    string Output { get; set; }
+
+    public bool CanCancel { get; set; }
+    public bool IsCancelDisabled => !CanCancel;
+
+    public async Task ClearFile()
+    {
+        await fileReaderService.CreateReference(inputElement).ClearValue();
+    }
+
+    public async Task ReadFile()
+    {
+        max = 0;
+        value = 0;
+        Output = string.Empty;
+        this.StateHasChanged();
+        var files = await fileReaderService.CreateReference(inputElement).EnumerateFilesAsync();
+        foreach (var file in files)
+        {
+            var fileInfo = await file.ReadFileInfoAsync();
+            max = fileInfo.Size;
+
+            var stopwatch = new Stopwatch();
+            stopwatch.Start();
+
+
+            Output += $"{nameof(IFileInfo)}.{nameof(fileInfo.LastModifiedDate)}: {fileInfo.LastModifiedDate?.ToString() ?? "(N/A)"}{nl}";
+            foreach (var property in fileInfo.NonStandardProperties.Keys)
+            {
+                Output += $"{nameof(IFileInfo)}.{property} (nonstandard): {fileInfo.NonStandardProperties[property]}{nl}";
+            }
+            Output += $"Reading file...";
+            this.StateHasChanged();
+            Console.WriteLine(Output);
+            cancellationTokenSource?.Dispose();
+            cancellationTokenSource = new System.Threading.CancellationTokenSource();
+            CanCancel = true;
+
+            const int onlyReportProgressAfterThisPercentDelta = 10;
+
+            // Subscribe to progress (change of position)
+            fileInfo.PositionInfo.PositionChanged += (s, e) =>
+            {
+                // (optional) Only report progress in console / progress bar if percentage has moved over 10% since last call to Acknowledge()
+                if (e.PercentageDeltaSinceAcknowledge > onlyReportProgressAfterThisPercentDelta)
+                {
+                    stopwatch.Stop();
+                    Output += $"Read {(e.PositionDeltaSinceAcknowledge)} bytes ({e.Percentage:00}%). {e.Position} / {fileInfo.Size}{nl}";
+                    this.InvokeAsync(this.StateHasChanged);
+                    e.Acknowledge();
+                    value = e.Position;
+                    stopwatch.Start();
+                }
+            };
+
+            using (var fs = await file.OpenReadAsync())
+            {
+                var kHash = await CalculateKnuthHashAsync(fs, BufferSize);
+                value = fs.Position;
+                Output += $"Read 100%. {fileInfo.Size} / {fileInfo.Size}{nl}";
+                Output += $"Knuth hash for {fileInfo.Name} : {kHash.ToString("X")}";
+                stopwatch.Stop();
+                this.InvokeAsync(this.StateHasChanged);
+            }
+        }
+    }
+
+
+    async Task<ulong> CalculateKnuthHashAsync(Stream stream, int bufferSize)
+    {
+        var hashedValue = 3074457345618258791ul;
+        int bytesRead;
+        var buffer = new byte[bufferSize];
+        while ((bytesRead = await stream.ReadAsync(buffer, 0, buffer.Length)) != 0)
+        {
+            for (int i = 0; i < bytesRead; i++)
+            {
+                hashedValue += buffer[i];
+                hashedValue *= 3074457345618258799ul;
+            }
+        }
+
+        return hashedValue;
+    }
+}

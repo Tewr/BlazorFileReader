@@ -254,7 +254,7 @@ class FileReaderComponent {
                     resolve();
                 }, e => reject(e));
         });
-
+        
         asyncCall.then(
             () => FileReaderJsInterop.endTask(readFileParams.taskId),
             error => {

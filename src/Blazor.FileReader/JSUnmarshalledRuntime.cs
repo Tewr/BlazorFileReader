@@ -5,22 +5,35 @@ using System.Reflection;
 
 namespace Tewr.Blazor.FileReader
 {
-    internal static class IJSRuntimeExtensions
+#if NETSTANDARD20
+
+    internal interface IJSUnmarshalledRuntime
+    {
+        TReturn InvokeUnmarshalled<TParam, TReturn>(string methodName, TParam parameter);
+    }
+
+    internal class JSUnmarshalledRuntime : IJSUnmarshalledRuntime
     {
         private readonly static Type WebAssemblyJSRuntime
             = Type.GetType("Microsoft.JSInterop.WebAssembly.WebAssemblyJSRuntime, Microsoft.JSInterop.WebAssembly") ??
             Type.GetType("Mono.WebAssembly.Interop.MonoWebAssemblyJSRuntime, Mono.WebAssembly.Interop");
 
         private readonly static MethodInfo _invokeUnmarshalled = GetInvokeUnmarshalled();
-        private readonly static Dictionary<string, MethodInfo> _genericinvokeUnmarshalledMethods 
+        private readonly static Dictionary<string, MethodInfo> _genericinvokeUnmarshalledMethods
             = new Dictionary<string, MethodInfo>();
+        private readonly IJSRuntime jsRuntime;
+
+        public JSUnmarshalledRuntime(IJSRuntime jsRuntime)
+        {
+            this.jsRuntime = jsRuntime;
+        }
 
         public static bool IsInvokeUnmarshalledSupported()
         {
             return _invokeUnmarshalled != null;
-        } 
+        }
 
-        public static TReturn InvokeUnmarshalled<TParam, TReturn>(this IJSRuntime jsRuntime, string methodName, TParam parameter)
+        public TReturn InvokeUnmarshalled<TParam, TReturn>(string methodName, TParam parameter)
         {
             var cacheKey = $"{typeof(TReturn)}|{typeof(TParam)}";
             if (!_genericinvokeUnmarshalledMethods.TryGetValue(cacheKey, out var genericMethodInfo))
@@ -37,7 +50,7 @@ namespace Tewr.Blazor.FileReader
         {
             if (WebAssemblyJSRuntime == null)
             {
-                System.Diagnostics.Debug.WriteLine($"{nameof(IJSRuntimeExtensions)} : MonoWebAssemblyJSRuntime not found.");
+                System.Diagnostics.Debug.WriteLine($"{nameof(JSUnmarshalledRuntime)} : MonoWebAssemblyJSRuntime not found.");
                 return null;
             }
 
@@ -50,9 +63,10 @@ namespace Tewr.Blazor.FileReader
                 }
             }
 
-            System.Diagnostics.Debug.WriteLine($"{nameof(IJSRuntimeExtensions)} : MonoWebAssemblyJSRuntime.InvokeUnmarshalled<T0, T1, T2, TResult> method not found.");
+            System.Diagnostics.Debug.WriteLine($"{nameof(JSUnmarshalledRuntime)} : MonoWebAssemblyJSRuntime.InvokeUnmarshalled<T0, T1, T2, TResult> method not found.");
 
             return null;
         }
     }
+#endif
 }
