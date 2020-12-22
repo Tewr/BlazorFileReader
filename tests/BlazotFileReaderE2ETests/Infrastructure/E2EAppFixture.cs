@@ -43,11 +43,14 @@ namespace Tewr.Blazor.FileReader.E2ETests
                 }
             }
 
-            this.Browser = new ChromeDriver();
+            var options = new ChromeOptions();
+            options.AddArgument("headless");
+
+            this.Browser = new ChromeDriver(options);
             this.Browser.Navigate().GoToUrl(this.RootUri);
             // wait for application to load
-            var webdriverWait = new WebDriverWait(this.Browser, TimeSpan.FromSeconds(30));
-            webdriverWait.Until(WebDriver => WebDriver.FindElement(By.XPath("//a[@href='https://github.com/tewr/BlazorFileReader']")));
+            new WebDriverWait(this.Browser, TimeSpan.FromSeconds(30))
+                .Until(WebDriver => WebDriver.FindElement(By.XPath("//a[@href='https://github.com/tewr/BlazorFileReader']")));
         }
 
 

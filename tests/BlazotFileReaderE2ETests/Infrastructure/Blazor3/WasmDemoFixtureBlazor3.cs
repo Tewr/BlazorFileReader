@@ -1,4 +1,4 @@
-﻿namespace Tewr.Blazor.FileReader.E2ETests.Blazor3
+﻿    namespace Tewr.Blazor.FileReader.E2ETests.Blazor3
 {
     public class WasmDemoFixtureBlazor3 : E2EAppFixture
     {

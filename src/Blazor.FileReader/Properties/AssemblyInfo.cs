@@ -1,3 +1,3 @@
 ﻿using System.Runtime.CompilerServices;
 
-[assembly: InternalsVisibleTo("Blazor.FileReader.UnitTests")]
+[assembly: InternalsVisibleTo("Tewr.Blazor.FileReader.UnitTests")]
