@@ -92,24 +92,28 @@ Read 11 bytes. 11 / 11
         }
     }
 
+    [Collection(nameof(WasmDemoFixtureNet5))]
     public class DragNDropTests_WasmDemoNet5UnitTests : DragNDropTests<WasmDemoFixtureNet5>
     {
         public DragNDropTests_WasmDemoNet5UnitTests(WasmDemoFixtureNet5 e2EAppFixture) : base(e2EAppFixture)
         { }
     }
 
+    [Collection(nameof(ServersideDemoFixtureNet5))]
     public class DragNDropTests_ServersideDemoFixtureNet5 : DragNDropTests<ServersideDemoFixtureNet5>
     {
         public DragNDropTests_ServersideDemoFixtureNet5(ServersideDemoFixtureNet5 e2EAppFixture) : base(e2EAppFixture)
         { }
     }
 
+    [Collection(nameof(ServersideDemoFixtureBlazor3))]
     public class DragNDropTests_ServersideDemoFixtureBlazor3 : DragNDropTests<ServersideDemoFixtureBlazor3>
     {
         public DragNDropTests_ServersideDemoFixtureBlazor3(ServersideDemoFixtureBlazor3 e2EAppFixture) : base(e2EAppFixture)
         { }
     }
 
+    [Collection(nameof(WasmDemoFixtureBlazor3))]
     public class DragNDropTests_WasmDemoFixtureBlazor3 : DragNDropTests<WasmDemoFixtureBlazor3>
     {
         public DragNDropTests_WasmDemoFixtureBlazor3(WasmDemoFixtureBlazor3 e2EAppFixture) : base(e2EAppFixture)

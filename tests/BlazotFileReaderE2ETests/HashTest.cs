@@ -189,24 +189,29 @@ namespace Tewr.Blazor.FileReader.E2ETests
 
     #region Platform launchers
 
+
+    [Collection(nameof(WasmDemoFixtureNet5))]
     public class HashTest_WasmDemoNet5UnitTests : HashTest<WasmDemoFixtureNet5>
     {
         public HashTest_WasmDemoNet5UnitTests(WasmDemoFixtureNet5 e2EAppFixture) : base(e2EAppFixture)
         { }
     }
 
+    [Collection(nameof(ServersideDemoFixtureNet5))]
     public class HashTest_ServersideDemoFixtureNet5 : HashTest<ServersideDemoFixtureNet5>
     {
         public HashTest_ServersideDemoFixtureNet5(ServersideDemoFixtureNet5 e2EAppFixture) : base(e2EAppFixture)
         { }
     }
 
+    [Collection(nameof(ServersideDemoFixtureBlazor3))]
     public class HashTest_ServersideDemoFixtureBlazor3 : HashTest<ServersideDemoFixtureBlazor3>
     {
         public HashTest_ServersideDemoFixtureBlazor3(ServersideDemoFixtureBlazor3 e2EAppFixture) : base(e2EAppFixture)
         { }
     }
 
+    [Collection(nameof(WasmDemoFixtureBlazor3))]
     public class HashTest_WasmDemoFixtureBlazor3 : HashTest<WasmDemoFixtureBlazor3>
     {
         public HashTest_WasmDemoFixtureBlazor3(WasmDemoFixtureBlazor3 e2EAppFixture) : base(e2EAppFixture)
