@@ -21,6 +21,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blazor.FileReader.Wasm.Demo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blazor.FileReader.ServerSide.Demo", "Demo\Blazor3\Blazor.FileReader.ServerSide.Demo\Blazor.FileReader.ServerSide.Demo.csproj", "{AEA2CBDF-329E-4B17-9B02-4178D045F528}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{9A262CB5-8352-42D0-830C-D87131D9060B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tewr.Blazor.FileReader.E2ETests", "..\tests\BlazotFileReaderE2ETests\Tewr.Blazor.FileReader.E2ETests.csproj", "{14C576CC-9CFA-49E7-B48F-2C8E03A9B76D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tewr.Blazor.FileReader.UnitTests", "..\tests\Tewr.Blazor.FileReader.UnitTests\Tewr.Blazor.FileReader.UnitTests.csproj", "{38F452ED-A8E3-4CED-890C-E2E6DB6F54AF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -63,6 +69,18 @@ Global
 		{AEA2CBDF-329E-4B17-9B02-4178D045F528}.Ghpages|Any CPU.Build.0 = Debug|Any CPU
 		{AEA2CBDF-329E-4B17-9B02-4178D045F528}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AEA2CBDF-329E-4B17-9B02-4178D045F528}.Release|Any CPU.Build.0 = Release|Any CPU
+		{14C576CC-9CFA-49E7-B48F-2C8E03A9B76D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{14C576CC-9CFA-49E7-B48F-2C8E03A9B76D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{14C576CC-9CFA-49E7-B48F-2C8E03A9B76D}.Ghpages|Any CPU.ActiveCfg = Debug|Any CPU
+		{14C576CC-9CFA-49E7-B48F-2C8E03A9B76D}.Ghpages|Any CPU.Build.0 = Debug|Any CPU
+		{14C576CC-9CFA-49E7-B48F-2C8E03A9B76D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{14C576CC-9CFA-49E7-B48F-2C8E03A9B76D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{38F452ED-A8E3-4CED-890C-E2E6DB6F54AF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{38F452ED-A8E3-4CED-890C-E2E6DB6F54AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{38F452ED-A8E3-4CED-890C-E2E6DB6F54AF}.Ghpages|Any CPU.ActiveCfg = Debug|Any CPU
+		{38F452ED-A8E3-4CED-890C-E2E6DB6F54AF}.Ghpages|Any CPU.Build.0 = Debug|Any CPU
+		{38F452ED-A8E3-4CED-890C-E2E6DB6F54AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{38F452ED-A8E3-4CED-890C-E2E6DB6F54AF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -75,6 +93,8 @@ Global
 		{856A3F73-2C95-4E2E-819C-41F6456EE049} = {8AA482CE-0130-43A1-84BC-92215AF25AED}
 		{707F28F7-80EF-4A66-BF30-44EB218A4B11} = {856A3F73-2C95-4E2E-819C-41F6456EE049}
 		{AEA2CBDF-329E-4B17-9B02-4178D045F528} = {856A3F73-2C95-4E2E-819C-41F6456EE049}
+		{14C576CC-9CFA-49E7-B48F-2C8E03A9B76D} = {9A262CB5-8352-42D0-830C-D87131D9060B}
+		{38F452ED-A8E3-4CED-890C-E2E6DB6F54AF} = {9A262CB5-8352-42D0-830C-D87131D9060B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7BCBB258-C07A-4039-838A-09F3B45F7E58}

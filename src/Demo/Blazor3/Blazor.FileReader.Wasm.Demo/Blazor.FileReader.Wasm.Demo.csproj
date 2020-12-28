@@ -26,5 +26,14 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Blazor.FileReader.Demo.Common\Blazor.FileReader.Demo.Common.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="Pages\E2ETestDragnDrop.razor">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+    </Content>
+    <Content Update="Pages\E2ETestHash.razor">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+    </Content>
+  </ItemGroup>
   
 </Project>
