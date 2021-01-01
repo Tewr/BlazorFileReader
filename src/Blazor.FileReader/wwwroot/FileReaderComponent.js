@@ -13,21 +13,56 @@ var FileReaderJsInterop = (function () {
     FileReaderJsInterop.initialized = false;
     return FileReaderJsInterop;
 }());
+var nameof = function (name) { return name; };
 var FileReaderComponent = (function () {
     function FileReaderComponent() {
         var _this = this;
         this.newFileStreamReference = 0;
         this.fileStreams = {};
+        this.dropEvent = nameof("drop");
+        this.dragOverEvent = nameof("dragover");
         this.dragElements = new Map();
         this.elementDataTransfers = new Map();
         this.readResultByTaskId = new Map();
-        this.RegisterDropEvents = function (element, additive) {
+        this.BuildDragEventHandler = function (declaredMethod, script, eventDescription) {
+            var result;
+            var declaredHandler;
+            if (declaredMethod) {
+                if (!window.hasOwnProperty(declaredMethod) || typeof window[declaredMethod] !== 'function') {
+                    throw (FileReaderJsInterop.assembly + ".BuildDragEventHandler: window." + declaredMethod + " was provided as an option for event '" + eventDescription + "', but was not declared or was not a function. Make sure your script that defines this method is loaded before calling RegisterDropEvents.");
+                }
+                else {
+                    declaredHandler = window[declaredMethod];
+                }
+            }
+            if (script) {
+                var scriptHandler_1 = Function("return " + script)();
+                if (!scriptHandler_1 || typeof scriptHandler_1 !== 'function') {
+                    throw (FileReaderJsInterop.assembly + ".BuildDragEventHandler: plugin was provided as an option for event '" + eventDescription + "', but was not properly declared or was not a function.");
+                }
+                else {
+                    if (!declaredHandler) {
+                        return scriptHandler_1;
+                    }
+                    return function (dragEvent, element, fileReaderComponent) {
+                        declaredHandler(dragEvent, element, fileReaderComponent);
+                        scriptHandler_1(dragEvent, element, fileReaderComponent);
+                    };
+                }
+            }
+            if (declaredHandler) {
+                return declaredHandler;
+            }
+            return (function () { });
+        };
+        this.RegisterDropEvents = function (element, registerOptions) {
             _this.LogIfNull(element);
-            var handler = function (ev) {
+            var onAfterDropHandler = _this.BuildDragEventHandler(registerOptions.onDropMethod, registerOptions.onDropScript, _this.dropEvent);
+            var dropHandler = function (ev) {
                 _this.PreventDefaultHandler(ev);
                 if (ev.target instanceof HTMLElement) {
                     var list = ev.dataTransfer.files;
-                    if (additive) {
+                    if (registerOptions.additive) {
                         var existing = _this.elementDataTransfers.get(element);
                         if (existing !== undefined && existing.length > 0) {
                             list = new FileReaderComponent.ConcatFileList(existing, list);
@@ -35,18 +70,27 @@ var FileReaderComponent = (function () {
                     }
                     _this.elementDataTransfers.set(element, list);
                 }
+                onAfterDropHandler(ev, element, _this);
             };
-            _this.dragElements.set(element, handler);
-            element.addEventListener("drop", handler);
-            element.addEventListener("dragover", _this.PreventDefaultHandler);
+            var onAfterDragOverHandler = _this.BuildDragEventHandler(registerOptions.onDragOverMethod, registerOptions.onDragOverScript, _this.dragOverEvent);
+            var dragOverHandler = function (ev) {
+                _this.PreventDefaultHandler(ev);
+                onAfterDragOverHandler(ev, element, _this);
+            };
+            var onAfterRegisterHandler = _this.BuildDragEventHandler(registerOptions.onRegisterDropEventsMethod, registerOptions.onRegisterDropEventsScript, 'RegisterDropEvents');
+            var eventHandlers = { drop: dropHandler, dragover: dragOverHandler };
+            _this.dragElements.set(element, eventHandlers);
+            element.addEventListener(_this.dropEvent, eventHandlers.drop);
+            element.addEventListener(_this.dragOverEvent, eventHandlers.dragover);
+            onAfterRegisterHandler(null, element, _this);
             return true;
         };
         this.UnregisterDropEvents = function (element) {
             _this.LogIfNull(element);
-            var handler = _this.dragElements.get(element);
-            if (handler) {
-                element.removeEventListener("drop", handler);
-                element.removeEventListener("dragover", _this.PreventDefaultHandler);
+            var eventHandlers = _this.dragElements.get(element);
+            if (eventHandlers) {
+                element.removeEventListener(_this.dropEvent, eventHandlers.drop);
+                element.removeEventListener(_this.dragOverEvent, eventHandlers.dragover);
             }
             _this.elementDataTransfers.delete(element);
             _this.dragElements.delete(element);

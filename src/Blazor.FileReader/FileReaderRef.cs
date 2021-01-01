@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Tewr.Blazor.FileReader.DropEvents;
 
 namespace Tewr.Blazor.FileReader
 {
@@ -19,6 +20,13 @@ namespace Tewr.Blazor.FileReader
         /// <param name="additive">If set to true, drop target file list becomes additive. Defaults to false.</param>
         /// <returns>An awaitable task representing the operation</returns>
         Task RegisterDropEventsAsync(bool additive = false);
+
+        /// <summary>
+        /// Register for drop events on the source element
+        /// </summary>
+        /// <param name="dropEventsOptions">Provides expert options for manipulating the default javascript behaviour of the drag and drop events.</param>
+        /// <returns>An awaitable task representing the operation</returns>
+        Task RegisterDropEventsAsync(DropEventsOptions dropEventsOptions);
 
         /// <summary>
         /// Unregister drop events on the source element
@@ -173,7 +181,19 @@ namespace Tewr.Blazor.FileReader
             Enumerable.Range(0, Math.Max(0, await this.FileReaderJsInterop.GetFileCount(this.ElementRef)))
                 .Select(index => (IFileReference)new FileReference(this, index));
 
-        public async Task RegisterDropEventsAsync(bool additive) => await this.FileReaderJsInterop.RegisterDropEvents(this.ElementRef, additive);
+        public async Task RegisterDropEventsAsync(bool additive) => 
+            await RegisterDropEventsAsync(new DropEventsOptions { Additive = additive });
+
+        public async Task RegisterDropEventsAsync(DropEventsOptions dropEventsOptions)
+        {
+            if (dropEventsOptions is null)
+            {
+                throw new ArgumentNullException(nameof(dropEventsOptions));
+            }
+
+            await this.FileReaderJsInterop.RegisterDropEvents(this.ElementRef, dropEventsOptions);
+        }
+
         public async Task UnregisterDropEventsAsync() => await this.FileReaderJsInterop.UnregisterDropEvents(this.ElementRef);
 
         public async Task ClearValue() 

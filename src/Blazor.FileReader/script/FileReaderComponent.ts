@@ -81,11 +81,34 @@ class FileReaderJsInterop {
     static endTask: (taskId: number) => void;
 }
 
+interface DragEvents {
+    drop: EventListenerOrEventListenerObject;
+    dragover: EventListenerOrEventListenerObject;
+}
+
+interface DropEventsOptions {
+    additive: boolean;
+    onDropMethod: string;
+    onDropScript: string;
+    onDragOverMethod: string;
+    onDragOverScript: string;
+    onRegisterDropEventsMethod: string;
+    onRegisterDropEventsScript: string;
+}
+
+type DragEventHandler = (dragEvent: DragEvent, element: HTMLElement, fileReaderComponent: FileReaderComponent) => void;
+
+const nameof = <T>(name: keyof T) => name;
+
 class FileReaderComponent {
 
     private newFileStreamReference = 0;
     private readonly fileStreams: { [reference: number]: File } = {};
-    private readonly dragElements: Map<HTMLElement, EventListenerOrEventListenerObject> = new Map();
+
+    private readonly dropEvent = nameof<DragEvents>("drop");
+    private readonly dragOverEvent = nameof<DragEvents>("dragover");
+    private readonly dragElements: Map<HTMLElement, DragEvents> = new Map();
+
     private readonly elementDataTransfers: Map<HTMLElement, FileList> = new Map();
     private readonly readResultByTaskId: Map<number, IReadFileData> = new Map();
 
@@ -94,16 +117,55 @@ class FileReaderComponent {
             console.log(`${FileReaderJsInterop.assembly}: HTMLElement is null. Can't access IFileReaderRef after HTMLElement was removed from DOM.`);
         }
     }
-    
-    public RegisterDropEvents = (element: HTMLElement, additive: boolean): boolean => {
+
+    private BuildDragEventHandler = (declaredMethod: string, script: string, eventDescription: string) : DragEventHandler => {
+
+        let result: DragEventHandler;
+        let declaredHandler: DragEventHandler;
+        if (declaredMethod) {
+            if (!window.hasOwnProperty(declaredMethod) || typeof window[declaredMethod] !== 'function') {
+                throw (`${FileReaderJsInterop.assembly}.BuildDragEventHandler: window.${declaredMethod} was provided as an option for event '${eventDescription}', but was not declared or was not a function. Make sure your script that defines this method is loaded before calling RegisterDropEvents.`);
+            }
+            else {
+                declaredHandler = window[declaredMethod];
+            }
+        }
+
+        if (script) {
+            const scriptHandler = Function(`return ${script}`)() as DragEventHandler;
+            if (!scriptHandler || typeof scriptHandler !== 'function') {
+                throw (`${FileReaderJsInterop.assembly}.BuildDragEventHandler: plugin was provided as an option for event '${eventDescription}', but was not properly declared or was not a function.`);
+            }
+            else {
+                if (!declaredHandler) {
+                    return scriptHandler;
+                }
+
+                // Executes declared handler first, then script handler.
+                return (dragEvent: DragEvent, element: HTMLElement, fileReaderComponent: FileReaderComponent) => {
+                    declaredHandler(dragEvent, element, fileReaderComponent);
+                    scriptHandler(dragEvent, element, fileReaderComponent);
+                }
+            }
+        }
+
+        if (declaredHandler) {
+            return declaredHandler;
+        }
+
+        return (() => { }) as DragEventHandler;
+    }
+
+    public RegisterDropEvents = (element: HTMLElement, registerOptions: DropEventsOptions): boolean => {
         this.LogIfNull(element);
-        
-        const handler = (ev: DragEvent) => {
+
+        const onAfterDropHandler = this.BuildDragEventHandler(registerOptions.onDropMethod, registerOptions.onDropScript, this.dropEvent);
+        const dropHandler = (ev: DragEvent) => {
             this.PreventDefaultHandler(ev);
             if (ev.target instanceof HTMLElement) {
                 let list = ev.dataTransfer.files;
 
-                if (additive) {
+                if (registerOptions.additive) {
                     const existing = this.elementDataTransfers.get(element);
                     if (existing !== undefined && existing.length > 0) {
                         list = new FileReaderComponent.ConcatFileList(existing, list);
@@ -112,20 +174,33 @@ class FileReaderComponent {
                 
                 this.elementDataTransfers.set(element, list);
             }
+
+            onAfterDropHandler(ev, element, this);
         };
 
-        this.dragElements.set(element, handler);
-        element.addEventListener("drop", handler);
-        element.addEventListener("dragover", this.PreventDefaultHandler);
+        const onAfterDragOverHandler = this.BuildDragEventHandler(registerOptions.onDragOverMethod, registerOptions.onDragOverScript, this.dragOverEvent);
+        const dragOverHandler = (ev: DragEvent) => {
+            this.PreventDefaultHandler(ev);
+            onAfterDragOverHandler(ev, element, this);
+        };
+
+        const onAfterRegisterHandler = this.BuildDragEventHandler(registerOptions.onRegisterDropEventsMethod, registerOptions.onRegisterDropEventsScript, 'RegisterDropEvents');
+
+        const eventHandlers = { drop: dropHandler, dragover: dragOverHandler };
+        this.dragElements.set(element, eventHandlers);
+        element.addEventListener(this.dropEvent, eventHandlers.drop);
+        element.addEventListener(this.dragOverEvent, eventHandlers.dragover);
+
+        onAfterRegisterHandler(null, element, this);
         return true;
     }
 
     public UnregisterDropEvents = (element: HTMLElement): boolean => {
         this.LogIfNull(element);
-        const handler = this.dragElements.get(element);
-        if (handler) {
-            element.removeEventListener("drop", handler);
-            element.removeEventListener("dragover", this.PreventDefaultHandler);
+        const eventHandlers = this.dragElements.get(element);
+        if (eventHandlers) {
+            element.removeEventListener(this.dropEvent, eventHandlers.drop);
+            element.removeEventListener(this.dragOverEvent, eventHandlers.dragover);
         }
         this.elementDataTransfers.delete(element);
         this.dragElements.delete(element);

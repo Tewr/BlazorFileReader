@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Tewr.Blazor.FileReader.DropEvents;
 
 namespace Tewr.Blazor.FileReader
 {
@@ -49,10 +50,10 @@ namespace Tewr.Blazor.FileReader
             }
         }
 
-        public async Task<bool> RegisterDropEvents(ElementReference elementReference, bool additive)
+        internal async Task<bool> RegisterDropEvents(ElementReference elementReference, DropEventsOptions options)
         {
             await EnsureInitializedAsync();
-            return await CurrentJSRuntime.InvokeAsync<bool>($"FileReaderComponent.RegisterDropEvents", elementReference, additive);
+            return await CurrentJSRuntime.InvokeAsync<bool>($"FileReaderComponent.RegisterDropEvents", elementReference, options);
         }
 
         public async Task<bool> UnregisterDropEvents(ElementReference elementReference)
