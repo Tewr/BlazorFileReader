@@ -25,7 +25,6 @@ var FileReaderComponent = (function () {
         this.elementDataTransfers = new Map();
         this.readResultByTaskId = new Map();
         this.BuildDragEventHandler = function (declaredMethod, script, eventDescription) {
-            var result;
             var declaredHandler;
             if (declaredMethod) {
                 if (!window.hasOwnProperty(declaredMethod) || typeof window[declaredMethod] !== 'function') {

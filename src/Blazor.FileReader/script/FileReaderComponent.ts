@@ -120,7 +120,6 @@ class FileReaderComponent {
 
     private BuildDragEventHandler = (declaredMethod: string, script: string, eventDescription: string) : DragEventHandler => {
 
-        let result: DragEventHandler;
         let declaredHandler: DragEventHandler;
         if (declaredMethod) {
             if (!window.hasOwnProperty(declaredMethod) || typeof window[declaredMethod] !== 'function') {

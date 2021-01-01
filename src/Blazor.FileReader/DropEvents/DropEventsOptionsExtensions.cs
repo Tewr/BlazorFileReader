@@ -4,8 +4,10 @@ namespace Tewr.Blazor.FileReader.DropEvents
 {
     /// <summary>
     /// Possible values of the DataTransfer.dropEffect property
-    /// https://developer.mozilla.org/en-US/docs/Web/API/DataTransfer/dropEffect
     /// </summary>
+    /// <remarks>
+    /// https://developer.mozilla.org/en-US/docs/Web/API/DataTransfer/dropEffect
+    /// </remarks>
     public enum DropEffect
     {
         /// <summary>
@@ -38,10 +40,11 @@ namespace Tewr.Blazor.FileReader.DropEvents
             };
 
         /// <summary>
-        /// Sets the dropEffect (https://developer.mozilla.org/en-US/docs/Web/API/DataTransfer/dropEffect) on the dragover event to the specified value.
+        /// Sets the dropEffect on the dragover event to the specified value.
         /// </summary>
         /// <param name="source"></param>
         /// <param name="dropEffect"></param>
+        /// <remarks>https://developer.mozilla.org/en-US/docs/Web/API/DataTransfer/dropEffect</remarks>
         /// <returns></returns>
         public static DropEventsOptions SetDragOverDataTransferDropEffect(this DropEventsOptions source, DropEffect dropEffect)
         {
