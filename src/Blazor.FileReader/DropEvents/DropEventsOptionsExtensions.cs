@@ -40,7 +40,7 @@ namespace Tewr.Blazor.FileReader.DropEvents
             };
 
         /// <summary>
-        /// Sets the dropEffect on the dragover event to the specified value.
+        /// Sets the specified <see cref="dropEffect"/> value on the dataTransfer property in the dragover event to the specified value.
         /// </summary>
         /// <param name="source"></param>
         /// <param name="dropEffect"></param>
@@ -53,7 +53,11 @@ namespace Tewr.Blazor.FileReader.DropEvents
                 throw new System.ArgumentNullException(nameof(source));
             }
 
-            var value = dropeffectDomstringValues[dropEffect];
+            if (!dropeffectDomstringValues.TryGetValue(dropEffect, out var value))
+            {
+                throw new System.ArgumentException($"{dropEffect} is not a valid value for parameter {nameof(dropEffect)}", nameof(dropEffect));
+            }
+            
             source.OnDragOverScript = @$"(dragEvent) => {{
                 if (dragEvent.dataTransfer) {{
                     dragEvent.dataTransfer.dropEffect = ""{value}"";

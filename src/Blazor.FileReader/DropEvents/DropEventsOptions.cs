@@ -19,20 +19,20 @@
 
         /// <summary>
         /// Javascript function snippet that will be executed on the drop event. 
-        /// The method will be passed the following arguments: The Event, the target element, and the FileReaderComponent instance.
+        /// The method will be passed the following arguments: The DragEvent, the target element, and the FileReaderComponent instance.
         /// Do not set this property using user-provided data, as it would be a security risk.
         /// </summary>
         public string OnDropScript { get; set; }
 
         /// <summary>
         /// Predefined global javascript function that will be executed on the dragover event. 
-        /// The method will be passed the following arguments: The Event, the target element, and the FileReaderComponent instance.
+        /// The method will be passed the following arguments: The DragEvent, the target element, and the FileReaderComponent instance.
         /// </summary>
         public string OnDragOverMethod { get; set; }
 
         /// <summary>
         /// Javascript function snippet that will be executed on the dragover event. 
-        /// The method will be passed the following arguments: The Event, the target element, and the FileReaderComponent instance.
+        /// The method will be passed the following arguments: The DragEvent, the target element, and the FileReaderComponent instance.
         /// Do not set this property using user-provided data, as it would be a security risk.
         /// </summary>
         public string OnDragOverScript { get; set; }
