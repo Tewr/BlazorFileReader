@@ -46,6 +46,32 @@ Read 11 bytes. 11 / 11
             }
         }
 
+        [Fact]
+        public void DragNDrop_ExtensionApi_IsExecuted()
+        {
+            Navigate("/E2ETestDragnDrop");
+            try
+            {
+                // Given 
+                var tempFile = Path.GetTempFileName();
+                File.WriteAllText(tempFile, "Hello world");
+                Disposables.Add(() => File.Delete(tempFile));
+
+                // When 
+                Browser.FindElement(By.Id("testDropEvents")).Click();
+                var dropZone = Browser.FindElement(By.Id("drop-zone"));
+                DropFile(Browser, new FileInfo(tempFile), dropZone, 0, 0);
+
+                // Then
+                var value = Browser.FindElement(By.Id("testDropEventsValues")).GetAttribute("value");
+                Assert.Equal(@"\nOnDragOverMethod\nOnDragOverScriptn\nOnDropMethod\nOnDropScript", value);
+            }
+            finally
+            {
+                Disposables?.ForEach(d => d?.Invoke());
+            }
+        }
+
         public DragNDropTests(TFixture fixture) : base(fixture)
         { }
 

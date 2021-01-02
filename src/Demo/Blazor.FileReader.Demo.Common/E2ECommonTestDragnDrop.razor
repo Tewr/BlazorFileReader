@@ -81,14 +81,10 @@ This demo is used for e2e tests.
                       };
 
                      window.testondropovermethod = (a, b, c) => 
-                      { 
                             testlog('OnDropMethod', a, b, c);
-                      };
 
-                     window.testondragovermethod = (a, b, c) => 
-                      { 
+                     window.testondragovermethod = (a, b, c) =>                       
                             testlog('OnDragOverMethod', a, b, c);
-                      };
                 ");
 
                 TestDropEventsMethodsDefined = true;
@@ -99,7 +95,7 @@ This demo is used for e2e tests.
                 o.OnDragOverScript = $"(a,b,c) => {{ testlog('OnDragOverScript', a,b,c); ({o.OnDragOverScript})(a,b,c); }}";
                 o.OnDropMethod = "testondropovermethod";
                 o.OnDragOverMethod = "testondragovermethod";
-                o.OnDropScript = "(a,b,c) => testlog('OnDropMethod', a,b,c)";
+                o.OnDropScript = "(a,b,c) => testlog('OnDropScript', a,b,c)";
             });
         }
         else
