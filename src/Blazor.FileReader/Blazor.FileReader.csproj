@@ -1,9 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 
+
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net5.0</TargetFrameworks>
     <BlazorLinkOnBuild>true</BlazorLinkOnBuild>
-    <TypeScriptToolsVersion>2.8</TypeScriptToolsVersion>
+    <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
     <LangVersion>latest</LangVersion>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <Version>3.0.0.20340</Version>
@@ -32,7 +33,12 @@
     <DocumentationFile>Blazor.FileReader.xml</DocumentationFile>
   </PropertyGroup>
 
-
+  <Target Name="BundleTypescript" BeforeTargets="CreateManifestResourceNames" Condition="'$(Configuration)'=='Debug'">
+    <!-- using ts-bundle to create a single output js file from several ts files  -->
+    <Exec Command="tsc-bundle $(ProjectDir)tsconfig.json --outFile $(ProjectDir)wwwroot\FileReaderComponent.js --entryPoint FileReaderComponent --transform tsPreprocessor.js" />
+  </Target>
+  
+  
   <ItemGroup>
     <!-- .js/.css files will be referenced via <script>/<link> tags; other content files will just be included in the app's 'dist' directory without any tags referencing them -->
     <EmbeddedResource Include="wwwroot\**\*.js" LogicalName="blazor:js:%(RecursiveDir)%(Filename)%(Extension)" />
@@ -47,17 +53,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="3.1.3" />
     <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="1.1.0" />
   </ItemGroup>
-
-  <ItemGroup Condition="'$(Configuration)'=='Debug'">
-    <!-- 
-    Referencing this is needed for a smooth developer experience, 
-    but it will botch the pack command, thus only available for debug config
-    -->
-    <PackageReference Include="Microsoft.TypeScript.Msbuild" Version="3.4.5">
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
-  </ItemGroup>
-
+ 
   <ItemGroup>
     <Content Update="tsconfig.json">
       <Pack>false</Pack>
@@ -67,6 +63,7 @@
 
   <ItemGroup>
     <Folder Include="Extensions\" />
+    <Folder Include="wwwroot\" />
   </ItemGroup>
 
   <PropertyGroup Condition="'$(TargetFramework)'=='netstandard2.0'">
