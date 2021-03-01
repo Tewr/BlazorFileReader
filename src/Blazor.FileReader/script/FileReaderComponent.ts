@@ -1,136 +1,27 @@
-﻿declare const Blazor: IBlazor;
+﻿import { RegisterDropEvents, UnregisterDropEvents } from "./DragnDrop"
+import { FileReaderJsInterop } from "./FileReaderJsInterop"
+
+declare const Blazor: IBlazor;
 declare const DotNet: IDotNet;
-declare const Module: IModule;
-
-interface IDotNet {
-    invokeMethodAsync<T>(assemblyName: string, methodIdentifier: string, ...args: any[]): Promise<T>;
-}
-interface IBlazor {
-    platform: IBlazorPlatform;
-}
-interface IModule {
-    mono_bind_static_method(fqn: string, signature?: any): (...args: any[]) => any;
-}
-interface MethodHandle { MethodHandle__DO_NOT_IMPLEMENT: any }
-interface System_Object { System_Object__DO_NOT_IMPLEMENT: any }
-interface System_Array<T> extends System_Object { System_Array__DO_NOT_IMPLEMENT: any }
-interface Pointer { Pointer__DO_NOT_IMPLEMENT: any }
-
-interface IBlazorPlatform {
-    toJavaScriptString(pointer: any): string;
-    toUint8Array(array: System_Array<any>): Uint8Array;
-    readInt16Field(baseAddress: Pointer, fieldOffset?: number): number;
-    readInt32Field(baseAddress: Pointer, fieldOffset?: number): number;
-    readUint64Field(baseAddress: Pointer, fieldOffset?: number): number;
-    readFloatField(baseAddress: Pointer, fieldOffset?: number): number;
-    readObjectField<T extends System_Object>(baseAddress: Pointer, fieldOffset?: number): T;
-    readStringField(baseAddress: Pointer, fieldOffset?: number): string | null;
-    readStructField<T extends Pointer>(baseAddress: Pointer, fieldOffset?: number): T;
-}
-
-interface IReadFileParams {
-    taskId: number;
-    bufferOffset: number;
-    count: number;
-    fileRef: number;
-    position: number;
-};
-
-interface IBufferParams {
-    taskId: number;
-    buffer: System_Array<object>;
-};
-
-interface IReadFileData {
-    arrayBuffer: ArrayBuffer;
-    params: IReadFileParams;
-}
-
-interface ReadFileSliceResult {
-    file: File;
-    result: string | ArrayBuffer;
-}
-
-interface IFileInfo {
-    name: string;
-    nonStandardProperties: any;
-    size: number;
-    type: string;
-    lastModified: number;
-};
-
-interface IDotNetBuffer {
-    toUint8Array(): Uint8Array;
-}
-
-/**
- * Proxy class for the c# class Tewr.Blazor.FileReader.FileReaderJsInterop
- * */
-class FileReaderJsInterop {
-    static assembly = 'Tewr.Blazor.FileReader';
-    static initialized = false;
-    static initialize() {
-        FileReaderJsInterop.endTask =
-            Module.mono_bind_static_method(`[${this.assembly}] Tewr.Blazor.FileReader.FileReaderJsInterop:EndTask`);
-        FileReaderJsInterop.initialized = true;
-    }
-
-    /**
-     * Unmarshalled callback for ending the current read task
-     * */
-    static endTask: (taskId: number) => void;
-}
 
 class FileReaderComponent {
 
     private newFileStreamReference = 0;
     private readonly fileStreams: { [reference: number]: File } = {};
-    private readonly dragElements: Map<HTMLElement, EventListenerOrEventListenerObject> = new Map();
-    private readonly elementDataTransfers: Map<HTMLElement, FileList> = new Map();
+
+    protected readonly dragElements: Map<HTMLElement, DragEvents> = new Map();
+    protected readonly elementDataTransfers: Map<HTMLElement, FileList> = new Map();
     private readonly readResultByTaskId: Map<number, IReadFileData> = new Map();
 
-    private LogIfNull(element: HTMLElement) {
+    protected LogIfNull(element: HTMLElement) {
         if (element == null) {
             console.log(`${FileReaderJsInterop.assembly}: HTMLElement is null. Can't access IFileReaderRef after HTMLElement was removed from DOM.`);
-        }
-    }
-    
-    public RegisterDropEvents = (element: HTMLElement, additive: boolean): boolean => {
-        this.LogIfNull(element);
-        
-        const handler = (ev: DragEvent) => {
-            this.PreventDefaultHandler(ev);
-            if (ev.target instanceof HTMLElement) {
-                let list = ev.dataTransfer.files;
-
-                if (additive) {
-                    const existing = this.elementDataTransfers.get(element);
-                    if (existing !== undefined && existing.length > 0) {
-                        list = new FileReaderComponent.ConcatFileList(existing, list);
-                    }
-                }
-                
-                this.elementDataTransfers.set(element, list);
-            }
-        };
-
-        this.dragElements.set(element, handler);
-        element.addEventListener("drop", handler);
-        element.addEventListener("dragover", this.PreventDefaultHandler);
-        return true;
+        } 
     }
 
-    public UnregisterDropEvents = (element: HTMLElement): boolean => {
-        this.LogIfNull(element);
-        const handler = this.dragElements.get(element);
-        if (handler) {
-            element.removeEventListener("drop", handler);
-            element.removeEventListener("dragover", this.PreventDefaultHandler);
-        }
-        this.elementDataTransfers.delete(element);
-        this.dragElements.delete(element);
-        return true;
-    }
+    public RegisterDropEvents = RegisterDropEvents;
+
+    public UnregisterDropEvents = UnregisterDropEvents;
 
     private GetFiles(element: HTMLElement): FileList {
         let files: FileList = null;
@@ -288,7 +179,6 @@ class FileReaderComponent {
                 }, e => reject(e));
         });
     }
-    
 
     private ReadFileSlice = (readFileParams: IReadFileParams, method: (reader: FileReader, blob: Blob) => void): Promise<ReadFileSliceResult> => {
         return new Promise<ReadFileSliceResult>((resolve, reject) => {
@@ -310,50 +200,8 @@ class FileReaderComponent {
             }
         });
     }
-
-    private PreventDefaultHandler = (ev: DragEvent) => {
-        ev.preventDefault();
-    }
-
-    static ConcatFileList = class implements FileList {
-        [index: number]: File;
-
-        length: number;
-
-        item(index: number): File {
-            return this[index];
-        }
-
-        constructor(existing: FileList, additions: FileList) {
-            for (let i = 0; i < existing.length; i++) {
-                this[i] = existing[i];
-            }
-
-            const eligebleAdditions = [];
-
-            // Check for doubles
-            for (let i = 0; i < additions.length; i++) {
-                let exists = false;
-                const addition = additions[i];
-                for (let j = 0; j < existing.length; j++) {
-                    if (existing[j] === addition) {
-                        exists = true;
-                        break;
-                    }
-                }
-
-                if (!exists) {
-                    eligebleAdditions[eligebleAdditions.length] = addition;
-                }
-            }
-
-            for (let i = 0; i < eligebleAdditions.length; i++) {
-                this[i + existing.length] = eligebleAdditions[i];
-            }
-
-            this.length = existing.length + eligebleAdditions.length;
-        }
-    }
 }
 
-(window as any).FileReaderComponent = new FileReaderComponent();
+const FileReaderComponentInstance = new FileReaderComponent();
+
+export { FileReaderComponent, FileReaderComponentInstance }

@@ -1,10 +1,12 @@
 ﻿@using System.IO;
-@inject IFileReaderService fileReaderService;
+@using Tewr.Blazor.FileReader.DropEvents
+@inject IFileReaderService fileReaderService
+@inject IJSRuntime jsRuntime; 
 <h1>Hello, dropped files!</h1>
 
 Welcome to your new filestreaming app.
 <br />
-This demo reads files that was dropped in without doing anything particular with it.
+This demo is used for e2e tests.
 <br />
 <br />
 
@@ -23,8 +25,12 @@ This demo reads files that was dropped in without doing anything particular with
 
 
 
-<input id="additive" type="checkbox" checked=@Additive @onchange="OnAdditiveChange" />
-<label for="additive">Additive</label>
+<input id="additive" type="checkbox" checked=@Additive @onchange="OnAdditiveChange" /><label for="additive">Additive</label>
+<br />
+<input id="testDropEvents" type="checkbox" checked=@TestDropEvents @onchange="OnTestDropEvents" /><label for="testDropEvents">Test drop events</label>
+<input id="testDropEventsValues" type="hidden"/>
+<br />
+
 <br />
 <button @onclick="ReadDrop" class="btn btn-primary" id="read-file">Read file</button>
 <button @onclick="ClearDrop" class="btn btn-primary">Clear</button>
@@ -36,7 +42,8 @@ This demo reads files that was dropped in without doing anything particular with
     ElementReference dropTargetElement;
     IFileReaderRef dropReference;
     bool Additive { get; set; }
-
+    bool TestDropEvents { get; set; }
+    bool TestDropEventsMethodsDefined;
     string Output { get; set; }
     List<IFileInfo> DropFileList { get; } = new List<IFileInfo>();
 
@@ -57,12 +64,53 @@ This demo reads files that was dropped in without doing anything particular with
         await dropReference.RegisterDropEventsAsync(Additive);
     }
 
+    public async Task OnTestDropEvents(ChangeEventArgs e)
+    {
+        TestDropEvents = (bool)e.Value;
+        StateHasChanged();
+        await dropReference.UnregisterDropEventsAsync();
+        if (TestDropEvents)
+        {
+            if (!TestDropEventsMethodsDefined)
+            {
+                await jsRuntime.InvokeVoidAsync("eval",
+                    @"window.testlog = (log, a, b, c) => 
+                      { 
+                            console.log(log, a, b, c); 
+                            document.getElementById('testDropEventsValues').value = document.getElementById('testDropEventsValues').value + '\n'+ log; 
+                      };
+
+                     window.testondropovermethod = (a, b, c) => 
+                            testlog('OnDropMethod', a, b, c);
+
+                     window.testondragovermethod = (a, b, c) =>                       
+                            testlog('OnDragOverMethod', a, b, c);
+                ");
+
+                TestDropEventsMethodsDefined = true;
+            }
+
+            await dropReference.RegisterDropEventsAsync(o => {
+                o.SetDragOverDataTransferDropEffect(DropEffect.Copy);
+                o.OnDragOverScript = $"(a,b,c) => {{ testlog('OnDragOverScript', a,b,c); ({o.OnDragOverScript})(a,b,c); }}";
+                o.OnDropMethod = "testondropovermethod";
+                o.OnDragOverMethod = "testondragovermethod";
+                o.OnDropScript = "(a,b,c) => testlog('OnDropScript', a,b,c)";
+            });
+        }
+        else
+        {
+            await dropReference.RegisterDropEventsAsync();
+        }
+
+    }
+
     public async Task ClearDrop()
     {
         await dropReference.ClearValue();
         await this.RefreshDropFileList();
     }
-   
+
     private Task RefreshDropFileList()
     {
         return RefreshFileList(dropReference, DropFileList);
@@ -79,7 +127,8 @@ This demo reads files that was dropped in without doing anything particular with
         this.StateHasChanged();
     }
 
-    public async Task ReadDrop() {
+    public async Task ReadDrop()
+    {
         await ReadFile(dropReference);
     }
 
