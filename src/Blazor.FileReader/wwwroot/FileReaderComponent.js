@@ -183,6 +183,11 @@
                 }
                 return files;
             };
+            FileReaderComponent.prototype.GetJSObjectReference = function (element, fileIndex) {
+                this.LogIfNull(element);
+                var files = this.GetFiles(element);
+                return files[fileIndex];
+            };
             FileReaderComponent.prototype.GetFileInfoFromFile = function (file) {
                 var result = {
                     lastModified: file.lastModified,
@@ -245,7 +250,7 @@
             var declaredHandler;
             if (declaredMethod) {
                 if (!window.hasOwnProperty(declaredMethod) || typeof window[declaredMethod] !== 'function') {
-                    throw (FileReaderJsInterop_2.FileReaderJsInterop.assembly + ".BuildDragEventHandler: window." + declaredMethod + " was provided as an option for event '" + eventDescription + "', but was not declared or was not a function. Make sure your script that defines this method is loaded before calling RegisterDropEvents.");
+                    throw (FileReaderJsInterop_2.FileReaderJsInterop.assembly + ": BuildDragEventHandler: window." + declaredMethod + " was provided as an option for event '" + eventDescription + "', but was not declared or was not a function. Make sure your script that defines this method is loaded before calling RegisterDropEvents.");
                 }
                 else {
                     declaredHandler = window[declaredMethod];
@@ -254,7 +259,7 @@
             if (script) {
                 var scriptHandler_1 = Function("return " + script)();
                 if (!scriptHandler_1 || typeof scriptHandler_1 !== 'function') {
-                    throw (FileReaderJsInterop_2.FileReaderJsInterop.assembly + ".BuildDragEventHandler: plugin was provided as an option for event '" + eventDescription + "', but was not properly declared or was not a function.");
+                    throw (FileReaderJsInterop_2.FileReaderJsInterop.assembly + ": BuildDragEventHandler: script was provided as an option for event '" + eventDescription + "', but was not properly declared or was not a function.");
                 }
                 else {
                     if (!declaredHandler) {
