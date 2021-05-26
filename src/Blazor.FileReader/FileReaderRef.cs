@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
+using Microsoft.JSInterop;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -52,6 +53,15 @@ namespace Tewr.Blazor.FileReader
     /// </summary>
     public interface IFileReference
     {
+
+#if NET5
+        /// <summary>
+        /// Returns the underlying file object as an <see cref="IJSObjectReference"/>
+        /// </summary>
+        /// <returns></returns>
+        Task<IJSObjectReference> GetJSObjectReferenceAsync();
+#endif
+
         /// <summary>
         /// Opens a read-only <see cref="Stream"/> to read the file.
         /// </summary>
@@ -207,6 +217,7 @@ namespace Tewr.Blazor.FileReader
             this.ElementRef = elementRef;
             this.FileReaderJsInterop = fileReaderJsInterop;
         }
+
     }
 
     internal class FileReference : IFileReference
@@ -279,6 +290,13 @@ namespace Tewr.Blazor.FileReader
             memoryStream.Position = 0;
             return memoryStream;
         }
+
+#if NET5
+        public Task<IJSObjectReference> GetJSObjectReferenceAsync()
+        {
+            return this.fileLoaderRef.FileReaderJsInterop.GetJSObjectReferenceAsync(this.index);
+        }
+#endif
 
     }
 

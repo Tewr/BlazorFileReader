@@ -36,6 +36,12 @@ class FileReaderComponent {
         return files;
     }
 
+    public GetJSObjectReference(element: HTMLElement, fileIndex: number): File {
+        this.LogIfNull(element);
+        const files = this.GetFiles(element);
+        return files[fileIndex];
+    }
+
     public GetFileCount = (element: HTMLElement): number => {
         this.LogIfNull(element);
         const files = this.GetFiles(element);
