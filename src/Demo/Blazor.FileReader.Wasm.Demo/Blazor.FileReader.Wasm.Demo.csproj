@@ -24,5 +24,11 @@
   <ItemGroup>
     <ProjectReference Include="..\Blazor.FileReader.Demo.Common\Blazor.FileReader.Demo.Common.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Pages\ObjectReferenceCommon - Copy.razor.cs">
+      <DependentUpon>ObjectReferenceCommon.razor.cs</DependentUpon>
+    </Compile>
+  </ItemGroup>
   
 </Project>

@@ -60,6 +60,12 @@ namespace Tewr.Blazor.FileReader
         /// </summary>
         /// <returns></returns>
         Task<IJSObjectReference> GetJSObjectReferenceAsync();
+
+        /// <summary>
+        /// Returns an object url for a file.
+        /// </summary>
+        /// <returns></returns>
+        Task<IObjectUrl> GetObjectUrlAsync();
 #endif
 
         /// <summary>
@@ -296,6 +302,16 @@ namespace Tewr.Blazor.FileReader
         {
             return this.fileLoaderRef.FileReaderJsInterop.GetJSObjectReferenceAsync(fileLoaderRef.ElementRef, this.index);
         }
+
+        public async Task<IObjectUrl> GetObjectUrlAsync()
+        {
+            var file = await GetJSObjectReferenceAsync();
+
+            var objectUrl = new ObjectUrl(this.fileLoaderRef.FileReaderJsInterop.CurrentJSRuntime, file);
+            await objectUrl.InitAsync();
+            return objectUrl;
+        }
+
 #endif
 
     }
