@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using System;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Tewr.Blazor.FileReader;
@@ -15,9 +14,6 @@ namespace Blazor.FileReader.Demo.Common
         [Inject]
         IJSRuntime CurrentJSRuntime { get; set; }
 
-        private static string nl = Environment.NewLine;
-        [Parameter]
-        public int BufferSize { get; set; } = 20480;
         public long max;
         public long value;
         public ElementReference inputElement;
@@ -26,16 +22,6 @@ namespace Blazor.FileReader.Demo.Common
 
         public bool CanCancel { get; set; }
         public bool IsCancelDisabled => !CanCancel;
-        
-
-        public async Task ReadOneFile(IFileReference file)
-        {
-            
-            
-
-            
-        }
-
 
         public async Task ReadFile()
         {
@@ -54,7 +40,7 @@ namespace Blazor.FileReader.Demo.Common
                     };");
             }
 
-            if (files.Count() < 1 )
+            if (!files.Any())
             {
                 await WriteLine("No file selected");
             }
