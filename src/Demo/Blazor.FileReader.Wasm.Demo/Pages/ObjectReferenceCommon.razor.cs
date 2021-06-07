@@ -14,19 +14,11 @@ namespace Blazor.FileReader.Demo.Common
         [Inject]
         IJSRuntime CurrentJSRuntime { get; set; }
 
-        public long max;
-        public long value;
         public ElementReference inputElement;
-        public System.Threading.CancellationTokenSource cancellationTokenSource;
         public string Output { get; set; }
-
-        public bool CanCancel { get; set; }
-        public bool IsCancelDisabled => !CanCancel;
 
         public async Task ReadFile()
         {
-            max = 0;
-            value = 0;
             Output = string.Empty;
             this.StateHasChanged();
             var files = await fileReaderService.CreateReference(inputElement).EnumerateFilesAsync();
@@ -57,18 +49,6 @@ namespace Blazor.FileReader.Demo.Common
                 }
 
             }
-        }
-
-        public async Task CancelFile()
-        {
-            await WriteLine("Cancel requested.");
-            await Task.Delay(1);
-            cancellationTokenSource.Cancel();
-        }
-
-        public async Task ClearFile()
-        {
-            await fileReaderService.CreateReference(inputElement).ClearValue();
         }
 
         public async Task WriteLine(string log)
