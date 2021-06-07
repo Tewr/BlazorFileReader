@@ -6,6 +6,8 @@
 <br />
 This demo returns an <a href="https://developer.mozilla.org/en-US/docs/Web/API/URL/createObjectURL">Object url</a>
  and reads some properties from it in a custom js function. This method is only supported for .NET5 and higher.
+<br />
+Don't forget to dispose the url if no longer used, as not doing so will create a memoryleak. Disposing calls <a href="https://developer.mozilla.org/en-US/docs/Web/API/URL/revokeObjectURL">revokeObjectURL</a>.
 
 <br />
 
