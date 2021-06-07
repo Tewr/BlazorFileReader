@@ -249,9 +249,9 @@ namespace Tewr.Blazor.FileReader
         }
 
 #if NET5
-        internal async Task<IJSObjectReference> GetJSObjectReferenceAsync(int fileIndex)
+        internal async Task<IJSObjectReference> GetJSObjectReferenceAsync(ElementReference elementRef, int fileIndex)
         {
-            return await CurrentJSRuntime.InvokeAsync<IJSObjectReference>("FileReaderComponent.GetJSObjectReference", fileIndex);
+            return await CurrentJSRuntime.InvokeAsync<IJSObjectReference>("FileReaderComponent.GetJSObjectReference", elementRef, fileIndex);
         }
 #endif
 

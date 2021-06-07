@@ -75,9 +75,6 @@
                 };
                 this.OpenRead = function (element, fileIndex, useWasmSharedBuffer) {
                     _this.LogIfNull(element);
-                    if (useWasmSharedBuffer && !FileReaderJsInterop_1.FileReaderJsInterop.initialized) {
-                        FileReaderJsInterop_1.FileReaderJsInterop.initialize();
-                    }
                     var files = _this.GetFiles(element);
                     if (!files) {
                         throw 'No FileList available.';
@@ -85,6 +82,12 @@
                     var file = files.item(fileIndex);
                     if (!file) {
                         throw "No file with index " + fileIndex + " available.";
+                    }
+                    return _this.OpenReadFile(file, useWasmSharedBuffer);
+                };
+                this.OpenReadFile = function (file, useWasmSharedBuffer) {
+                    if (useWasmSharedBuffer && !FileReaderJsInterop_1.FileReaderJsInterop.initialized) {
+                        FileReaderJsInterop_1.FileReaderJsInterop.initialize();
                     }
                     var fileRef = _this.newFileStreamReference++;
                     _this.fileStreams[fileRef] = file;
@@ -186,7 +189,7 @@
             FileReaderComponent.prototype.GetJSObjectReference = function (element, fileIndex) {
                 this.LogIfNull(element);
                 var files = this.GetFiles(element);
-                return files[fileIndex];
+                return files.item(fileIndex);
             };
             FileReaderComponent.prototype.GetFileInfoFromFile = function (file) {
                 var result = {

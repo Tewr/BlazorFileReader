@@ -294,7 +294,7 @@ namespace Tewr.Blazor.FileReader
 #if NET5
         public Task<IJSObjectReference> GetJSObjectReferenceAsync()
         {
-            return this.fileLoaderRef.FileReaderJsInterop.GetJSObjectReferenceAsync(this.index);
+            return this.fileLoaderRef.FileReaderJsInterop.GetJSObjectReferenceAsync(fileLoaderRef.ElementRef, this.index);
         }
 #endif
 

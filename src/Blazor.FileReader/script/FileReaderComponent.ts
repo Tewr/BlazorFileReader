@@ -39,7 +39,7 @@ class FileReaderComponent {
     public GetJSObjectReference(element: HTMLElement, fileIndex: number): File {
         this.LogIfNull(element);
         const files = this.GetFiles(element);
-        return files[fileIndex];
+        return files.item(fileIndex);
     }
 
     public GetFileCount = (element: HTMLElement): number => {
@@ -102,9 +102,6 @@ class FileReaderComponent {
 
     public OpenRead = (element: HTMLElement, fileIndex: number, useWasmSharedBuffer: boolean): number => {
         this.LogIfNull(element);
-        if (useWasmSharedBuffer && !FileReaderJsInterop.initialized) {
-            FileReaderJsInterop.initialize();
-        }
 
         const files = this.GetFiles(element);
         if (!files) {
@@ -114,12 +111,21 @@ class FileReaderComponent {
         if (!file) {
             throw `No file with index ${fileIndex} available.`;
         }
-            
+
+        return this.OpenReadFile(file, useWasmSharedBuffer);
+    }
+
+    public OpenReadFile = (file: File, useWasmSharedBuffer: boolean): number => {
+        if (useWasmSharedBuffer && !FileReaderJsInterop.initialized) {
+            FileReaderJsInterop.initialize();
+        }
+
         const fileRef: number = this.newFileStreamReference++;
         this.fileStreams[fileRef] = file;
         return fileRef;
-        
     }
+
+
     public ReadFileParamsPointer = (readFileParamsPointer: Pointer): IReadFileParams => {
         return {
             taskId: Blazor.platform.readUint64Field(readFileParamsPointer, 0),
