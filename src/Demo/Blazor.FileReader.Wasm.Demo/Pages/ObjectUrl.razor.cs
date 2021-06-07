@@ -10,9 +10,7 @@ namespace Blazor.FileReader.Demo.Common
     public partial class ObjectUrlBase : ComponentBase
     {
         [Inject]
-        IFileReaderService fileReaderService { get; set; }
-        [Inject]
-        IJSRuntime CurrentJSRuntime { get; set; }
+        IFileReaderService FileReaderService { get; set; }
 
         public ElementReference inputElement;
         public string Output { get; set; }
@@ -21,7 +19,7 @@ namespace Blazor.FileReader.Demo.Common
         {
             Output = string.Empty;
             this.StateHasChanged();
-            var files = await fileReaderService.CreateReference(inputElement).EnumerateFilesAsync();
+            var files = await FileReaderService.CreateReference(inputElement).EnumerateFilesAsync();
 
             if (!files.Any())
             {
@@ -33,8 +31,7 @@ namespace Blazor.FileReader.Demo.Common
                 var objectUrl = await file.GetObjectUrlAsync();
                 await using (objectUrl)
                 {
-                    
-                    // get length manually using a custom method
+                    // Print the object url
                     await WriteLine($"Object url: {objectUrl}");
                 }
 
