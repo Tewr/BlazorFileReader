@@ -7,7 +7,6 @@
     <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
     <LangVersion>latest</LangVersion>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-    <Version>3.0.0.20340</Version>
     <Authors>Tor Knutsson (Tewr)</Authors>
     <PackageProjectUrl>https://github.com/Tewr/BlazorFileReader</PackageProjectUrl>
     <RepositoryUrl>https://github.com/Tewr/BlazorFileReader</RepositoryUrl>
@@ -15,14 +14,15 @@
     <PackageTags>blazor blazor-component stream filestream file-stream read-file filereader</PackageTags>
     <Configurations>Debug;Release;Ghpages</Configurations>
     <PackageId>Tewr.Blazor.FileReader</PackageId>
-    <PackageReleaseNotes>Support for to 5, multi-targeting</PackageReleaseNotes>
-    <AssemblyVersion>3.0.0.20340</AssemblyVersion>
+    <PackageReleaseNotes>new APIs for .NET5: CreateObjectUrl, Expose Js file using JSObjectReference.</PackageReleaseNotes>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageIcon>icon.png</PackageIcon>
     <RazorLangVersion>3.0</RazorLangVersion>
     <AssemblyName>Tewr.Blazor.FileReader</AssemblyName>
     <RootNamespace>Tewr.Blazor.FileReader</RootNamespace>
-    <FileVersion>3.0.0.20340</FileVersion>
+    <AssemblyVersion>3.1.0.21158</AssemblyVersion>
+    <Version>3.1.0.21158</Version>
+    <FileVersion>3.1.0.21158</FileVersion>
   </PropertyGroup>
   <ItemGroup>
     <None Include="icon.png" Pack="true" Visible="false" PackagePath="" />
