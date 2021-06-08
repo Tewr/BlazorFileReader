@@ -1,5 +1,6 @@
 ﻿using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
+using SeleniumExtras.WaitHelpers;
 using System;
 using System.IO;
 using Tewr.Blazor.FileReader.E2ETests.Blazor3;
@@ -64,7 +65,8 @@ Read 11 bytes. 11 / 11
 
                 // Then
                 var value = Browser.FindElement(By.Id("testDropEventsValues")).GetAttribute("value");
-                Assert.Equal(@"\nOnDragOverMethod\nOnDragOverScriptn\nOnDropMethod\nOnDropScript", value);
+                var nl = Environment.NewLine;
+                Assert.Equal(@$"{nl}OnDragOverMethod{nl}OnDragOverScript{nl}OnDropMethod{nl}OnDropScript", value);
             }
             finally
             {

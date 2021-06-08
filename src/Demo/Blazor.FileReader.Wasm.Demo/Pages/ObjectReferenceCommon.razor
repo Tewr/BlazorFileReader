@@ -5,11 +5,12 @@
 
 <br />
 This demo reads a file into a <a href="https://docs.microsoft.com/en-us/dotnet/api/microsoft.jsinterop.implementation.jsobjectreference?view=dotnet-plat-ext-6.0">js object reference</a>
- and reads some properties from it in a custom js function. This method is only suppoerted for .NET5 and higher.
+ and reads some properties from it in a custom js function. This method is only supported for .NET5 and higher.
 
 <br />
 
 <input type="file" @ref=inputElement />
 <button @onclick=ReadFile class="btn btn-primary">Read file object reference</button>
+<br />
 <br />
 <textarea style="max-width: 100%;" cols="50" rows="20">@Output</textarea>
