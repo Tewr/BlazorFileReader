@@ -13,9 +13,6 @@ and [FileReader](https://developer.mozilla.org/en-US/docs/Web/API/FileReader). D
 
 Here is a [Live demo](https://tewr.github.io/BlazorFileReader/) that contains the output of [the wasm demo project](src/Demo/Blazor.FileReader.Wasm.Demo). Currently, its a build based on ```v2.0.0```.
 
-# Standard upload component
-📰 01.10.2020 Microsoft has released a built-in file upload component called [InputFile](https://docs.microsoft.com/en-us/aspnet/core/blazor/file-uploads?view=aspnetcore-5.0). For the most common and simple scenarios, I'd recommend using the built-in component rather than <code>BlazorFileReader</code>. The <code>BlazorFileReader</code> library gives more control over buffer size and memory usage, which may be to your advantage when working with large files. Also, not really being a blazor component, but rather a service that binds to an element, it may at times offer more flexibility.
-
 ## Installation
 
 Use [Nuget](https://www.nuget.org/packages/Tewr.Blazor.FileReader): ```Install-Package Tewr.Blazor.FileReader```
@@ -41,6 +38,12 @@ Setup IoC for  ```IFileReaderService``` as in the example ([Startup.cs](src/Demo
 services.AddFileReaderService();
 
 ```
+## Documentation
+
+The public API is documented [here](src/Blazor.FileReader/Blazor.FileReader.md), generated from the XML comments. 
+
+To get started, the best is to look at the example razor files in the [demo project](src/Demo/Blazor.FileReader.Demo.Common).
+
 
 <details><summary>Serverside/SSB: Important usage notice for versions prior to 2.1</summary>
 
@@ -113,6 +116,8 @@ The code for views looks the same for both [client](src/Demo/Blazor.FileReader.W
 
 ## Version notes
 
+Version <code>3.1.0.21158</code> Adds two new methods (.NET5 only): JsObjectReference for files, and CreateObjectUrl for files (built on JsObjectReference)
+
 Version <code>3.0.0.20340</code> Add support for .NET5 and fixes a small issue with Platform detection.
 
 <details><summary>Older versions</summary>
@@ -178,3 +183,6 @@ Also, introduces a new collection property on <code>File</code> for non-standard
 
 <details><summary>Versions previous to <code>0.5.1</code></summary> wrapped the input element in a Blazor Component, this has been removed for better configurability and general lack of value.</details>
 </details>
+
+# Standard upload component
+📰 01.10.2020 Microsoft has released a built-in file upload component called [InputFile](https://docs.microsoft.com/en-us/aspnet/core/blazor/file-uploads?view=aspnetcore-5.0). For the most common and simple scenarios, I'd recommend using the built-in component rather than <code>BlazorFileReader</code>. The <code>BlazorFileReader</code> library gives more control over buffer size and memory usage, which may be to your advantage when working with large files. Also, not really being a blazor component, but rather a service that binds to an element, it may at times offer more flexibility.
