@@ -52,7 +52,10 @@
   - [EnumerateFilesAsync()](#M-Tewr-Blazor-FileReader-IFileReaderRef-EnumerateFilesAsync 'Tewr.Blazor.FileReader.IFileReaderRef.EnumerateFilesAsync')
   - [RegisterDropEventsAsync(additive)](#M-Tewr-Blazor-FileReader-IFileReaderRef-RegisterDropEventsAsync-System-Boolean- 'Tewr.Blazor.FileReader.IFileReaderRef.RegisterDropEventsAsync(System.Boolean)')
   - [RegisterDropEventsAsync(dropEventsOptions)](#M-Tewr-Blazor-FileReader-IFileReaderRef-RegisterDropEventsAsync-Tewr-Blazor-FileReader-DropEvents-DropEventsOptions- 'Tewr.Blazor.FileReader.IFileReaderRef.RegisterDropEventsAsync(Tewr.Blazor.FileReader.DropEvents.DropEventsOptions)')
+  - [RegisterPasteEventAsync(additive)](#M-Tewr-Blazor-FileReader-IFileReaderRef-RegisterPasteEventAsync-System-Boolean- 'Tewr.Blazor.FileReader.IFileReaderRef.RegisterPasteEventAsync(System.Boolean)')
+  - [RegisterPasteEventAsync(pasteEventOptions)](#M-Tewr-Blazor-FileReader-IFileReaderRef-RegisterPasteEventAsync-Tewr-Blazor-FileReader-DropEvents-PasteEventOptions- 'Tewr.Blazor.FileReader.IFileReaderRef.RegisterPasteEventAsync(Tewr.Blazor.FileReader.DropEvents.PasteEventOptions)')
   - [UnregisterDropEventsAsync()](#M-Tewr-Blazor-FileReader-IFileReaderRef-UnregisterDropEventsAsync 'Tewr.Blazor.FileReader.IFileReaderRef.UnregisterDropEventsAsync')
+  - [UnregisterPasteEventAsync()](#M-Tewr-Blazor-FileReader-IFileReaderRef-UnregisterPasteEventAsync 'Tewr.Blazor.FileReader.IFileReaderRef.UnregisterPasteEventAsync')
 - [IFileReaderService](#T-Tewr-Blazor-FileReader-IFileReaderService 'Tewr.Blazor.FileReader.IFileReaderService')
   - [CreateReference(element)](#M-Tewr-Blazor-FileReader-IFileReaderService-CreateReference-Microsoft-AspNetCore-Components-ElementReference- 'Tewr.Blazor.FileReader.IFileReaderService.CreateReference(Microsoft.AspNetCore.Components.ElementReference)')
   - [EnsureInitializedAsync()](#M-Tewr-Blazor-FileReader-IFileReaderService-EnsureInitializedAsync 'Tewr.Blazor.FileReader.IFileReaderService.EnsureInitializedAsync')
@@ -71,6 +74,8 @@
   - [ReadFileInfoAsync()](#M-Tewr-Blazor-FileReader-IFileReference-ReadFileInfoAsync 'Tewr.Blazor.FileReader.IFileReference.ReadFileInfoAsync')
 - [IObjectUrl](#T-Tewr-Blazor-FileReader-IObjectUrl 'Tewr.Blazor.FileReader.IObjectUrl')
   - [Url](#P-Tewr-Blazor-FileReader-IObjectUrl-Url 'Tewr.Blazor.FileReader.IObjectUrl.Url')
+- [PasteEventOptions](#T-Tewr-Blazor-FileReader-DropEvents-PasteEventOptions 'Tewr.Blazor.FileReader.DropEvents.PasteEventOptions')
+  - [Additive](#P-Tewr-Blazor-FileReader-DropEvents-PasteEventOptions-Additive 'Tewr.Blazor.FileReader.DropEvents.PasteEventOptions.Additive')
 - [PlatformConfig](#T-Tewr-Blazor-FileReader-PlatformConfig 'Tewr.Blazor.FileReader.PlatformConfig')
   - [IsWasm](#P-Tewr-Blazor-FileReader-PlatformConfig-IsWasm 'Tewr.Blazor.FileReader.PlatformConfig.IsWasm')
   - [TryReadMaximumReceiveMessageSize(serviceProvider,maximumReceiveMessageSize)](#M-Tewr-Blazor-FileReader-PlatformConfig-TryReadMaximumReceiveMessageSize-System-IServiceProvider,System-Int64@- 'Tewr.Blazor.FileReader.PlatformConfig.TryReadMaximumReceiveMessageSize(System.IServiceProvider,System.Int64@)')
@@ -549,12 +554,61 @@ An awaitable task representing the operation
 | ---- | ---- | ----------- |
 | dropEventsOptions | [Tewr.Blazor.FileReader.DropEvents.DropEventsOptions](#T-Tewr-Blazor-FileReader-DropEvents-DropEventsOptions 'Tewr.Blazor.FileReader.DropEvents.DropEventsOptions') | Provides expert options for manipulating the default javascript behaviour of the drag and drop events. |
 
+<a name='M-Tewr-Blazor-FileReader-IFileReaderRef-RegisterPasteEventAsync-System-Boolean-'></a>
+### RegisterPasteEventAsync(additive) `method`
+
+##### Summary
+
+Register for paste events on the source element
+
+##### Returns
+
+An awaitable task representing the operation
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| additive | [System.Boolean](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Boolean 'System.Boolean') | If set to true, target file list becomes additive. Defaults to false. |
+
+<a name='M-Tewr-Blazor-FileReader-IFileReaderRef-RegisterPasteEventAsync-Tewr-Blazor-FileReader-DropEvents-PasteEventOptions-'></a>
+### RegisterPasteEventAsync(pasteEventOptions) `method`
+
+##### Summary
+
+Register for paste events on the source element
+
+##### Returns
+
+An awaitable task representing the operation
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| pasteEventOptions | [Tewr.Blazor.FileReader.DropEvents.PasteEventOptions](#T-Tewr-Blazor-FileReader-DropEvents-PasteEventOptions 'Tewr.Blazor.FileReader.DropEvents.PasteEventOptions') | Provides expert options for manipulating the default javascript behaviour of the paste events. |
+
 <a name='M-Tewr-Blazor-FileReader-IFileReaderRef-UnregisterDropEventsAsync'></a>
 ### UnregisterDropEventsAsync() `method`
 
 ##### Summary
 
 Unregister drop events on the source element
+
+##### Returns
+
+An awaitable Task representing the operation
+
+##### Parameters
+
+This method has no parameters.
+
+<a name='M-Tewr-Blazor-FileReader-IFileReaderRef-UnregisterPasteEventAsync'></a>
+### UnregisterPasteEventAsync() `method`
+
+##### Summary
+
+Unregister paste events on the source element
 
 ##### Returns
 
@@ -825,6 +879,24 @@ https://developer.mozilla.org/en-US/docs/Web/API/URL/createObjectURL
 ##### Summary
 
 Returns the Object Url.
+
+<a name='T-Tewr-Blazor-FileReader-DropEvents-PasteEventOptions'></a>
+## PasteEventOptions `type`
+
+##### Namespace
+
+Tewr.Blazor.FileReader.DropEvents
+
+##### Summary
+
+Provides expert options for manipulating the default behaviour of the paste event.
+
+<a name='P-Tewr-Blazor-FileReader-DropEvents-PasteEventOptions-Additive'></a>
+### Additive `property`
+
+##### Summary
+
+If set to true, paste target file list becomes additive. Defaults to false.
 
 <a name='T-Tewr-Blazor-FileReader-PlatformConfig'></a>
 ## PlatformConfig `type`

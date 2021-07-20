@@ -1,0 +1,122 @@
+﻿@using System.IO;
+@inject IFileReaderService fileReaderService;
+
+<div>
+
+    Paste files on to this div 
+    <div 
+        style="width: 200px; height: 100px; background-color: azure; border-color: aquamarine; border-width: 2px; border-style: dashed" 
+        @ref=pasteTargetElement
+        @onpaste=OnPaste>
+
+    </div>
+
+
+    @foreach (var fileInfo in FileList)
+    {
+        <br />@fileInfo.Name
+    }
+</div>
+
+
+
+
+<input id="additivediv" type="checkbox" checked=@Additive @onchange=OnAdditiveChange />
+<label for="additivediv">Additive</label>
+<br />
+<button @onclick="Read" class="btn btn-primary">Read file</button>
+<button @onclick="Clear" class="btn btn-primary">Clear</button>
+<br /><br />
+<textarea style="max-width: 100%;" cols="50" rows="20">@Output</textarea>
+@code {
+    ElementReference pasteTargetElement;
+    IFileReaderRef pasteReference;
+    IFileReaderRef ipReference;
+    bool Additive { get; set; }
+    
+    string Output { get; set; }
+    List<IFileInfo> FileList { get; } = new List<IFileInfo>();
+
+    protected override async Task OnAfterRenderAsync(bool isFirstRender)
+    {
+        if (isFirstRender)
+        {
+            pasteReference = fileReaderService.CreateReference(pasteTargetElement);
+            await pasteReference.RegisterPasteEventAsync();
+        }
+    }
+
+    public async Task OnAdditiveChange(ChangeEventArgs e)
+    {
+        Additive = (bool)e.Value;
+        StateHasChanged();
+        await pasteReference.UnregisterPasteEventAsync();
+        await pasteReference.RegisterPasteEventAsync(Additive);
+    }
+
+    public async Task Clear()
+    {
+        await pasteReference.ClearValue();
+        await this.RefreshFileList();
+    }
+    
+    public async Task OnPaste(EventArgs e)
+    {
+        Output += "Pasted a file.";
+        this.StateHasChanged();
+        await this.RefreshFileList();
+    }
+
+    private async Task RefreshFileList()
+    {
+        FileList.Clear();
+        foreach (var file in await pasteReference.EnumerateFilesAsync())
+        {
+            var fileInfo = await file.ReadFileInfoAsync();
+            FileList.Add(fileInfo);
+        }
+        this.StateHasChanged();
+    }
+
+    public async Task Read() {
+        await ReadFile(pasteReference);
+    }
+    public async Task ReadClick()
+    {
+        await ReadFile(ipReference);
+    }
+
+    public async Task ReadFile(IFileReaderRef list)
+    {
+        Output = string.Empty;
+        this.StateHasChanged();
+        var nl = Environment.NewLine;
+        foreach (var file in await list.EnumerateFilesAsync())
+        {
+            var fileInfo = await file.ReadFileInfoAsync();
+            Output += $"{nameof(IFileInfo)}.{nameof(fileInfo.Name)}: {fileInfo.Name}{nl}";
+            Output += $"{nameof(IFileInfo)}.{nameof(fileInfo.Size)}: {fileInfo.Size}{nl}";
+            Output += $"{nameof(IFileInfo)}.{nameof(fileInfo.Type)}: {fileInfo.Type}{nl}";
+            Output += $"{nameof(IFileInfo)}.{nameof(fileInfo.LastModifiedDate)}: {fileInfo.LastModifiedDate?.ToString() ?? "(N/A)"}{nl}";
+            Output += $"Reading file...";
+            this.StateHasChanged();
+            fileInfo.PositionInfo.PositionChanged += (s, e) => {
+                Output += $"Read {e.PositionDeltaSinceAcknowledge}, {e.Position} / {fileInfo.Size} ({e.Percentage:0.00}%){nl}";
+                this.StateHasChanged();
+            };
+
+            var bufferSize = 20480;
+            using (var ps = new PositionStream())
+            using (var fs = await file.OpenReadAsync())
+            {
+                await fs.CopyToAsync(ps, bufferSize);
+                Output += $"Done reading file {fileInfo.Name}{nl}.";
+            }
+            this.StateHasChanged();
+        }
+
+    }
+}
+
+
+
