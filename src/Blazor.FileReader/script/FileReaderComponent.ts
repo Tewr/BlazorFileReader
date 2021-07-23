@@ -1,4 +1,5 @@
 ﻿import { RegisterDropEvents, UnregisterDropEvents } from "./DragnDrop"
+import { RegisterPasteEvent, UnregisterPasteEvent } from "./Clipboard"
 import { FileReaderJsInterop } from "./FileReaderJsInterop"
 
 declare const Blazor: IBlazor;
@@ -10,6 +11,7 @@ class FileReaderComponent {
     private readonly fileStreams: { [reference: number]: File } = {};
 
     protected readonly dragElements: Map<HTMLElement, DragEvents> = new Map();
+    protected readonly pasteElements: Map<HTMLElement, EventListenerOrEventListenerObject> = new Map();
     protected readonly elementDataTransfers: Map<HTMLElement, FileList> = new Map();
     private readonly readResultByTaskId: Map<number, IReadFileData> = new Map();
 
@@ -22,6 +24,10 @@ class FileReaderComponent {
     public RegisterDropEvents = RegisterDropEvents;
 
     public UnregisterDropEvents = UnregisterDropEvents;
+
+    public RegisterPasteEvent = RegisterPasteEvent;
+
+    public UnregisterPasteEvent = UnregisterPasteEvent;
 
     private GetFiles(element: HTMLElement): FileList {
         let files: FileList = null;

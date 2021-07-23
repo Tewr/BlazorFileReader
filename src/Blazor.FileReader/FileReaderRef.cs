@@ -36,6 +36,26 @@ namespace Tewr.Blazor.FileReader
         Task UnregisterDropEventsAsync();
 
         /// <summary>
+        /// Register for paste events on the source element
+        /// </summary>
+        /// <param name="additive">If set to true, target file list becomes additive. Defaults to false.</param>
+        /// <returns>An awaitable task representing the operation</returns>
+        Task RegisterPasteEventAsync(bool additive = false);
+
+        /// <summary>
+        /// Register for paste events on the source element
+        /// </summary>
+        /// <param name="pasteEventOptions">Provides expert options for manipulating the default javascript behaviour of the paste events.</param>
+        /// <returns>An awaitable task representing the operation</returns>
+        Task RegisterPasteEventAsync(PasteEventOptions pasteEventOptions);
+
+        /// <summary>
+        /// Unregister paste events on the source element
+        /// </summary>
+        /// <returns>An awaitable Task representing the operation</returns>
+        Task UnregisterPasteEventAsync();
+
+        /// <summary>
         /// Clears any value set on the source element
         /// </summary>
         /// <returns>An awaitable Task representing the operation</returns>
@@ -211,6 +231,21 @@ namespace Tewr.Blazor.FileReader
         }
 
         public async Task UnregisterDropEventsAsync() => await this.FileReaderJsInterop.UnregisterDropEvents(this.ElementRef);
+
+        public async Task RegisterPasteEventAsync(bool additive) =>
+            await RegisterPasteEventAsync(new PasteEventOptions { Additive = additive });
+
+        public async Task RegisterPasteEventAsync(PasteEventOptions pasteEventOptions)
+        {
+            if (pasteEventOptions is null)
+            {
+                throw new ArgumentNullException(nameof(pasteEventOptions));
+            }
+
+            await this.FileReaderJsInterop.RegisterPasteEvent(this.ElementRef, pasteEventOptions);
+        }
+
+        public async Task UnregisterPasteEventAsync() => await this.FileReaderJsInterop.UnregisterPasteEvent(this.ElementRef);
 
         public async Task ClearValue() 
             => await this.FileReaderJsInterop.ClearValue(this.ElementRef);

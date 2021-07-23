@@ -62,6 +62,18 @@ namespace Tewr.Blazor.FileReader
             return await CurrentJSRuntime.InvokeAsync<bool>($"FileReaderComponent.UnregisterDropEvents", elementReference);
         }
 
+        internal async Task<bool> RegisterPasteEvent(ElementReference elementReference, PasteEventOptions options)
+        {
+            await EnsureInitializedAsync();
+            return await CurrentJSRuntime.InvokeAsync<bool>($"FileReaderComponent.RegisterPasteEvent", elementReference, options);
+        }
+
+        public async Task<bool> UnregisterPasteEvent(ElementReference elementReference)
+        {
+            await EnsureInitializedAsync();
+            return await CurrentJSRuntime.InvokeAsync<bool>($"FileReaderComponent.UnregisterPasteEvent", elementReference);
+        }
+
         public async Task<AsyncDisposableStream> OpenFileStream(ElementReference elementReference, int index, IFileInfo fileInfo)
         {
             return new InteropFileStream(await OpenReadAsync(elementReference, index), fileInfo, this);

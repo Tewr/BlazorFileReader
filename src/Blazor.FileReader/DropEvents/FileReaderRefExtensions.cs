@@ -23,5 +23,22 @@ namespace Tewr.Blazor.FileReader.DropEvents
             dropEventsModifier(options);
             return source.RegisterDropEventsAsync(options);
         }
+
+        public static Task RegisterPasteEventAsync(this IFileReaderRef source, Action<PasteEventOptions> pasteEventModifier)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (pasteEventModifier is null)
+            {
+                throw new ArgumentNullException(nameof(pasteEventModifier));
+            }
+
+            var options = new PasteEventOptions();
+            pasteEventModifier(options);
+            return source.RegisterPasteEventAsync(options);
+        }
     }
 }

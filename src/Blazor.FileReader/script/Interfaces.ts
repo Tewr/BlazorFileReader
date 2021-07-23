@@ -77,4 +77,6 @@ interface DropEventsOptions {
     onRegisterDropEventsScript: string;
 }
 
-
+interface PasteEventOptions {
+    additive: boolean
+}
