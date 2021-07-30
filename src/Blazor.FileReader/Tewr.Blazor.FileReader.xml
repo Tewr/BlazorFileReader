@@ -9,6 +9,98 @@
             Exception that is thrown if an exception occurs in the browser during file reader operations
             </summary>
         </member>
+        <!-- Badly formed XML comment ignored for member "T:Tewr.Blazor.FileReader.DropEvents.DropEventsOptions" -->
+        <member name="P:Tewr.Blazor.FileReader.DropEvents.DropEventsOptions.Additive">
+            <summary>
+            If set to true, drop target file list becomes additive. Defaults to false.
+            </summary>
+        </member>
+        <member name="P:Tewr.Blazor.FileReader.DropEvents.DropEventsOptions.OnDropMethod">
+            <summary>
+            Predefined global javascript function that will be executed on the drop event. 
+            The method will be passed the following arguments: The Event, the target element, and the FileReaderComponent instance.
+            </summary>
+        </member>
+        <member name="P:Tewr.Blazor.FileReader.DropEvents.DropEventsOptions.OnDropScript">
+            <summary>
+            Javascript function snippet that will be executed on the drop event. 
+            The method will be passed the following arguments: The DragEvent, the target element, and the FileReaderComponent instance.
+            Do not set this property using user-provided data, as it would be a security risk.
+            </summary>
+        </member>
+        <member name="P:Tewr.Blazor.FileReader.DropEvents.DropEventsOptions.OnDragOverMethod">
+            <summary>
+            Predefined global javascript function that will be executed on the dragover event. 
+            The method will be passed the following arguments: The DragEvent, the target element, and the FileReaderComponent instance.
+            </summary>
+        </member>
+        <member name="P:Tewr.Blazor.FileReader.DropEvents.DropEventsOptions.OnDragOverScript">
+            <summary>
+            Javascript function snippet that will be executed on the dragover event. 
+            The method will be passed the following arguments: The DragEvent, the target element, and the FileReaderComponent instance.
+            Do not set this property using user-provided data, as it would be a security risk.
+            </summary>
+        </member>
+        <member name="P:Tewr.Blazor.FileReader.DropEvents.DropEventsOptions.OnRegisterDropEventsMethod">
+            <summary>
+            Predefined global javascript function that will be executed immediately after the drag and drop events have been registered. 
+            The method will be passed the following arguments: null, the target element, and the FileReaderComponent instance.
+            </summary>
+        </member>
+        <member name="P:Tewr.Blazor.FileReader.DropEvents.DropEventsOptions.OnRegisterDropEventsScript">
+            <summary>
+            Javascript function snippet that will be executed immediately after the drag and drop events have been registered. 
+            The method will be passed the following arguments: null, the target element, and the FileReaderComponent instance.
+            Do not set this property using user-provided data, as it would be a security risk.
+            </summary>
+        </member>
+        <member name="T:Tewr.Blazor.FileReader.DropEvents.DropEffect">
+            <summary>
+            Possible values of the DataTransfer.dropEffect property
+            </summary>
+            <remarks>
+            https://developer.mozilla.org/en-US/docs/Web/API/DataTransfer/dropEffect
+            </remarks>
+        </member>
+        <member name="F:Tewr.Blazor.FileReader.DropEvents.DropEffect.Copy">
+            <summary>
+            A copy of the source item is made at the new location.
+            </summary>
+        </member>
+        <member name="F:Tewr.Blazor.FileReader.DropEvents.DropEffect.Move">
+            <summary>
+            An item is moved to a new location.
+            </summary>
+        </member>
+        <member name="F:Tewr.Blazor.FileReader.DropEvents.DropEffect.Link">
+            <summary>
+            A link is established to the source at the new location.
+            </summary>
+        </member>
+        <member name="F:Tewr.Blazor.FileReader.DropEvents.DropEffect.None">
+            <summary>
+            The item may not be dropped.
+            </summary>
+        </member>
+        <member name="M:Tewr.Blazor.FileReader.DropEvents.DropEventsOptionsExtensions.SetDragOverDataTransferDropEffect(Tewr.Blazor.FileReader.DropEvents.DropEventsOptions,Tewr.Blazor.FileReader.DropEvents.DropEffect)">
+            <summary>
+            Sets the specified <see cref="!:dropEffect"/> value on the dataTransfer property in the dragover event to the specified value.
+            </summary>
+            <param name="source"></param>
+            <param name="dropEffect"></param>
+            <remarks>https://developer.mozilla.org/en-US/docs/Web/API/DataTransfer/dropEffect</remarks>
+            <returns></returns>
+        </member>
+        <member name="T:Tewr.Blazor.FileReader.DropEvents.PasteEventOptions">
+            <summary>
+            Provides expert options for manipulating the default behaviour of the paste event.
+            </summary>
+        </member>
+        <member name="P:Tewr.Blazor.FileReader.DropEvents.PasteEventOptions.Additive">
+            <summary>
+            If set to true, paste target file list becomes additive. Defaults to false.
+            </summary>
+        </member>
         <member name="T:Tewr.Blazor.FileReader.IFilePositionInfo">
             <summary>
             Provides information on the position of a Stream currently reading this file.
@@ -64,6 +156,12 @@
             Called after <see cref="P:Tewr.Blazor.FileReader.IFilePositionInfo.Position"/> has changed.
             </summary>
         </member>
+        <member name="M:Tewr.Blazor.FileReader.FileReaderJsInterop.EndTask(System.Int64)">
+            <summary>
+            Called from Js
+            </summary>
+            <param name="taskId"></param>
+        </member>
         <member name="T:Tewr.Blazor.FileReader.IFileReaderRef">
             <summary>
             Provides methods for interacting with an element that provides file streams.
@@ -74,61 +172,121 @@
             Register for drop events on the source element
             </summary>
             <param name="additive">If set to true, drop target file list becomes additive. Defaults to false.</param>
-            <returns></returns>
+            <returns>An awaitable task representing the operation</returns>
+        </member>
+        <member name="M:Tewr.Blazor.FileReader.IFileReaderRef.RegisterDropEventsAsync(Tewr.Blazor.FileReader.DropEvents.DropEventsOptions)">
+            <summary>
+            Register for drop events on the source element
+            </summary>
+            <param name="dropEventsOptions">Provides expert options for manipulating the default javascript behaviour of the drag and drop events.</param>
+            <returns>An awaitable task representing the operation</returns>
         </member>
         <member name="M:Tewr.Blazor.FileReader.IFileReaderRef.UnregisterDropEventsAsync">
             <summary>
             Unregister drop events on the source element
             </summary>
-            <returns></returns>
+            <returns>An awaitable Task representing the operation</returns>
+        </member>
+        <member name="M:Tewr.Blazor.FileReader.IFileReaderRef.RegisterPasteEventAsync(System.Boolean)">
+            <summary>
+            Register for paste events on the source element
+            </summary>
+            <param name="additive">If set to true, target file list becomes additive. Defaults to false.</param>
+            <returns>An awaitable task representing the operation</returns>
+        </member>
+        <member name="M:Tewr.Blazor.FileReader.IFileReaderRef.RegisterPasteEventAsync(Tewr.Blazor.FileReader.DropEvents.PasteEventOptions)">
+            <summary>
+            Register for paste events on the source element
+            </summary>
+            <param name="pasteEventOptions">Provides expert options for manipulating the default javascript behaviour of the paste events.</param>
+            <returns>An awaitable task representing the operation</returns>
+        </member>
+        <member name="M:Tewr.Blazor.FileReader.IFileReaderRef.UnregisterPasteEventAsync">
+            <summary>
+            Unregister paste events on the source element
+            </summary>
+            <returns>An awaitable Task representing the operation</returns>
         </member>
         <member name="M:Tewr.Blazor.FileReader.IFileReaderRef.ClearValue">
             <summary>
             Clears any value set on the source element
             </summary>
-            <returns></returns>
+            <returns>An awaitable Task representing the operation</returns>
         </member>
         <member name="M:Tewr.Blazor.FileReader.IFileReaderRef.EnumerateFilesAsync">
             <summary>
             Enumerates the currently selected file references
             </summary>
-            <returns></returns>
+            <returns>An awaitable Task that provides an enumeration of the currently selected file references</returns>
         </member>
         <member name="T:Tewr.Blazor.FileReader.IFileReference">
             <summary>
             Provides properties and instance methods for the reading file metadata and aids in the creation of Readonly Stream objects. 
             </summary>
         </member>
-        <member name="M:Tewr.Blazor.FileReader.IFileReference.OpenReadAsync">
+        <member name="M:Tewr.Blazor.FileReader.IFileReference.GetJSObjectReferenceAsync">
             <summary>
-            Opens a stream to read the file.
+            Returns the underlying file object as an <see cref="T:Microsoft.JSInterop.IJSObjectReference"/>
             </summary>
             <returns></returns>
+        </member>
+        <member name="M:Tewr.Blazor.FileReader.IFileReference.GetObjectUrlAsync">
+            <summary>
+            Returns an object url for a file.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Tewr.Blazor.FileReader.IFileReference.OpenReadAsync">
+            <summary>
+            Opens a read-only <see cref="T:System.IO.Stream"/> to read the file.
+            </summary>
+            <returns>A read-only <see cref="T:System.IO.Stream"/> to read the file.</returns>
         </member>
         <member name="M:Tewr.Blazor.FileReader.IFileReference.OpenReadBase64Async">
             <summary>
-            Opens a base64-encoded string stream to read the file
+            Opens a read-only base64-encoded string stream to read the file
             </summary>
-            <returns></returns>
+            <returns>A read-only <see cref="T:Tewr.Blazor.FileReader.IBase64Stream"/> to read the file.</returns>
         </member>
         <member name="M:Tewr.Blazor.FileReader.IFileReference.CreateMemoryStreamAsync">
             <summary>
-            Convenience method to read the file into memory using a single interop call 
-            and returns it as a MemoryStream. Buffer size will be equal to the file size.
+            Convenience method to read the file fully into memory using a single interop call 
+            and returns it as a <see cref="T:System.IO.MemoryStream"/>. Buffer size will be equal to the file size.
+            The length of the resulting <see cref="T:System.IO.MemoryStream"/> will be the same as the file size.
             </summary>
-            <returns></returns>
+            <remarks>In most cases the fastest way to read a file into ram, but also the method that uses the most memory. 
+            Will use at least twice the file size of memory at the end of the read operation.</remarks>
+            <returns>A <see cref="T:System.IO.MemoryStream"/> representing the full file, with <see cref="P:System.IO.MemoryStream.Position"/> set to 0.</returns>
+        </member>
+        <member name="M:Tewr.Blazor.FileReader.IFileReference.CreateMemoryStreamAsync(System.Threading.CancellationToken)">
+            <summary>
+            Convenience method to read the file fully into memory using a single interop call 
+            and returns it as a <see cref="T:System.IO.MemoryStream"/>. Buffer size will be equal to the file size.
+            The length of the resulting <see cref="T:System.IO.MemoryStream"/> will be the same as the file size.
+            </summary>
+            <remarks>In most cases the fastest way to read a file into ram, but the most expensive in memory usage. 
+            Will use at least twice the file size of memory at the end of the read operation.</remarks>
+            <returns>A <see cref="T:System.IO.MemoryStream"/> representing the full file, with <see cref="P:System.IO.MemoryStream.Position"/> set to 0.</returns>
         </member>
         <member name="M:Tewr.Blazor.FileReader.IFileReference.CreateMemoryStreamAsync(System.Int32)">
             <summary>
-            Convenience method to read the file into memory and returns it as a MemoryStream, using the specified buffersize.
+            Convenience method to read the file fully into memory represented as a <see cref="T:System.IO.MemoryStream"/>, using the specified <paramref name="bufferSize"/>.
+            The length of the resulting <see cref="T:System.IO.MemoryStream"/> will be the same as the file size.
             </summary>
-            <returns></returns>
+            <returns>A <see cref="T:System.IO.MemoryStream"/> representing the full file, with <see cref="P:System.IO.MemoryStream.Position"/> set to 0.</returns>
+        </member>
+        <member name="M:Tewr.Blazor.FileReader.IFileReference.CreateMemoryStreamAsync(System.Int32,System.Threading.CancellationToken)">
+            <summary>
+            Convenience method to read the file fully into memory represented as a <see cref="T:System.IO.MemoryStream"/>, using the specified <paramref name="bufferSize"/>.
+            The length of the resulting <see cref="T:System.IO.MemoryStream"/> will be the same as the file size.
+            </summary>
+            <returns>A <see cref="T:System.IO.MemoryStream"/> representing the full file, with <see cref="P:System.IO.MemoryStream.Position"/> set to 0.</returns>
         </member>
         <member name="M:Tewr.Blazor.FileReader.IFileReference.ReadFileInfoAsync">
             <summary>
-            Reads the file metadata
+            Reads the file metadata.
             </summary>
-            <returns></returns>
+            <returns>An object containing the file metadata</returns>
         </member>
         <member name="T:Tewr.Blazor.FileReader.IBase64Stream">
             <summary>
@@ -228,6 +386,16 @@
             Not available for server-side blazor.
             </summary>
         </member>
+        <member name="P:Tewr.Blazor.FileReader.FileReaderServiceOptions.UseBufferChunking">
+            <summary>
+            Activates server-side buffer chunking. Activated if not running on WASM.
+            </summary>
+        </member>
+        <member name="P:Tewr.Blazor.FileReader.FileReaderServiceOptions.MaximumRecieveMessageSize">
+            <summary>
+            SignalR setting
+            </summary>
+        </member>
         <member name="T:Tewr.Blazor.FileReader.IFileReaderService">
             <summary>
             Servive for creating a <see cref="T:Tewr.Blazor.FileReader.IFileReaderRef"/> instance from an element.
@@ -247,6 +415,30 @@
             Should be obtained using the @ref attribute. 
             Should reference either an input element of type file or a drop target.</param>
             <returns>a new instance of <see cref="T:Tewr.Blazor.FileReader.IFileReaderRef"/></returns>
+        </member>
+        <member name="T:Tewr.Blazor.FileReader.IObjectUrl">
+            <summary>
+            Represents an object url for a file.
+            </summary>
+            <remarks>https://developer.mozilla.org/en-US/docs/Web/API/URL/createObjectURL</remarks>
+        </member>
+        <member name="P:Tewr.Blazor.FileReader.IObjectUrl.Url">
+            <summary>
+            Returns the Object Url.
+            </summary>
+        </member>
+        <member name="P:Tewr.Blazor.FileReader.PlatformConfig.IsWasm">
+            <summary>
+            Returns true if the application is running on WASM.
+            </summary>
+        </member>
+        <member name="M:Tewr.Blazor.FileReader.PlatformConfig.TryReadMaximumReceiveMessageSize(System.IServiceProvider,System.Int64@)">
+            <summary>
+            Tries reading HubOptions&lt;ComponentHub&gt;.MaximumReceiveMessageSize using reflection.
+            </summary>
+            <param name="serviceProvider"></param>
+            <param name="maximumReceiveMessageSize"></param>
+            <returns><c>true</c> if the value could be sucessfully read.</returns>
         </member>
         <member name="T:Tewr.Blazor.FileReader.SetupExtension">
             <summary>

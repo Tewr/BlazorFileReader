@@ -12,7 +12,6 @@
     define("FileReaderJsInterop", ["require", "exports"], function (require, exports) {
         "use strict";
         Object.defineProperty(exports, "__esModule", { value: true });
-        exports.FileReaderJsInterop = void 0;
         var FileReaderJsInterop = (function () {
             function FileReaderJsInterop() {
             }
@@ -30,7 +29,6 @@
     define("ConcatFileList", ["require", "exports"], function (require, exports) {
         "use strict";
         Object.defineProperty(exports, "__esModule", { value: true });
-        exports.ConcatFileList = void 0;
         var ConcatFileList = (function () {
             function ConcatFileList(existing, additions) {
                 for (var i = 0; i < existing.length; i++) {
@@ -65,7 +63,6 @@
     define("DragnDrop", ["require", "exports", "FileReaderJsInterop", "ConcatFileList"], function (require, exports, FileReaderJsInterop_1, ConcatFileList_1) {
         "use strict";
         Object.defineProperty(exports, "__esModule", { value: true });
-        exports.UnregisterDropEvents = exports.RegisterDropEvents = exports.BuildDragEventHandler = void 0;
         var nameof = function (name) { return name; };
         var dropEvent = nameof("drop");
         var dragOverEvent = nameof("dragover");
@@ -148,7 +145,6 @@
     define("FileReaderComponent", ["require", "exports", "DragnDrop", "Clipboard", "FileReaderJsInterop"], function (require, exports, DragnDrop_1, Clipboard_1, FileReaderJsInterop_2) {
         "use strict";
         Object.defineProperty(exports, "__esModule", { value: true });
-        exports.FileReaderComponentInstance = exports.FileReaderComponent = void 0;
         var FileReaderComponent = (function () {
             function FileReaderComponent() {
                 var _this = this;
@@ -340,7 +336,6 @@
     define("Clipboard", ["require", "exports", "ConcatFileList"], function (require, exports, ConcatFileList_2) {
         "use strict";
         Object.defineProperty(exports, "__esModule", { value: true });
-        exports.UnregisterPasteEvent = exports.RegisterPasteEvent = void 0;
         function RegisterPasteEvent(element, registerOptions) {
             var _this = this;
             this.LogIfNull(element);

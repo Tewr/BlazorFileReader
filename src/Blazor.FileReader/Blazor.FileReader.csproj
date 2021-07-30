@@ -30,7 +30,7 @@
 
   <PropertyGroup>
     <NoWarn>1701;1702;NU5104</NoWarn>
-    <DocumentationFile>Blazor.FileReader.xml</DocumentationFile>
+    <DocumentationFile>Tewr.Blazor.FileReader.xml</DocumentationFile>
   </PropertyGroup>
 
   <Target Name="BundleTypescript" BeforeTargets="CreateManifestResourceNames" Condition="'$(Configuration)'=='Debug'">
