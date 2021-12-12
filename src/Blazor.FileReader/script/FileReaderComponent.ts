@@ -174,6 +174,12 @@ class FileReaderComponent {
         return 0;
     }
 
+    public async ReadFileSliceAsync(fileRef: number, position: number, count:number) : Promise<Blob> {
+        const file = this.fileStreams[fileRef];
+        const slice = file.slice(position, position + count)
+        return slice;
+    }
+
     public FillBufferUnmarshalled = (bufferPointer: Pointer) => {
         const readBufferParams = this.ReadBufferPointer(bufferPointer);
 

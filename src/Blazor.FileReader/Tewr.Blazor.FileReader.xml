@@ -224,18 +224,6 @@
             Provides properties and instance methods for the reading file metadata and aids in the creation of Readonly Stream objects. 
             </summary>
         </member>
-        <member name="M:Tewr.Blazor.FileReader.IFileReference.GetJSObjectReferenceAsync">
-            <summary>
-            Returns the underlying file object as an <see cref="T:Microsoft.JSInterop.IJSObjectReference"/>
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:Tewr.Blazor.FileReader.IFileReference.GetObjectUrlAsync">
-            <summary>
-            Returns an object url for a file.
-            </summary>
-            <returns></returns>
-        </member>
         <member name="M:Tewr.Blazor.FileReader.IFileReference.OpenReadAsync">
             <summary>
             Opens a read-only <see cref="T:System.IO.Stream"/> to read the file.
@@ -274,6 +262,11 @@
             The length of the resulting <see cref="T:System.IO.MemoryStream"/> will be the same as the file size.
             </summary>
             <returns>A <see cref="T:System.IO.MemoryStream"/> representing the full file, with <see cref="P:System.IO.MemoryStream.Position"/> set to 0.</returns>
+        </member>
+        <member name="M:Tewr.Blazor.FileReader.IFileReference.CreateMemoryStreamAsync(System.Int32,System.Threading.CancellationToken)">
+            <summary>
+            Convenience method to read the file fully into memory represented as a <see cref="T:System.IO.MemoryStream"/>, using the specified <paramref name="bufferSize"/>.
+            The length of the resulting <="T:System.IO.MemoryStream"/> representing the full file, with <see cref="P:System.IO.MemoryStream.Position"/> set to 0.</returns>
         </member>
         <member name="M:Tewr.Blazor.FileReader.IFileReference.CreateMemoryStreamAsync(System.Int32,System.Threading.CancellationToken)">
             <summary>

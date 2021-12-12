@@ -125,7 +125,11 @@ namespace Tewr.Blazor.FileReader
         {
             if (this._options.UseWasmSharedBuffer)
             {
+#if NET6_0_OR_GREATER
+                return await ReadFileSliceAsync(fileRef, buffer, position, bufferOffset, count, cancellationToken);
+#else
                 return await ReadFileUnmarshalledAsync(fileRef, buffer, position, bufferOffset, count, cancellationToken);
+#endif
             }
 
             return await ReadFileMarshalledAsync(fileRef, buffer, position, bufferOffset, count, cancellationToken);
@@ -196,6 +200,18 @@ namespace Tewr.Blazor.FileReader
 
         }
 
+#if NET6_0_OR_GREATER
+        private async Task<int> ReadFileSliceAsync(
+            int fileRef, byte[] buffer, long position, long bufferOffset, int count,
+            CancellationToken cancellationToken)
+        {
+            var streamBuilder = await this.CurrentJSRuntime.InvokeAsync<IJSStreamReference>(
+                "FileReaderComponent.ReadFileSliceAsync", cancellationToken, fileRef, position, count);
+            using var readStream = await streamBuilder.OpenReadStreamAsync(cancellationToken: cancellationToken);
+            return await readStream.ReadAsync(buffer.AsMemory((int)bufferOffset, count), cancellationToken);
+        }
+#endif
+
         private async Task<int> ReadFileUnmarshalledAsync(
             int fileRef, byte[] buffer, long position, long bufferOffset, int count,
             CancellationToken cancellationToken)
@@ -260,7 +276,7 @@ namespace Tewr.Blazor.FileReader
             taskCompletionSource.SetException(new BrowserFileReaderException(error));
         }
 
-#if NET5
+#if NET5_0_OR_GREATER
         internal async Task<IJSObjectReference> GetJSObjectReferenceAsync(ElementReference elementRef, int fileIndex)
         {
             return await CurrentJSRuntime.InvokeAsync<IJSObjectReference>("FileReaderComponent.GetJSObjectReference", elementRef, fileIndex);

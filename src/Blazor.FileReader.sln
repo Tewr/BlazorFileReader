@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.28531.58
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31808.319
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blazor.FileReader", "Blazor.FileReader\Blazor.FileReader.csproj", "{5F8084DD-9D88-4407-BCFC-15C71C5AF11E}"
 EndProject
@@ -26,6 +26,10 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tewr.Blazor.FileReader.E2ETests", "..\tests\BlazotFileReaderE2ETests\Tewr.Blazor.FileReader.E2ETests.csproj", "{14C576CC-9CFA-49E7-B48F-2C8E03A9B76D}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tewr.Blazor.FileReader.UnitTests", "..\tests\Tewr.Blazor.FileReader.UnitTests\Tewr.Blazor.FileReader.UnitTests.csproj", "{38F452ED-A8E3-4CED-890C-E2E6DB6F54AF}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Net6", "Net6", "{C3DC632D-7249-4B55-A0F4-68742064C71F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Blazor.FileReader.Wasm.Demo", "Demo\Net6\Blazor.FileReader.Wasm.Demo\Blazor.FileReader.Wasm.Demo.csproj", "{96778444-7F44-4CF8-B8B2-4124865A826A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -81,6 +85,12 @@ Global
 		{38F452ED-A8E3-4CED-890C-E2E6DB6F54AF}.Ghpages|Any CPU.Build.0 = Debug|Any CPU
 		{38F452ED-A8E3-4CED-890C-E2E6DB6F54AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{38F452ED-A8E3-4CED-890C-E2E6DB6F54AF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{96778444-7F44-4CF8-B8B2-4124865A826A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{96778444-7F44-4CF8-B8B2-4124865A826A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{96778444-7F44-4CF8-B8B2-4124865A826A}.Ghpages|Any CPU.ActiveCfg = Debug|Any CPU
+		{96778444-7F44-4CF8-B8B2-4124865A826A}.Ghpages|Any CPU.Build.0 = Debug|Any CPU
+		{96778444-7F44-4CF8-B8B2-4124865A826A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{96778444-7F44-4CF8-B8B2-4124865A826A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -95,6 +105,8 @@ Global
 		{AEA2CBDF-329E-4B17-9B02-4178D045F528} = {856A3F73-2C95-4E2E-819C-41F6456EE049}
 		{14C576CC-9CFA-49E7-B48F-2C8E03A9B76D} = {9A262CB5-8352-42D0-830C-D87131D9060B}
 		{38F452ED-A8E3-4CED-890C-E2E6DB6F54AF} = {9A262CB5-8352-42D0-830C-D87131D9060B}
+		{C3DC632D-7249-4B55-A0F4-68742064C71F} = {8AA482CE-0130-43A1-84BC-92215AF25AED}
+		{96778444-7F44-4CF8-B8B2-4124865A826A} = {C3DC632D-7249-4B55-A0F4-68742064C71F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7BCBB258-C07A-4039-838A-09F3B45F7E58}

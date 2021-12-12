@@ -8,6 +8,11 @@ namespace Blazor.FileReader.Demo.Common
 {
     public class EPPlusBuilder
     {
+        static EPPlusBuilder()
+        {
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+        }
+
         public static TablesModel Parse(ExcelPackage xlPackage, bool treatFirstRowAsHeader)
         {
             var tableModel = new TablesModel();
