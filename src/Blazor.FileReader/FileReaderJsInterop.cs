@@ -20,6 +20,8 @@ namespace Tewr.Blazor.FileReader
         private static readonly Dictionary<long, TaskCompletionSource<int>> _readFileUnmarshalledCalls
             = new Dictionary<long, TaskCompletionSource<int>>();
 
+
+
         internal IJSRuntime CurrentJSRuntime;
         internal IJSUnmarshalledRuntime UnmarshalledRuntime;
 
@@ -53,25 +55,25 @@ namespace Tewr.Blazor.FileReader
         internal async Task<bool> RegisterDropEvents(ElementReference elementReference, DropEventsOptions options)
         {
             await EnsureInitializedAsync();
-            return await CurrentJSRuntime.InvokeAsync<bool>($"FileReaderComponent.RegisterDropEvents", elementReference, options);
+            return await CurrentJSRuntime.InvokeAsync<bool>(FileReaderComponent.RegisterDropEvents, elementReference, options);
         }
 
         public async Task<bool> UnregisterDropEvents(ElementReference elementReference)
         {
             await EnsureInitializedAsync();
-            return await CurrentJSRuntime.InvokeAsync<bool>($"FileReaderComponent.UnregisterDropEvents", elementReference);
+            return await CurrentJSRuntime.InvokeAsync<bool>(FileReaderComponent.UnregisterDropEvents, elementReference);
         }
 
         internal async Task<bool> RegisterPasteEvent(ElementReference elementReference, PasteEventOptions options)
         {
             await EnsureInitializedAsync();
-            return await CurrentJSRuntime.InvokeAsync<bool>($"FileReaderComponent.RegisterPasteEvent", elementReference, options);
+            return await CurrentJSRuntime.InvokeAsync<bool>(FileReaderComponent.RegisterPasteEvent, elementReference, options);
         }
 
         public async Task<bool> UnregisterPasteEvent(ElementReference elementReference)
         {
             await EnsureInitializedAsync();
-            return await CurrentJSRuntime.InvokeAsync<bool>($"FileReaderComponent.UnregisterPasteEvent", elementReference);
+            return await CurrentJSRuntime.InvokeAsync<bool>(FileReaderComponent.UnregisterPasteEvent, elementReference);
         }
 
         public async Task<AsyncDisposableStream> OpenFileStream(ElementReference elementReference, int index, IFileInfo fileInfo)
@@ -87,18 +89,18 @@ namespace Tewr.Blazor.FileReader
         public async Task<int> GetFileCount(ElementReference elementReference)
         {
             await EnsureInitializedAsync();
-            return (int)await CurrentJSRuntime.InvokeAsync<long>($"FileReaderComponent.GetFileCount", elementReference);
+            return (int)await CurrentJSRuntime.InvokeAsync<long>(FileReaderComponent.GetFileCount, elementReference);
         }
 
         public async Task<int> ClearValue(ElementReference elementReference)
         {
             await EnsureInitializedAsync();
-            return (int)await CurrentJSRuntime.InvokeAsync<long>($"FileReaderComponent.ClearValue", elementReference);
+            return (int)await CurrentJSRuntime.InvokeAsync<long>(FileReaderComponent.ClearValue, elementReference);
         }
 
         public async Task<IFileInfo> GetFileInfoFromElement(ElementReference elementReference, int index)
         {
-            return await CurrentJSRuntime.InvokeAsync<FileInfo>($"FileReaderComponent.GetFileInfoFromElement", elementReference, index);
+            return await CurrentJSRuntime.InvokeAsync<FileInfo>(FileReaderComponent.GetFileInfoFromElement, elementReference, index);
         }
 
         public async Task EnsureInitializedAsync(bool force = false)
@@ -113,12 +115,12 @@ namespace Tewr.Blazor.FileReader
 
         private async Task<int> OpenReadAsync(ElementReference elementReference, int fileIndex)
         {
-            return (int)await CurrentJSRuntime.InvokeAsync<long>($"FileReaderComponent.OpenRead", elementReference, fileIndex, _options.UseWasmSharedBuffer);
+            return (int)await CurrentJSRuntime.InvokeAsync<long>(FileReaderComponent.OpenRead, elementReference, fileIndex, _options.UseWasmSharedBuffer);
         }
 
         private async Task<bool> DisposeStream(int fileRef)
         {
-            return await CurrentJSRuntime.InvokeAsync<bool>($"FileReaderComponent.Dispose", fileRef);
+            return await CurrentJSRuntime.InvokeAsync<bool>(FileReaderComponent.Dispose, fileRef);
         }
 
         private async Task<int> ReadFileAsync(int fileRef, byte[] buffer, long position, long bufferOffset, int count, CancellationToken cancellationToken)
@@ -193,7 +195,7 @@ namespace Tewr.Blazor.FileReader
         {
             cancellationToken.ThrowIfCancellationRequested();
             var data = await CurrentJSRuntime.InvokeAsync<string>(
-                $"FileReaderComponent.ReadFileMarshalledAsync", cancellationToken,
+                FileReaderComponent.ReadFileMarshalledAsync, cancellationToken,
                 new { position, count, fileRef });
 
             return data;
@@ -206,7 +208,7 @@ namespace Tewr.Blazor.FileReader
             CancellationToken cancellationToken)
         {
             await using var streamReference = await this.CurrentJSRuntime.InvokeAsync<IJSStreamReference>(
-                "FileReaderComponent.ReadFileSliceAsync", cancellationToken, fileRef, position, count);
+                FileReaderComponent.ReadFileSliceAsync, cancellationToken, fileRef, position, count);
             using var readStream = await streamReference.OpenReadStreamAsync(cancellationToken: cancellationToken);
             return await readStream.ReadAsync(buffer.AsMemory((int)bufferOffset, count), cancellationToken);
         }
@@ -223,7 +225,7 @@ namespace Tewr.Blazor.FileReader
 
             // Buffer is not allocated here, 
             UnmarshalledRuntime.InvokeUnmarshalled<ReadFileParams, int>(
-                $"FileReaderComponent.ReadFileUnmarshalledAsync",
+                FileReaderComponent.ReadFileUnmarshalledAsync,
                 new ReadFileParams { 
                     BufferOffset = bufferOffset, 
                     Count = count, 
@@ -237,7 +239,7 @@ namespace Tewr.Blazor.FileReader
          
             // It is safely filled up here instead
             var bytesRead = UnmarshalledRuntime.InvokeUnmarshalled<BufferParams, int>(
-                $"FileReaderComponent.FillBufferUnmarshalled",
+                FileReaderComponent.FillBufferUnmarshalled,
                 new BufferParams
                 {
                     TaskId = id,
@@ -279,7 +281,7 @@ namespace Tewr.Blazor.FileReader
 #if NET5_0_OR_GREATER
         internal async Task<IJSObjectReference> GetJSObjectReferenceAsync(ElementReference elementRef, int fileIndex)
         {
-            return await CurrentJSRuntime.InvokeAsync<IJSObjectReference>("FileReaderComponent.GetJSObjectReference", elementRef, fileIndex);
+            return await CurrentJSRuntime.InvokeAsync<IJSObjectReference>(FileReaderComponent.GetJSObjectReference, elementRef, fileIndex);
         }
 #endif
 
@@ -316,7 +318,7 @@ namespace Tewr.Blazor.FileReader
 
         private async Task<bool> IsLoaded()
         {
-            return await CurrentJSRuntime.InvokeAsync<bool>("window.hasOwnProperty", "FileReaderComponent");
+            return await CurrentJSRuntime.InvokeAsync<bool>("window.hasOwnProperty", FileReaderComponent.InstanceName);
         }
 
         private async Task<T> ExecuteRawScriptAsync<T>(string scriptContent)
@@ -326,5 +328,25 @@ namespace Tewr.Blazor.FileReader
             var bootStrapScript = $"(function(){{var d = document; var s = d.createElement('script'); s.src={blob}; s.async=false; d.head.appendChild(s); d.head.removeChild(s);}})();";
             return await CurrentJSRuntime.InvokeAsync<T>("eval", bootStrapScript);
         }
+    }
+
+    internal static class FileReaderComponent
+    {
+        public static readonly string InstanceName = nameof(FileReaderComponent);
+
+        public static readonly string ClearValue = $"{InstanceName}.{nameof(ClearValue)}";
+        public static readonly string Dispose = $"{InstanceName}.{nameof(Dispose)}";
+        public static readonly string FillBufferUnmarshalled = $"{InstanceName}.{nameof(FillBufferUnmarshalled)}";
+        public static readonly string GetFileCount = $"{InstanceName}.{nameof(GetFileCount)}";
+        public static readonly string GetFileInfoFromElement = $"{InstanceName}.{nameof(GetFileInfoFromElement)}";
+        public static readonly string GetJSObjectReference = $"{InstanceName}.{nameof(GetJSObjectReference)}";
+        public static readonly string OpenRead = $"{InstanceName}.{nameof(OpenRead)}";
+        public static readonly string ReadFileMarshalledAsync = $"{InstanceName}.{nameof(ReadFileMarshalledAsync)}";
+        public static readonly string ReadFileSliceAsync = $"{InstanceName}.{nameof(ReadFileSliceAsync)}";
+        public static readonly string ReadFileUnmarshalledAsync = $"{InstanceName}.{nameof(ReadFileUnmarshalledAsync)}";
+        public static readonly string RegisterDropEvents = $"{InstanceName}.{nameof(RegisterDropEvents)}";
+        public static readonly string RegisterPasteEvent = $"{InstanceName}.{nameof(RegisterPasteEvent)}";
+        public static readonly string UnregisterDropEvents = $"{InstanceName}.{nameof(UnregisterDropEvents)}";
+        public static readonly string UnregisterPasteEvent = $"{InstanceName}.{nameof(UnregisterPasteEvent)}";
     }
 }
