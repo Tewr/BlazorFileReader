@@ -266,11 +266,6 @@
         <member name="M:Tewr.Blazor.FileReader.IFileReference.CreateMemoryStreamAsync(System.Int32,System.Threading.CancellationToken)">
             <summary>
             Convenience method to read the file fully into memory represented as a <see cref="T:System.IO.MemoryStream"/>, using the specified <paramref name="bufferSize"/>.
-            The length of the resulting <="T:System.IO.MemoryStream"/> representing the full file, with <see cref="P:System.IO.MemoryStream.Position"/> set to 0.</returns>
-        </member>
-        <member name="M:Tewr.Blazor.FileReader.IFileReference.CreateMemoryStreamAsync(System.Int32,System.Threading.CancellationToken)">
-            <summary>
-            Convenience method to read the file fully into memory represented as a <see cref="T:System.IO.MemoryStream"/>, using the specified <paramref name="bufferSize"/>.
             The length of the resulting <see cref="T:System.IO.MemoryStream"/> will be the same as the file size.
             </summary>
             <returns>A <see cref="T:System.IO.MemoryStream"/> representing the full file, with <see cref="P:System.IO.MemoryStream.Position"/> set to 0.</returns>
@@ -409,23 +404,28 @@
             Should reference either an input element of type file or a drop target.</param>
             <returns>a new instance of <see cref="T:Tewr.Blazor.FileReader.IFileReaderRef"/></returns>
         </member>
-        <member name="T:Tewr.Blazor.FileReader.IObjectUrl">
-            <summary>
-            Represents an object url for a file.
-            </summary>
-            <remarks>https://developer.mozilla.org/en-US/docs/Web/API/URL/createObjectURL</remarks>
-        </member>
-        <member name="P:Tewr.Blazor.FileReader.IObjectUrl.Url">
-            <summary>
-            Returns the Object Url.
-            </summary>
-        </member>
         <member name="P:Tewr.Blazor.FileReader.PlatformConfig.IsWasm">
             <summary>
             Returns true if the application is running on WASM.
             </summary>
         </member>
         <member name="M:Tewr.Blazor.FileReader.PlatformConfig.TryReadMaximumReceiveMessageSize(System.IServiceProvider,System.Int64@)">
+            <summary>
+            Tries reading HubOptions&lt;ComponentHub&gt;.MaximumReceiveMessageSize using reflection.
+            </summary>
+            <param name="serviceProvider"></param>
+            <param name="maximumReceiveMessageSize"></param>
+            <returns><c>true</c> if the value could be sucessfully read.</returns>
+        </member>
+        <member name="T:Tewr.Blazor.FileReader.SetupExtension">
+            <summary>
+            Provides extension methods for setting up <see cref="T:Tewr.Blazor.FileReader.IFileReaderService"/>
+            </summary>
+        </member>
+        <member name="M:Tewr.Blazor.FileReader.SetupExtension.AddFileReaderService(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            Adds <see cref="T:Tewr.Blazor.FileReader.IFileReaderService"/> as a scoped service
+            to the specified <see cref="T:MicrosogeSize(System.IServiceProvider,System.Int64@)">
             <summary>
             Tries reading HubOptions&lt;ComponentHub&gt;.MaximumReceiveMessageSize using reflection.
             </summary>

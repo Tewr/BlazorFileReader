@@ -205,7 +205,7 @@ namespace Tewr.Blazor.FileReader
             int fileRef, byte[] buffer, long position, long bufferOffset, int count,
             CancellationToken cancellationToken)
         {
-            using var streamReference = await this.CurrentJSRuntime.InvokeAsync<IJSStreamReference>(
+            await using var streamReference = await this.CurrentJSRuntime.InvokeAsync<IJSStreamReference>(
                 "FileReaderComponent.ReadFileSliceAsync", cancellationToken, fileRef, position, count);
             using var readStream = await streamReference.OpenReadStreamAsync(cancellationToken: cancellationToken);
             return await readStream.ReadAsync(buffer.AsMemory((int)bufferOffset, count), cancellationToken);
