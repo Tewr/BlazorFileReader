@@ -224,18 +224,6 @@
             Provides properties and instance methods for the reading file metadata and aids in the creation of Readonly Stream objects. 
             </summary>
         </member>
-        <member name="M:Tewr.Blazor.FileReader.IFileReference.GetJSObjectReferenceAsync">
-            <summary>
-            Returns the underlying file object as an <see cref="T:Microsoft.JSInterop.IJSObjectReference"/>
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:Tewr.Blazor.FileReader.IFileReference.GetObjectUrlAsync">
-            <summary>
-            Returns an object url for a file.
-            </summary>
-            <returns></returns>
-        </member>
         <member name="M:Tewr.Blazor.FileReader.IFileReference.OpenReadAsync">
             <summary>
             Opens a read-only <see cref="T:System.IO.Stream"/> to read the file.
@@ -415,17 +403,6 @@
             Should be obtained using the @ref attribute. 
             Should reference either an input element of type file or a drop target.</param>
             <returns>a new instance of <see cref="T:Tewr.Blazor.FileReader.IFileReaderRef"/></returns>
-        </member>
-        <member name="T:Tewr.Blazor.FileReader.IObjectUrl">
-            <summary>
-            Represents an object url for a file.
-            </summary>
-            <remarks>https://developer.mozilla.org/en-US/docs/Web/API/URL/createObjectURL</remarks>
-        </member>
-        <member name="P:Tewr.Blazor.FileReader.IObjectUrl.Url">
-            <summary>
-            Returns the Object Url.
-            </summary>
         </member>
         <member name="P:Tewr.Blazor.FileReader.PlatformConfig.IsWasm">
             <summary>
