@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Tewr.Blazor.FileReader
 {
-#if NET5
+#if NET5_0_OR_GREATER
 
     /// <summary>
     /// Represents an object url for a file.

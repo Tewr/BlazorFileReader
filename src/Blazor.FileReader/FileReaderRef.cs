@@ -74,7 +74,7 @@ namespace Tewr.Blazor.FileReader
     public interface IFileReference
     {
 
-#if NET5
+#if NET5_0_OR_GREATER
         /// <summary>
         /// Returns the underlying file object as an <see cref="IJSObjectReference"/>
         /// </summary>
@@ -332,7 +332,7 @@ namespace Tewr.Blazor.FileReader
             return memoryStream;
         }
 
-#if NET5
+#if NET5_0_OR_GREATER
         public Task<IJSObjectReference> GetJSObjectReferenceAsync()
         {
             return this.fileLoaderRef.FileReaderJsInterop.GetJSObjectReferenceAsync(fileLoaderRef.ElementRef, this.index);

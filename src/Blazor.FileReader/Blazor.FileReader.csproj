@@ -2,7 +2,7 @@
 
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;net5.0</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;net5.0;net6.0</TargetFrameworks>
     <BlazorLinkOnBuild>true</BlazorLinkOnBuild>
     <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
     <LangVersion>latest</LangVersion>
@@ -14,15 +14,15 @@
     <PackageTags>blazor blazor-component stream filestream file-stream read-file filereader</PackageTags>
     <Configurations>Debug;Release;Ghpages</Configurations>
     <PackageId>Tewr.Blazor.FileReader</PackageId>
-    <PackageReleaseNotes>Copy-paste API</PackageReleaseNotes>
+    <PackageReleaseNotes>net6 support</PackageReleaseNotes>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageIcon>icon.png</PackageIcon>
     <RazorLangVersion>3.0</RazorLangVersion>
     <AssemblyName>Tewr.Blazor.FileReader</AssemblyName>
     <RootNamespace>Tewr.Blazor.FileReader</RootNamespace>
-    <AssemblyVersion>3.2.0.21211</AssemblyVersion>
-    <Version>3.2.0.21211</Version>
-    <FileVersion>3.2.0.21211</FileVersion>
+    <AssemblyVersion>3.3.0.21348</AssemblyVersion>
+    <Version>3.3.0.21348</Version>
+    <FileVersion>3.3.0.21348</FileVersion>
   </PropertyGroup>
   <ItemGroup>
     <None Include="icon.png" Pack="true" Visible="false" PackagePath="" />
@@ -44,6 +44,11 @@
     <EmbeddedResource Include="wwwroot\**\*.js" LogicalName="blazor:js:%(RecursiveDir)%(Filename)%(Extension)" />
   </ItemGroup>
 
+  <ItemGroup Condition="'$(TargetFramework)'=='net6.0'">
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="6.0.0" />
+    <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="6.0.0" />
+  </ItemGroup>
+  
   <ItemGroup Condition="'$(TargetFramework)'=='net5.0'">
     <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="5.0.0" />
     <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="5.0.0" />
