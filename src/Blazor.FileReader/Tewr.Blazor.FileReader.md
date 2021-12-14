@@ -67,13 +67,9 @@
   - [CreateMemoryStreamAsync()](#M-Tewr-Blazor-FileReader-IFileReference-CreateMemoryStreamAsync-System-Threading-CancellationToken- 'Tewr.Blazor.FileReader.IFileReference.CreateMemoryStreamAsync(System.Threading.CancellationToken)')
   - [CreateMemoryStreamAsync()](#M-Tewr-Blazor-FileReader-IFileReference-CreateMemoryStreamAsync-System-Int32- 'Tewr.Blazor.FileReader.IFileReference.CreateMemoryStreamAsync(System.Int32)')
   - [CreateMemoryStreamAsync()](#M-Tewr-Blazor-FileReader-IFileReference-CreateMemoryStreamAsync-System-Int32,System-Threading-CancellationToken- 'Tewr.Blazor.FileReader.IFileReference.CreateMemoryStreamAsync(System.Int32,System.Threading.CancellationToken)')
-  - [GetJSObjectReferenceAsync()](#M-Tewr-Blazor-FileReader-IFileReference-GetJSObjectReferenceAsync 'Tewr.Blazor.FileReader.IFileReference.GetJSObjectReferenceAsync')
-  - [GetObjectUrlAsync()](#M-Tewr-Blazor-FileReader-IFileReference-GetObjectUrlAsync 'Tewr.Blazor.FileReader.IFileReference.GetObjectUrlAsync')
   - [OpenReadAsync()](#M-Tewr-Blazor-FileReader-IFileReference-OpenReadAsync 'Tewr.Blazor.FileReader.IFileReference.OpenReadAsync')
   - [OpenReadBase64Async()](#M-Tewr-Blazor-FileReader-IFileReference-OpenReadBase64Async 'Tewr.Blazor.FileReader.IFileReference.OpenReadBase64Async')
   - [ReadFileInfoAsync()](#M-Tewr-Blazor-FileReader-IFileReference-ReadFileInfoAsync 'Tewr.Blazor.FileReader.IFileReference.ReadFileInfoAsync')
-- [IObjectUrl](#T-Tewr-Blazor-FileReader-IObjectUrl 'Tewr.Blazor.FileReader.IObjectUrl')
-  - [Url](#P-Tewr-Blazor-FileReader-IObjectUrl-Url 'Tewr.Blazor.FileReader.IObjectUrl.Url')
 - [PasteEventOptions](#T-Tewr-Blazor-FileReader-DropEvents-PasteEventOptions 'Tewr.Blazor.FileReader.DropEvents.PasteEventOptions')
   - [Additive](#P-Tewr-Blazor-FileReader-DropEvents-PasteEventOptions-Additive 'Tewr.Blazor.FileReader.DropEvents.PasteEventOptions.Additive')
 - [PlatformConfig](#T-Tewr-Blazor-FileReader-PlatformConfig 'Tewr.Blazor.FileReader.PlatformConfig')
@@ -783,36 +779,6 @@ A [MemoryStream](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=
 
 This method has no parameters.
 
-<a name='M-Tewr-Blazor-FileReader-IFileReference-GetJSObjectReferenceAsync'></a>
-### GetJSObjectReferenceAsync() `method`
-
-##### Summary
-
-Returns the underlying file object as an [IJSObjectReference](#T-Microsoft-JSInterop-IJSObjectReference 'Microsoft.JSInterop.IJSObjectReference')
-
-##### Returns
-
-
-
-##### Parameters
-
-This method has no parameters.
-
-<a name='M-Tewr-Blazor-FileReader-IFileReference-GetObjectUrlAsync'></a>
-### GetObjectUrlAsync() `method`
-
-##### Summary
-
-Returns an object url for a file.
-
-##### Returns
-
-
-
-##### Parameters
-
-This method has no parameters.
-
 <a name='M-Tewr-Blazor-FileReader-IFileReference-OpenReadAsync'></a>
 ### OpenReadAsync() `method`
 
@@ -857,28 +823,6 @@ An object containing the file metadata
 ##### Parameters
 
 This method has no parameters.
-
-<a name='T-Tewr-Blazor-FileReader-IObjectUrl'></a>
-## IObjectUrl `type`
-
-##### Namespace
-
-Tewr.Blazor.FileReader
-
-##### Summary
-
-Represents an object url for a file.
-
-##### Remarks
-
-https://developer.mozilla.org/en-US/docs/Web/API/URL/createObjectURL
-
-<a name='P-Tewr-Blazor-FileReader-IObjectUrl-Url'></a>
-### Url `property`
-
-##### Summary
-
-Returns the Object Url.
 
 <a name='T-Tewr-Blazor-FileReader-DropEvents-PasteEventOptions'></a>
 ## PasteEventOptions `type`

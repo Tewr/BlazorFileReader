@@ -425,22 +425,6 @@
         <member name="M:Tewr.Blazor.FileReader.SetupExtension.AddFileReaderService(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
             <summary>
             Adds <see cref="T:Tewr.Blazor.FileReader.IFileReaderService"/> as a scoped service
-            to the specified <see cref="T:MicrosogeSize(System.IServiceProvider,System.Int64@)">
-            <summary>
-            Tries reading HubOptions&lt;ComponentHub&gt;.MaximumReceiveMessageSize using reflection.
-            </summary>
-            <param name="serviceProvider"></param>
-            <param name="maximumReceiveMessageSize"></param>
-            <returns><c>true</c> if the value could be sucessfully read.</returns>
-        </member>
-        <member name="T:Tewr.Blazor.FileReader.SetupExtension">
-            <summary>
-            Provides extension methods for setting up <see cref="T:Tewr.Blazor.FileReader.IFileReaderService"/>
-            </summary>
-        </member>
-        <member name="M:Tewr.Blazor.FileReader.SetupExtension.AddFileReaderService(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
-            <summary>
-            Adds <see cref="T:Tewr.Blazor.FileReader.IFileReaderService"/> as a scoped service
             to the specified <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/>.
             </summary>
             <param name="services"></param>
