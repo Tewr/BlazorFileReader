@@ -115,6 +115,7 @@ The code for views looks the same for both [client](src/Demo/Blazor.FileReader.W
 ```
 
 ## Version notes
+Version <code>v3.3.0.21348</code> Adds .Net6 support.
 
 Version <code>3.1.0.21158</code> Adds two new methods (.NET5 only): 
 [JsObjectReference](src/Blazor.FileReader/Tewr.Blazor.FileReader.md#M-Tewr-Blazor-FileReader-IFileReference-GetJSObjectReferenceAsync) for files, and [CreateObjectUrl](src/Blazor.FileReader/Tewr.Blazor.FileReader.md#getobjecturlasync-method) for files (built on JsObjectReference).
