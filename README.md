@@ -1,4 +1,4 @@
-[![Build status](https://ci.appveyor.com/api/projects/status/rr7pchwk7wbc3mn1/branch/master?svg=true)](https://ci.appveyor.com/project/Tewr/blazorfilereader/branch/master)
+[![Build status](https://ci.appveyor.com/api/projects/status/rr7pchwk7wbc3mn1/branch/main?svg=true)](https://ci.appveyor.com/project/Tewr/blazorfilereader/branch/main)
 [![NuGet](https://img.shields.io/nuget/dt/Tewr.Blazor.FileReader.svg?label=Tewr.Blazor.FileReader)](https://www.nuget.org/packages/Tewr.Blazor.FileReader)
 [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=AC77J8GFQ6LYA&item_name=Blazor+File+Reader+Project&currency_code=EUR&source=url)
 
@@ -116,6 +116,8 @@ The code for views looks the same for both [client](src/Demo/Blazor.FileReader.W
 
 ## Version notes
 Version <code>v3.3.0.21348</code> Adds .Net6 support.
+  
+Version <code>v3.2.0.21211</code> Adds [Copy/Paste](https://github.com/Tewr/BlazorFileReader/blob/main/src/Blazor.FileReader/Tewr.Blazor.FileReader.md#M-Tewr-Blazor-FileReader-IFileReaderRef-RegisterPasteEventAsync-Tewr-Blazor-FileReader-DropEvents-PasteEventOptions-) support.
 
 Version <code>3.1.0.21158</code> Adds two new methods (.NET5 only): 
 [JsObjectReference](src/Blazor.FileReader/Tewr.Blazor.FileReader.md#M-Tewr-Blazor-FileReader-IFileReference-GetJSObjectReferenceAsync) for files, and [CreateObjectUrl](src/Blazor.FileReader/Tewr.Blazor.FileReader.md#getobjecturlasync-method) for files (built on JsObjectReference).
