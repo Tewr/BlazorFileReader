@@ -29,7 +29,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tewr.Blazor.FileReader.Unit
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Net6", "Net6", "{C3DC632D-7249-4B55-A0F4-68742064C71F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Blazor.FileReader.Wasm.Demo", "Demo\Net6\Blazor.FileReader.Wasm.Demo\Blazor.FileReader.Wasm.Demo.csproj", "{96778444-7F44-4CF8-B8B2-4124865A826A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blazor.FileReader.Wasm.Demo", "Demo\Net6\Blazor.FileReader.Wasm.Demo\Blazor.FileReader.Wasm.Demo.csproj", "{96778444-7F44-4CF8-B8B2-4124865A826A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Blazor.FileReader.ServerSide.Demo", "Demo\Net6\Blazor.FileReader.ServerSide.Demo\Blazor.FileReader.ServerSide.Demo.csproj", "{4AFCC00A-7CC4-4143-9D12-0E0E3CA4A630}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -91,6 +93,12 @@ Global
 		{96778444-7F44-4CF8-B8B2-4124865A826A}.Ghpages|Any CPU.Build.0 = Debug|Any CPU
 		{96778444-7F44-4CF8-B8B2-4124865A826A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{96778444-7F44-4CF8-B8B2-4124865A826A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4AFCC00A-7CC4-4143-9D12-0E0E3CA4A630}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4AFCC00A-7CC4-4143-9D12-0E0E3CA4A630}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4AFCC00A-7CC4-4143-9D12-0E0E3CA4A630}.Ghpages|Any CPU.ActiveCfg = Debug|Any CPU
+		{4AFCC00A-7CC4-4143-9D12-0E0E3CA4A630}.Ghpages|Any CPU.Build.0 = Debug|Any CPU
+		{4AFCC00A-7CC4-4143-9D12-0E0E3CA4A630}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4AFCC00A-7CC4-4143-9D12-0E0E3CA4A630}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -107,6 +115,7 @@ Global
 		{38F452ED-A8E3-4CED-890C-E2E6DB6F54AF} = {9A262CB5-8352-42D0-830C-D87131D9060B}
 		{C3DC632D-7249-4B55-A0F4-68742064C71F} = {8AA482CE-0130-43A1-84BC-92215AF25AED}
 		{96778444-7F44-4CF8-B8B2-4124865A826A} = {C3DC632D-7249-4B55-A0F4-68742064C71F}
+		{4AFCC00A-7CC4-4143-9D12-0E0E3CA4A630} = {C3DC632D-7249-4B55-A0F4-68742064C71F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7BCBB258-C07A-4039-838A-09F3B45F7E58}
