@@ -55,6 +55,11 @@ namespace Tewr.Blazor.FileReader
             public override async Task<int> ReadAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)
             {
                 ThrowIfDisposed();
+                if (Position >= length)
+                {
+                    return 0;
+                }
+
                 var bytesRead = await fileReaderJsInterop.ReadFileAsync(fileRef, buffer, Position, offset, count, cancellationToken);
                 Position += bytesRead;
                 return bytesRead;

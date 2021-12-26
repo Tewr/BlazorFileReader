@@ -14,15 +14,15 @@
     <PackageTags>blazor blazor-component stream filestream file-stream read-file filereader</PackageTags>
     <Configurations>Debug;Release;Ghpages</Configurations>
     <PackageId>Tewr.Blazor.FileReader</PackageId>
-    <PackageReleaseNotes>net6 support</PackageReleaseNotes>
+    <PackageReleaseNotes>fixes a bug under net6 that would throw PlatformNotSupportedException</PackageReleaseNotes>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageIcon>icon.png</PackageIcon>
     <RazorLangVersion>3.0</RazorLangVersion>
     <AssemblyName>Tewr.Blazor.FileReader</AssemblyName>
     <RootNamespace>Tewr.Blazor.FileReader</RootNamespace>
-    <AssemblyVersion>3.3.0.21348</AssemblyVersion>
-    <Version>3.3.0.21348</Version>
-    <FileVersion>3.3.0.21348</FileVersion>
+    <AssemblyVersion>3.3.1.21360</AssemblyVersion>
+    <Version>3.3.1.21360</Version>
+    <FileVersion>3.3.1.21360</FileVersion>
   </PropertyGroup>
   <ItemGroup>
     <None Include="icon.png" Pack="true" Visible="false" PackagePath="" />
