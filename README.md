@@ -115,9 +115,12 @@ The code for views looks the same for both [client](src/Demo/Blazor.FileReader.W
 ```
 
 ## Version notes
-Version <code>v3.3.0.21348</code> Adds .Net6 support.
   
-Version <code>v3.2.0.21211</code> Adds [Copy/Paste](https://github.com/Tewr/BlazorFileReader/blob/main/src/Blazor.FileReader/Tewr.Blazor.FileReader.md#M-Tewr-Blazor-FileReader-IFileReaderRef-RegisterPasteEventAsync-Tewr-Blazor-FileReader-DropEvents-PasteEventOptions-) support.
+Version <code>3.3.1.21360</code> Fixes <a href="https://github.com/Tewr/BlazorFileReader/issues/139">a bug</a> related to platform detection under .net6
+  
+Version <code>3.3.0.21348</code> Adds .Net6 support.
+  
+Version <code>3.2.0.21211</code> Adds [Copy/Paste](https://github.com/Tewr/BlazorFileReader/blob/main/src/Blazor.FileReader/Tewr.Blazor.FileReader.md#M-Tewr-Blazor-FileReader-IFileReaderRef-RegisterPasteEventAsync-Tewr-Blazor-FileReader-DropEvents-PasteEventOptions-) support.
 
 Version <code>3.1.0.21158</code> Adds two new methods (.NET5 only): 
 [JsObjectReference](src/Blazor.FileReader/Tewr.Blazor.FileReader.md#M-Tewr-Blazor-FileReader-IFileReference-GetJSObjectReferenceAsync) for files, and [CreateObjectUrl](src/Blazor.FileReader/Tewr.Blazor.FileReader.md#getobjecturlasync-method) for files (built on JsObjectReference).
