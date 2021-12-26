@@ -116,7 +116,7 @@ The code for views looks the same for both [client](src/Demo/Blazor.FileReader.W
 
 ## Version notes
   
-Version <code>3.3.1.21360</code> Fixes <a href="https://github.com/Tewr/BlazorFileReader/issues/139">a bug</a> related to platform detection under .net6
+Version <code>3.3.1.21360</code> Fixes <a href="https://github.com/Tewr/BlazorFileReader/issues/186">a bug</a> related to platform detection under .net6
   
 Version <code>3.3.0.21348</code> Adds .Net6 support.
   
