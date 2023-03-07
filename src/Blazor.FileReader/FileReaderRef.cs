@@ -205,6 +205,10 @@ namespace Tewr.Blazor.FileReader
         /// </summary>
         DateTime? LastModifiedDate { get; }
 
+        /// <summary>
+        ///     Gets the relative path including the filename.
+        /// </summary>
+        /// <value>The webkit relative path.</value>
         string WebkitRelativePath { get; }
 
         /// <summary>

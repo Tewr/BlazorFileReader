@@ -40,6 +40,7 @@
   - [PositionInfo](#P-Tewr-Blazor-FileReader-IFileInfo-PositionInfo 'Tewr.Blazor.FileReader.IFileInfo.PositionInfo')
   - [Size](#P-Tewr-Blazor-FileReader-IFileInfo-Size 'Tewr.Blazor.FileReader.IFileInfo.Size')
   - [Type](#P-Tewr-Blazor-FileReader-IFileInfo-Type 'Tewr.Blazor.FileReader.IFileInfo.Type')
+  - [WebkitRelativePath](#P-Tewr-Blazor-FileReader-IFileInfo-WebkitRelativePath 'Tewr.Blazor.FileReader.IFileInfo.WebkitRelativePath')
 - [IFilePositionInfo](#T-Tewr-Blazor-FileReader-IFilePositionInfo 'Tewr.Blazor.FileReader.IFilePositionInfo')
   - [DataStream](#P-Tewr-Blazor-FileReader-IFilePositionInfo-DataStream 'Tewr.Blazor.FileReader.IFilePositionInfo.DataStream')
   - [Percentage](#P-Tewr-Blazor-FileReader-IFilePositionInfo-Percentage 'Tewr.Blazor.FileReader.IFilePositionInfo.Percentage')
@@ -417,6 +418,13 @@ Returns the size of the file in bytes.
 ##### Summary
 
 Returns the MIME type of the file.
+
+<a name='P-Tewr-Blazor-FileReader-IFileInfo-WebkitRelativePath'></a>
+### WebkitRelativePath `property`
+
+##### Summary
+
+Gets the relative path including the filename.
 
 <a name='T-Tewr-Blazor-FileReader-IFilePositionInfo'></a>
 ## IFilePositionInfo `type`
