@@ -10,10 +10,10 @@ class FileReaderComponent {
     private newFileStreamReference = 0;
     private readonly fileStreams: { [reference: number]: File } = {};
 
-    protected readonly dragElements: Map<HTMLElement, DragEvents> = new Map();
-    protected readonly pasteElements: Map<HTMLElement, EventListenerOrEventListenerObject> = new Map();
-    protected readonly elementDataTransfers: Map<HTMLElement, FileList> = new Map();
-    private readonly readResultByTaskId: Map<number, IReadFileData> = new Map();
+    protected readonly dragElements = new Map<HTMLElement, DragEvents>();
+    protected readonly pasteElements = new Map<HTMLElement, EventListenerOrEventListenerObject>();
+    protected readonly elementDataTransfers = new Map<HTMLElement, FileList>();
+    private readonly readResultByTaskId = new Map<number, IReadFileData>();
 
     protected LogIfNull(element: HTMLElement) {
         if (element == null) {
@@ -39,6 +39,7 @@ class FileReaderComponent {
                 files = dataTransfer;
             }
         }
+
         return files;
     }
 
@@ -69,41 +70,8 @@ class FileReaderComponent {
         return 0;
     };
 
-    public GetFileInfoFromElement = (element: HTMLElement, index: number): IFileInfo => {
-        this.LogIfNull(element);
-        const files = this.GetFiles(element);
-        if (!files) {
-            return null;
-        }
-
-        const file = files.item(index);
-        if (!file) {
-            return null;
-        }
-
-        return this.GetFileInfoFromFile(file);
-    }
-
     public Dispose = (fileRef: number): boolean => {
         return delete (this.fileStreams[fileRef]);
-    }
-
-    public GetFileInfoFromFile(file: File): IFileInfo {
-        const result = {
-            lastModified: file.lastModified,
-            name: file.name,
-            nonStandardProperties: null,
-            size: file.size,
-            type: file.type
-        };
-        const properties: { [propertyName: string]: object } = {};
-        for (const property in file) {
-            if (Object.prototype.hasOwnProperty.call(file, property) && !(property in result)) {
-                properties[property] = file[property];
-            }
-        }
-        result.nonStandardProperties = properties;
-        return result;
     }
 
     public OpenRead = (element: HTMLElement, fileIndex: number, useWasmSharedBuffer: boolean): number => {
@@ -126,7 +94,7 @@ class FileReaderComponent {
             FileReaderJsInterop.initialize();
         }
 
-        const fileRef: number = this.newFileStreamReference++;
+        const fileRef = this.newFileStreamReference++;
         this.fileStreams[fileRef] = file;
         return fileRef;
     }
@@ -213,8 +181,8 @@ class FileReaderComponent {
                     return () => {
                         try {
                             resolve({result: r.result, file: file });
-                        } catch (e) {
-                            reject(e);
+                        } catch (ex) {
+                            reject(ex);
                         }
                     }
                 })(reader);

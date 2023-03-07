@@ -205,6 +205,8 @@ namespace Tewr.Blazor.FileReader
         /// </summary>
         DateTime? LastModifiedDate { get; }
 
+        string WebkitRelativePath { get; }
+
         /// <summary>
         /// Returns information of the position of any stream related to this file.
         /// </summary>
@@ -382,6 +384,9 @@ namespace Tewr.Blazor.FileReader
         public long? LastModified { get; set; }
 
         public DateTime? LastModifiedDate => this.lastModifiedDate.Value;
+
+        /// <inheritdoc />
+        public string WebkitRelativePath { get; set; }
 
         public IFilePositionInfo PositionInfo => filePositionInfo;
     }

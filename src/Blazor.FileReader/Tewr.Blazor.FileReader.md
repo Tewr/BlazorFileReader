@@ -21,6 +21,8 @@
   - [OnRegisterDropEventsScript](#P-Tewr-Blazor-FileReader-DropEvents-DropEventsOptions-OnRegisterDropEventsScript 'Tewr.Blazor.FileReader.DropEvents.DropEventsOptions.OnRegisterDropEventsScript')
 - [DropEventsOptionsExtensions](#T-Tewr-Blazor-FileReader-DropEvents-DropEventsOptionsExtensions 'Tewr.Blazor.FileReader.DropEvents.DropEventsOptionsExtensions')
   - [SetDragOverDataTransferDropEffect(source,dropEffect)](#M-Tewr-Blazor-FileReader-DropEvents-DropEventsOptionsExtensions-SetDragOverDataTransferDropEffect-Tewr-Blazor-FileReader-DropEvents-DropEventsOptions,Tewr-Blazor-FileReader-DropEvents-DropEffect- 'Tewr.Blazor.FileReader.DropEvents.DropEventsOptionsExtensions.SetDragOverDataTransferDropEffect(Tewr.Blazor.FileReader.DropEvents.DropEventsOptions,Tewr.Blazor.FileReader.DropEvents.DropEffect)')
+- [FileInfo](#T-Tewr-Blazor-FileReader-FileInfo 'Tewr.Blazor.FileReader.FileInfo')
+  - [WebkitRelativePath](#P-Tewr-Blazor-FileReader-FileInfo-WebkitRelativePath 'Tewr.Blazor.FileReader.FileInfo.WebkitRelativePath')
 - [FileReaderJsInterop](#T-Tewr-Blazor-FileReader-FileReaderJsInterop 'Tewr.Blazor.FileReader.FileReaderJsInterop')
   - [EndTask(taskId)](#M-Tewr-Blazor-FileReader-FileReaderJsInterop-EndTask-System-Int64- 'Tewr.Blazor.FileReader.FileReaderJsInterop.EndTask(System.Int64)')
 - [FileReaderServiceOptions](#T-Tewr-Blazor-FileReader-FileReaderServiceOptions 'Tewr.Blazor.FileReader.FileReaderServiceOptions')
@@ -252,6 +254,20 @@ Sets the specified [](#!-dropEffect 'dropEffect') value on the dataTransfer prop
 ##### Remarks
 
 https://developer.mozilla.org/en-US/docs/Web/API/DataTransfer/dropEffect
+
+<a name='T-Tewr-Blazor-FileReader-FileInfo'></a>
+## FileInfo `type`
+
+##### Namespace
+
+Tewr.Blazor.FileReader
+
+<a name='P-Tewr-Blazor-FileReader-FileInfo-WebkitRelativePath'></a>
+### WebkitRelativePath `property`
+
+##### Summary
+
+*Inherit from parent.*
 
 <a name='T-Tewr-Blazor-FileReader-FileReaderJsInterop'></a>
 ## FileReaderJsInterop `type`

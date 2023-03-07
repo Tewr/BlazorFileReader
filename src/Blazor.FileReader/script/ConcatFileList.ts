@@ -12,7 +12,7 @@
             this[i] = existing[i];
         }
 
-        const eligebleAdditions = [];
+        const eligibleAdditions = [];
 
         // Check for doubles
         for (let i = 0; i < additions.length; i++) {
@@ -26,15 +26,15 @@
             }
 
             if (!exists) {
-                eligebleAdditions[eligebleAdditions.length] = addition;
+                eligibleAdditions[eligibleAdditions.length] = addition;
             }
         }
 
-        for (let i = 0; i < eligebleAdditions.length; i++) {
-            this[i + existing.length] = eligebleAdditions[i];
+        for (let i = 0; i < eligibleAdditions.length; i++) {
+            this[i + existing.length] = eligibleAdditions[i];
         }
 
-        this.length = existing.length + eligebleAdditions.length;
+        this.length = existing.length + eligibleAdditions.length;
     }
 }
 
