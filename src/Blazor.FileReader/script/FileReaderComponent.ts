@@ -70,8 +70,44 @@ class FileReaderComponent {
         return 0;
     };
 
+    // Called from cs.
+    public GetFileInfoFromElement = (element: HTMLElement, index: number): IFileInfo => {
+        this.LogIfNull(element);
+        const files = this.GetFiles(element);
+        if (!files) {
+            return null;
+        }
+
+        const file = files.item(index);
+        if (!file) {
+            return null;
+        }
+
+        return this.GetFileInfoFromFile(file);
+    }
+
     public Dispose = (fileRef: number): boolean => {
         return delete (this.fileStreams[fileRef]);
+    }
+
+    public GetFileInfoFromFile(file: File): IFileInfo {
+        const result = {
+            lastModified: file.lastModified,
+            name: file.name,
+            nonStandardProperties: null,
+            size: file.size,
+            type: file.type,
+            webkitRelativePath: file.webkitRelativePath,
+        };
+
+        const properties: { [propertyName: string]: object } = {};
+        for (const property in file) {
+            if (Object.prototype.hasOwnProperty.call(file, property) && !(property in result)) {
+                properties[property] = file[property];
+            }
+        }
+        result.nonStandardProperties = properties;
+        return result;
     }
 
     public OpenRead = (element: HTMLElement, fileIndex: number, useWasmSharedBuffer: boolean): number => {

@@ -1,4 +1,5 @@
 ﻿@using System.IO;
+@using System.Threading
 @inject IFileReaderService fileReaderService;
 
 <style>
@@ -29,7 +30,7 @@
 
     @foreach (var fileInfo in DropFileList)
     {
-        <br />@fileInfo.Name
+        <br />@fileInfo.WebkitRelativePath
     }
 </div>
 
@@ -65,7 +66,7 @@
         if (isFirstRender)
         {
             dropReference = fileReaderService.CreateReference(dropTargetElement);
-            await dropReference.RegisterDropEventsAsync();
+            await dropReference.RegisterDropEventsAsync(Additive);
         }
     }
 
@@ -104,6 +105,7 @@
     private async Task RefreshDropFileList()
     {
         DropFileList.Clear();
+        Thread.Sleep(500);
         foreach (var file in await dropReference.EnumerateFilesAsync())
         {
             var fileInfo = await file.ReadFileInfoAsync();

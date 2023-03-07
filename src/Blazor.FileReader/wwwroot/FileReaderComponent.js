@@ -285,6 +285,18 @@
                     }
                     return 0;
                 };
+                this.GetFileInfoFromElement = (element, index) => {
+                    this.LogIfNull(element);
+                    const files = this.GetFiles(element);
+                    if (!files) {
+                        return null;
+                    }
+                    const file = files.item(index);
+                    if (!file) {
+                        return null;
+                    }
+                    return this.GetFileInfoFromFile(file);
+                };
                 this.Dispose = (fileRef) => {
                     return delete (this.fileStreams[fileRef]);
                 };
@@ -405,6 +417,24 @@
                 this.LogIfNull(element);
                 const files = this.GetFiles(element);
                 return files.item(fileIndex);
+            }
+            GetFileInfoFromFile(file) {
+                const result = {
+                    lastModified: file.lastModified,
+                    name: file.name,
+                    nonStandardProperties: null,
+                    size: file.size,
+                    type: file.type,
+                    webkitRelativePath: file.webkitRelativePath,
+                };
+                const properties = {};
+                for (const property in file) {
+                    if (Object.prototype.hasOwnProperty.call(file, property) && !(property in result)) {
+                        properties[property] = file[property];
+                    }
+                }
+                result.nonStandardProperties = properties;
+                return result;
             }
             ReadFileSliceAsync(fileRef, position, count) {
                 return __awaiter(this, void 0, void 0, function* () {
