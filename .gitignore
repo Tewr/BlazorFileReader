@@ -332,3 +332,4 @@ ASALocalRun/
 # MFractors (Xamarin productivity tool) working folder 
 .mfractor/
 /src/Blazor.FileReader/script/package-lock.json
+/src/Blazor.FileReader/package-lock.json
