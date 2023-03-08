@@ -59,10 +59,7 @@
     <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="1.1.0" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Content Remove="wwwroot\clone.js" />
-  </ItemGroup>
- 
+
   <ItemGroup>
     <Content Update="tsconfig.json">
       <Pack>false</Pack>
