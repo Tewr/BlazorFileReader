@@ -37,8 +37,8 @@
     <!-- using ts-bundle to create a single output js file from several ts files  -->
     <Exec Command="tsc-bundle $(ProjectDir)tsconfig.json --outFile $(ProjectDir)wwwroot\FileReaderComponent.js --entryPoint FileReaderComponent --transform tsPreprocessor.js" />
   </Target>
-  
-  
+
+
   <ItemGroup>
     <!-- .js/.css files will be referenced via <script>/<link> tags; other content files will just be included in the app's 'dist' directory without any tags referencing them -->
     <EmbeddedResource Include="wwwroot\**\*.js" LogicalName="blazor:js:%(RecursiveDir)%(Filename)%(Extension)" />
@@ -48,7 +48,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="6.0.0" />
     <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="6.0.0" />
   </ItemGroup>
-  
+
   <ItemGroup Condition="'$(TargetFramework)'=='net5.0'">
     <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="5.0.0" />
     <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="5.0.0" />
@@ -59,12 +59,16 @@
     <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="1.1.0" />
   </ItemGroup>
 
-
   <ItemGroup>
     <Content Update="tsconfig.json">
       <Pack>false</Pack>
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Extensions\" />
+    <Folder Include="wwwroot\" />
   </ItemGroup>
 
   <ItemGroup>
