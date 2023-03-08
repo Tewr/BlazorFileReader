@@ -55,6 +55,7 @@ interface IFileInfo {
     size: number;
     type: string;
     lastModified: number;
+    webkitRelativePath: string;
 };
 
 interface IDotNetBuffer {

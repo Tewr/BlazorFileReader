@@ -1,4 +1,5 @@
 ﻿@using System.IO;
+@using System.Threading
 @inject IFileReaderService fileReaderService;
 
 <style>
@@ -35,12 +36,13 @@
            @onchange="OnInputChange"
            @ondragenter=OnIpDragEnter
            @ondragleave=OnIpDragLeave
+           @ondrop="OnInputChange"
            multiple />
     Drop Files here or click me.
 
     @foreach (var fileInfo in IpFileList.Select(x => x.FileInfo))
     {
-        <br />@fileInfo.Name
+        <br />@fileInfo.WebkitRelativePath
     }
 </div>
 
@@ -77,6 +79,7 @@
         if (isFirstRender)
         {
             ipReference = fileReaderService.CreateReference(dropTargetInput);
+            await ipReference.RegisterDropEventsAsync();
         }
     }
 
@@ -120,6 +123,7 @@
         {
             await this.ClearAsync();
         }
+        Thread.Sleep(500); // Do this to let the files finish.
         foreach (var file in await ipReference.EnumerateFilesAsync())
         {
             var fileInfo = await file.ReadFileInfoAsync();

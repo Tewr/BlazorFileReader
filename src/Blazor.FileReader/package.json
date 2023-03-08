@@ -1,0 +1,9 @@
+{
+  "version": "1.0.18",
+  "name": "typescript-bundle",
+  "private": false,
+  "dependencies": {
+    "typescript-bundle": "^1.0.18",
+    "typescript":  "^4.9.5" 
+  }
+}
