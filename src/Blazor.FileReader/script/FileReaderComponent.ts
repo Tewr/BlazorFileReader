@@ -31,7 +31,7 @@ class FileReaderComponent {
 
     private GetFiles(element: HTMLElement): FileList {
         let files: FileList = null;
-        if (element instanceof HTMLInputElement) {
+        if (element instanceof HTMLInputElement && (element as HTMLInputElement).files.length > 0) {
             files = (element as HTMLInputElement).files;
         } else {
             const dataTransfer = this.elementDataTransfers.get(element);

@@ -402,7 +402,7 @@
             }
             GetFiles(element) {
                 let files = null;
-                if (element instanceof HTMLInputElement) {
+                if (element instanceof HTMLInputElement && element.files.length > 0) {
                     files = element.files;
                 }
                 else {
