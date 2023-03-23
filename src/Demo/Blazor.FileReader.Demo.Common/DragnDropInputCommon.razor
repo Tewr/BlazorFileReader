@@ -55,7 +55,7 @@
 
 <br />
 <br />
-<textarea style="max-width: 100%;" cols="50" rows="20">@Output</textarea>
+<textarea style="max-width: 100%; width: 100%" cols="50" rows="20">@Output</textarea>
 
 
 @code {
@@ -123,7 +123,8 @@
         {
             await this.ClearAsync();
         }
-        Thread.Sleep(500); // Do this to let the files finish.
+
+        await Task.Delay(500); // Do this to let the files finish.
         foreach (var file in await ipReference.EnumerateFilesAsync())
         {
             var fileInfo = await file.ReadFileInfoAsync();
@@ -136,22 +137,17 @@
     public async Task ReadFile(IFileReaderRef list)
     {
         Output = string.Empty;
-        this.StateHasChanged();
+        _ = InvokeAsync(StateHasChanged);
 
         foreach (var pair in IpFileList)
         {
             var fileInfo = pair.FileInfo;
-
-            Output += $"{nameof(IFileInfo)}.{nameof(fileInfo.Name)}: {fileInfo.Name}{nl}";
-            Output += $"{nameof(IFileInfo)}.{nameof(fileInfo.Size)}: {fileInfo.Size}{nl}";
-            Output += $"{nameof(IFileInfo)}.{nameof(fileInfo.Type)}: {fileInfo.Type}{nl}";
-            Output += $"{nameof(IFileInfo)}.{nameof(fileInfo.LastModifiedDate)}: {fileInfo.LastModifiedDate?.ToString() ?? "(N/A)"}{nl}";
-            Output += $"Reading file...";
-            this.StateHasChanged();
+            Output += DragnDropCommon.WriteFileInfoOutput(fileInfo, nl);
+            _ = InvokeAsync(StateHasChanged);
             fileInfo.PositionInfo.PositionChanged += (s, e) =>
             {
                 Output += $"Read {e.PositionDeltaSinceAcknowledge}, {e.Position} / {fileInfo.Size} ({e.Percentage:0.00}%){nl}";
-                this.StateHasChanged();
+                _ = InvokeAsync(StateHasChanged);
             };
 
             var bufferSize = 20480;
@@ -159,9 +155,10 @@
             using (var fs = pair.Stream)
             {
                 await fs.CopyToAsync(ps, bufferSize);
-                Output += $"Done reading file {fileInfo.Name}.{nl}";
+                Output += $"Done reading file {fileInfo.Name}.{nl}{nl}";
             }
-            this.StateHasChanged();
+            _ = InvokeAsync(StateHasChanged);
         }
     }
+
 }
