@@ -91,7 +91,7 @@ async function readEntryContentAsync(entry: FileSystemEntry): Promise<File[]> {
         let reading = 0;
         const contents: File[] = [];
 
-        return readEntry(entry);
+        readEntry(entry);
 
         function readEntry(innerEntry: FileSystemEntry) {
             if (isFile(innerEntry)) {

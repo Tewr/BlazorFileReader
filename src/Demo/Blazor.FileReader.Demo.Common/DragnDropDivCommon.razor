@@ -1,5 +1,6 @@
 ﻿@using System.IO;
 @using System.Threading
+@using Tewr.Blazor.FileReader.DropEvents
 @inject IFileReaderService fileReaderService;
 
 <style>
@@ -17,7 +18,7 @@
         font-weight: bold;
     }
 </style>
-
+Multiple files, directories, or a combination of both may be dropped onto the div element.
 <div class="@DropClass"
      @ref=dropTargetElement
      @ondrop=OnDrop
@@ -33,9 +34,6 @@
         <br />@fileInfo.WebkitRelativePath
     }
 </div>
-
-
-
 
 <input id="additivediv" type="checkbox" checked=@Additive @onchange="OnAdditiveChange" />
 <label for="additivediv">Additive</label>
@@ -68,7 +66,7 @@
         if (isFirstRender)
         {
             dropReference = fileReaderService.CreateReference(dropTargetElement);
-            await dropReference.RegisterDropEventsAsync(Additive);
+            await dropReference.RegisterDropEventsAsync();
         }
     }
 
@@ -107,7 +105,7 @@
     private async Task RefreshDropFileList()
     {
         DropFileList.Clear();
-        await Task.Delay(500); // Do this to let the files finish.
+        //await Task.Delay(500); // Do this to let the files finish.
         foreach (var file in await dropReference.EnumerateFilesAsync())
         {
             var fileInfo = await file.ReadFileInfoAsync();

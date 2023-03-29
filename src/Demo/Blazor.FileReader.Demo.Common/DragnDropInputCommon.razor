@@ -28,6 +28,12 @@
     }
 
 </style>
+<fieldset id="group1">
+    The input allows reading one or more files or a single directory. This applies when browsing or dropping files/directory.<br/>
+    Select an option below to set the input to files or directory.<br/>
+    <input type="radio" name="group1" checked="@(!useWebkit)" @onchange="@(() => useWebkit = false)">Files
+    <input type="radio" name="group1" checked="@useWebkit" @onchange="@(() => useWebkit = true)">Directory
+</fieldset>
 
 <div class="@IpDropClass">
     <input type="file"
@@ -36,13 +42,21 @@
            @onchange="OnInputChange"
            @ondragenter=OnIpDragEnter
            @ondragleave=OnIpDragLeave
-           @ondrop="OnInputChange"
+           webkitdirectory="@useWebkit"
            multiple />
-    Drop Files here or click me.
+    Drop @webkitCaption here or click me.
 
     @foreach (var fileInfo in IpFileList.Select(x => x.FileInfo))
     {
-        <br />@fileInfo.WebkitRelativePath
+        <br />
+        if (useWebkit)
+        {
+            @fileInfo.WebkitRelativePath
+        }
+        else
+        {
+            @fileInfo.Name
+        }
     }
 </div>
 
@@ -59,6 +73,9 @@
 
 
 @code {
+    string webkitAttribute => useWebkit ? "webkitdirectory=true" : "";
+    string webkitCaption => useWebkit ? "Directory" : "Files";
+    bool useWebkit = false;
     ElementReference dropTargetInput;
     IFileReaderRef ipReference;
     bool Additive { get; set; }
@@ -79,7 +96,6 @@
         if (isFirstRender)
         {
             ipReference = fileReaderService.CreateReference(dropTargetInput);
-            await ipReference.RegisterDropEventsAsync();
         }
     }
 
@@ -124,7 +140,7 @@
             await this.ClearAsync();
         }
 
-        await Task.Delay(500); // Do this to let the files finish.
+        //await Task.Delay(500); // Do this to let the files finish.
         foreach (var file in await ipReference.EnumerateFilesAsync())
         {
             var fileInfo = await file.ReadFileInfoAsync();

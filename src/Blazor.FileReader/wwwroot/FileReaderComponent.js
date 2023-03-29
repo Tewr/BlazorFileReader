@@ -161,7 +161,7 @@
                 return yield new Promise((resolve, reject) => {
                     let reading = 0;
                     const contents = [];
-                    return readEntry(entry);
+                    readEntry(entry);
                     function readEntry(innerEntry) {
                         if (isFile(innerEntry)) {
                             reading++;
@@ -402,7 +402,7 @@
             }
             GetFiles(element) {
                 let files = null;
-                if (element instanceof HTMLInputElement && element.files.length > 0) {
+                if (element instanceof HTMLInputElement) {
                     files = element.files;
                 }
                 else {

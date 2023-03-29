@@ -216,14 +216,17 @@ namespace Tewr.Blazor.FileReader
         /// </summary>
         IFilePositionInfo PositionInfo { get; }
     }
-    
+
     internal class FileReaderRef : IFileReaderRef
     {
-        public async Task<IEnumerable<IFileReference>> EnumerateFilesAsync() => 
-            Enumerable.Range(0, Math.Max(0, await this.FileReaderJsInterop.GetFileCount(this.ElementRef)))
-                .Select(index => (IFileReference)new FileReference(this, index));
+        public async Task<IEnumerable<IFileReference>> EnumerateFilesAsync()
+        {
+            await Task.Delay(500);
+            return Enumerable.Range(0, Math.Max(0, await this.FileReaderJsInterop.GetFileCount(this.ElementRef)))
+                .Select(index => (IFileReference) new FileReference(this, index));
+        }
 
-        public async Task RegisterDropEventsAsync(bool additive) => 
+        public async Task RegisterDropEventsAsync(bool additive) =>
             await RegisterDropEventsAsync(new DropEventsOptions { Additive = additive });
 
         public async Task RegisterDropEventsAsync(DropEventsOptions dropEventsOptions)
@@ -253,7 +256,7 @@ namespace Tewr.Blazor.FileReader
 
         public async Task UnregisterPasteEventAsync() => await this.FileReaderJsInterop.UnregisterPasteEvent(this.ElementRef);
 
-        public async Task ClearValue() 
+        public async Task ClearValue()
             => await this.FileReaderJsInterop.ClearValue(this.ElementRef);
 
         public ElementReference ElementRef { get; private set; }

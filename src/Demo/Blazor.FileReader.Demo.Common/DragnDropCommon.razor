@@ -30,11 +30,11 @@ else if (currentOption == "DragnDropInputCommon")
 @code {
     public static string WriteFileInfoOutput(IFileInfo fileInfo, string nl) {
         var output = string.Empty;
-        output += $"{nameof(IFileInfo)}.{nameof(fileInfo.Name)}: {fileInfo.Name}{nl}";
-        output += $"{nameof(IFileInfo)}.{nameof(fileInfo.WebkitRelativePath)}: {fileInfo.WebkitRelativePath}{nl}";
-        output += $"{nameof(IFileInfo)}.{nameof(fileInfo.Size)}: {fileInfo.Size}{nl}";
-        output += $"{nameof(IFileInfo)}.{nameof(fileInfo.Type)}: {fileInfo.Type}{nl}";
-        output += $"{nameof(IFileInfo)}.{nameof(fileInfo.LastModifiedDate)}: {fileInfo.LastModifiedDate?.ToString() ?? "(N/A)"}{nl}";
+        output += $"{nameof(IFileInfo)}.{nameof(fileInfo.Name)}: {fileInfo?.Name}{nl}";
+        output += $"{nameof(IFileInfo)}.{nameof(fileInfo.WebkitRelativePath)}: {fileInfo?.WebkitRelativePath}{nl}";
+        output += $"{nameof(IFileInfo)}.{nameof(fileInfo.Size)}: {fileInfo?.Size}{nl}";
+        output += $"{nameof(IFileInfo)}.{nameof(fileInfo.Type)}: {fileInfo?.Type}{nl}";
+        output += $"{nameof(IFileInfo)}.{nameof(fileInfo.LastModifiedDate)}: {fileInfo?.LastModifiedDate?.ToString() ?? "(N/A)"}{nl}";
         output += $"Reading file...";
 
         return output;
