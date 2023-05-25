@@ -145,8 +145,7 @@
                 }
                 for (let i = 0; i < webkitQueue.length; i++) {
                     const entry = webkitQueue[i];
-                    const entryContent = yield readEntryContentAsync(entry);
-                    files.push(...entryContent);
+                    yield readEntryContentAsync(entry).then(entryContent => files.push(...entryContent));
                 }
                 for (let i = 0; i < fileQueue.length; i++) {
                     const entry = fileQueue[i];
@@ -212,14 +211,16 @@
             const dropHandler = (ev) => __awaiter(this, void 0, void 0, function* () {
                 ev.preventDefault();
                 if (ev.target instanceof HTMLElement) {
-                    let list = yield getFilesAsync((ev.dataTransfer));
-                    if (registerOptions.additive) {
-                        const existing = this.elementDataTransfers.get(element);
-                        if (existing !== undefined && existing.length > 0) {
-                            list = new ConcatFileList_1.ConcatFileList(existing, list);
+                    yield getFilesAsync((ev.dataTransfer)).then(files => {
+                        var _a;
+                        if (registerOptions.additive) {
+                            const existing = (_a = this.elementDataTransfers.get(element)) !== null && _a !== void 0 ? _a : new FileList();
+                            if (existing.length > 0) {
+                                files = new ConcatFileList_1.ConcatFileList(existing, files);
+                            }
                         }
-                    }
-                    this.elementDataTransfers.set(element, list);
+                        this.elementDataTransfers.set(element, files);
+                    });
                 }
                 onAfterDropHandler(ev, element, this);
             });
@@ -426,8 +427,9 @@
                     size: file.size,
                     type: file.type
                 };
-                const properties = {};
-                properties["webkitRelativePath"] = file.webkitRelativePath;
+                const properties = {
+                    "webkitRelativePath": file.webkitRelativePath
+                };
                 for (const property in file) {
                     if (Object.prototype.hasOwnProperty.call(file, property) && !(property in result)) {
                         properties[property] = file[property];

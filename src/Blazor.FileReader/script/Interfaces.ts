@@ -51,7 +51,7 @@ interface ReadFileSliceResult {
 
 interface IFileInfo {
     name: string;
-    nonStandardProperties: { [propertyName: string]: any };
+    nonStandardProperties: Record<string, any>;
     size: number;
     type: string;
     lastModified: number;

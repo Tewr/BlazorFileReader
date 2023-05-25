@@ -183,7 +183,7 @@ namespace Tewr.Blazor.FileReader
         /// <summary>
         /// Returns a list of non-standard DOM properties attached to the object, like the webkitRelativePath property.
         /// </summary>
-        Dictionary<string,object> NonStandardProperties { get; }
+        Dictionary<string, object> NonStandardProperties { get; }
 
         /// <summary>
         /// Returns the size of the file in bytes.
@@ -215,9 +215,11 @@ namespace Tewr.Blazor.FileReader
     {
         public async Task<IEnumerable<IFileReference>> EnumerateFilesAsync()
         {
-            await Task.Delay(500);
-            return Enumerable.Range(0, Math.Max(0, await this.FileReaderJsInterop.GetFileCount(this.ElementRef)))
-                .Select(index => (IFileReference) new FileReference(this, index));
+            await Task.Yield();
+            var fileCount = await FileReaderJsInterop.GetFileCount(ElementRef);
+            var result = Enumerable.Range(0, Math.Max(0, fileCount))
+                .Select(index => (IFileReference)new FileReference(this, index));
+            return result;
         }
 
         public async Task RegisterDropEventsAsync(bool additive) =>
@@ -281,7 +283,8 @@ namespace Tewr.Blazor.FileReader
             return await CreateMemoryStreamAsync(CancellationToken.None);
         }
 
-        public async Task<MemoryStream> CreateMemoryStreamAsync(CancellationToken cancellationToken) {
+        public async Task<MemoryStream> CreateMemoryStreamAsync(CancellationToken cancellationToken)
+        {
             return await CreateMemoryStreamAsync((int)(await ReadFileInfoAsync()).Size, cancellationToken);
         }
 
@@ -326,7 +329,7 @@ namespace Tewr.Blazor.FileReader
             {
                 memoryStream = new MemoryStream(bufferSize);
             }
-            
+
             await using (var fs = await OpenReadAsync())
             {
                 await fs.CopyToAsync(memoryStream, bufferSize, cancellationToken);
@@ -372,12 +375,14 @@ namespace Tewr.Blazor.FileReader
 
         public Dictionary<string, object> NonStandardProperties { get; set; }
 
-        public long Size { 
-            get => size; 
-            set { 
+        public long Size
+        {
+            get => size;
+            set
+            {
                 size = value;
                 this.filePositionInfo.FileSize = size;
-            } 
+            }
         }
 
         public string Type { get; set; }

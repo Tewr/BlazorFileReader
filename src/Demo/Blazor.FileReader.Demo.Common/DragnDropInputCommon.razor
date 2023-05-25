@@ -51,7 +51,7 @@
         <br />
         if (useWebkit)
         {
-            @fileInfo.NonStandardProperties["WebkitRelativePath"]
+            @fileInfo.NonStandardProperties["webkitRelativePath"]
         }
         else
         {
@@ -155,7 +155,7 @@
         Output = string.Empty;
         _ = InvokeAsync(StateHasChanged);
 
-        foreach (var pair in IpFileList)
+        foreach (var pair in IpFileList.ToList())
         {
             var fileInfo = pair.FileInfo;
             Output += DragnDropCommon.WriteFileInfoOutput(fileInfo, nl);

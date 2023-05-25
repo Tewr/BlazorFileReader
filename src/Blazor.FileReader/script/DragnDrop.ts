@@ -72,8 +72,7 @@ async function getFilesAsync(dataTransfer: DataTransfer): Promise<FileList> {
     for (let i = 0; i < webkitQueue.length; i++) {
         const entry = webkitQueue[i];
 
-        const entryContent = await readEntryContentAsync(entry);
-        files.push(...entryContent);
+        await readEntryContentAsync(entry).then(entryContent => files.push(...entryContent));
     }
 
     // Get the content for any other files
@@ -155,15 +154,16 @@ function RegisterDropEvents(this: FileReaderComponent, element: HTMLElement, reg
         ev.preventDefault();
 
         if (ev.target instanceof HTMLElement) {
-            let list = await getFilesAsync((ev.dataTransfer));
-            if (registerOptions.additive) {
-                const existing = this.elementDataTransfers.get(element);
-                if (existing !== undefined && existing.length > 0) {
-                    list = new ConcatFileList(existing, list);
+            await getFilesAsync((ev.dataTransfer)).then(files => {
+                if (registerOptions.additive) {
+                    const existing = this.elementDataTransfers.get(element) ?? new FileList();
+                    if (existing.length > 0) {
+                        files = new ConcatFileList(existing, files);
+                    }
                 }
-            }
 
-            this.elementDataTransfers.set(element, list);
+                this.elementDataTransfers.set(element, files);
+            });
         }
 
         onAfterDropHandler(ev, element, this);

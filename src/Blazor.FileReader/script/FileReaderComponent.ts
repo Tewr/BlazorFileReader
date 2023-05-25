@@ -99,9 +99,10 @@ class FileReaderComponent {
             type: file.type
         };
 
-        const properties: { [propertyName: string]: any } = {};
-        
-        properties["webkitRelativePath"] = file.webkitRelativePath;
+        const properties: Record<string, any> = {
+            "webkitRelativePath": file.webkitRelativePath
+        };
+
         for (const property in file) {
             if (Object.prototype.hasOwnProperty.call(file, property) && !(property in result)) {
                 properties[property] = file[property];
