@@ -91,16 +91,17 @@ class FileReaderComponent {
     }
 
     public GetFileInfoFromFile(file: File): IFileInfo {
-        const result = {
+        const result:IFileInfo = {
             lastModified: file.lastModified,
             name: file.name,
             nonStandardProperties: null,
             size: file.size,
-            type: file.type,
-            webkitRelativePath: file.webkitRelativePath,
+            type: file.type
         };
 
-        const properties: { [propertyName: string]: object } = {};
+        const properties: { [propertyName: string]: any } = {};
+        
+        properties["webkitRelativePath"] = file.webkitRelativePath;
         for (const property in file) {
             if (Object.prototype.hasOwnProperty.call(file, property) && !(property in result)) {
                 properties[property] = file[property];

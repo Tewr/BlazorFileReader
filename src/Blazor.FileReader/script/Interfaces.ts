@@ -51,11 +51,10 @@ interface ReadFileSliceResult {
 
 interface IFileInfo {
     name: string;
-    nonStandardProperties: any;
+    nonStandardProperties: { [propertyName: string]: any };
     size: number;
     type: string;
     lastModified: number;
-    webkitRelativePath: string;
 };
 
 interface IDotNetBuffer {

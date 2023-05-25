@@ -351,19 +351,10 @@
             Returns the last modified time of the file.
             </summary>
         </member>
-        <member name="P:Tewr.Blazor.FileReader.IFileInfo.WebkitRelativePath">
-            <summary>
-                Gets the relative path including the filename.
-            </summary>
-            <value>The webkit relative path.</value>
-        </member>
         <member name="P:Tewr.Blazor.FileReader.IFileInfo.PositionInfo">
             <summary>
             Returns information of the position of any stream related to this file.
             </summary>
-        </member>
-        <member name="P:Tewr.Blazor.FileReader.FileInfo.WebkitRelativePath">
-            <inheritdoc />
         </member>
         <member name="T:Tewr.Blazor.FileReader.AsyncDisposableStream">
             <summary>
