@@ -31,7 +31,7 @@ Multiple files, directories, or a combination of both may be dropped onto the di
 
     @foreach (var fileInfo in DropFileList)
     {
-        <br />@fileInfo.WebkitRelativePath
+        <br />@fileInfo.NonStandardProperties["WebkitRelativePath"]
     }
 </div>
 
