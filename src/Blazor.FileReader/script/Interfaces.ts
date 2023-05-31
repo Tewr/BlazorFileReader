@@ -2,7 +2,6 @@
     invokeMethodAsync<T>(assemblyName: string, methodIdentifier: string, ...args: any[]): Promise<T>;
 }
 
-
 interface IBlazor {
     platform: IBlazorPlatform;
 }

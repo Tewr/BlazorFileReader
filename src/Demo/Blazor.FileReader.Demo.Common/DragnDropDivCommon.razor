@@ -96,7 +96,7 @@ Multiple files, directories, or a combination of both may be dropped onto the di
 
     public async Task OnDrop(EventArgs e)
     {
-        Output += "Dropped a file.";
+        Output += "Dropped a file.\n";
         _dropClasses.Remove(dropTargetDragClass);
         this.StateHasChanged();
         await this.RefreshDropFileList();
@@ -105,7 +105,9 @@ Multiple files, directories, or a combination of both may be dropped onto the di
     private async Task RefreshDropFileList()
     {
         DropFileList.Clear();
-        foreach (var file in await dropReference.EnumerateFilesAsync())
+        var files = (await dropReference.EnumerateFilesAsync()).ToList();
+        Output += $"{files.Count} files.\n";
+        foreach (var file in files)
         {
             var fileInfo = await file.ReadFileInfoAsync();
             DropFileList.Add(fileInfo);

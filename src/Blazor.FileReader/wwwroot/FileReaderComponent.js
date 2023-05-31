@@ -144,60 +144,71 @@
                     }
                 }
                 for (let i = 0; i < webkitQueue.length; i++) {
-                    const entry = webkitQueue[i];
-                    yield readEntryContentAsync(entry).then(entryContent => files.push(...entryContent));
+                    const file = yield readEntryAsync(webkitQueue[i]);
+                    files.push(...file);
                 }
-                for (let i = 0; i < fileQueue.length; i++) {
-                    const entry = fileQueue[i];
-                    files.push(entry);
-                }
+                files.push(...fileQueue);
                 return new FileEntryList_1.FileEntryList(files);
-                ;
             });
         }
-        function readEntryContentAsync(entry) {
+        function readEntryAsync(innerEntry) {
             return __awaiter(this, void 0, void 0, function* () {
-                return yield new Promise((resolve, reject) => {
-                    let reading = 0;
-                    const contents = [];
-                    readEntry(entry);
-                    function readEntry(innerEntry) {
-                        if (isFile(innerEntry)) {
-                            reading++;
-                            let fullPath = innerEntry.fullPath;
-                            if (fullPath.charAt(0) === "/" || fullPath.charAt(0) === "\\")
-                                fullPath = fullPath.substring(1);
-                            innerEntry.file(file => {
-                                reading--;
-                                Object.defineProperty(file, "webkitRelativePath", {
-                                    get() {
-                                        return fullPath;
-                                    }
-                                });
-                                contents.push(file);
-                                if (reading === 0) {
-                                    resolve(contents);
-                                }
-                            });
-                        }
-                        else if (isDirectory(innerEntry)) {
-                            readReaderContent(innerEntry.createReader());
+                const files = [];
+                if (isFile(innerEntry)) {
+                    let fullPath = innerEntry.fullPath;
+                    if (fullPath.charAt(0) === "/" || fullPath.charAt(0) === "\\")
+                        fullPath = fullPath.substring(1);
+                    try {
+                        const file = yield getFile(innerEntry);
+                        files.push(redefineWebkitRelativePath(file, fullPath));
+                    }
+                    catch (err) {
+                        console.error(`error on ${fullPath}`);
+                        console.error(err);
+                    }
+                }
+                else if (isDirectory(innerEntry)) {
+                    try {
+                        const entries = yield getEntries(innerEntry.createReader());
+                        for (const entry of entries) {
+                            const innerFiles = yield readEntryAsync(entry);
+                            files.push(...innerFiles);
                         }
                     }
-                    function readReaderContent(reader) {
-                        reading++;
-                        reader.readEntries(function (entries) {
-                            reading--;
-                            for (const entry of entries) {
-                                readEntry(entry);
-                            }
-                            if (reading === 0) {
-                                resolve(contents);
-                            }
-                        });
+                    catch (err2) {
+                        console.error(err2);
                     }
-                });
+                }
+                return files;
             });
+        }
+        function getEntries(reader) {
+            return __awaiter(this, void 0, void 0, function* () {
+                try {
+                    return yield new Promise((resolve, reject) => reader.readEntries(resolve, reject));
+                }
+                catch (err) {
+                    console.error(err);
+                }
+            });
+        }
+        function getFile(fileEntry) {
+            return __awaiter(this, void 0, void 0, function* () {
+                try {
+                    return new Promise((resolve, reject) => fileEntry.file(resolve, reject));
+                }
+                catch (err) {
+                    console.error(err);
+                }
+            });
+        }
+        function redefineWebkitRelativePath(file, fullPath) {
+            Object.defineProperty(file, "webkitRelativePath", {
+                get() {
+                    return fullPath;
+                }
+            });
+            return file;
         }
         function isDirectory(entry) {
             return entry.isDirectory;
@@ -209,18 +220,18 @@
             this.LogIfNull(element);
             const onAfterDropHandler = BuildDragEventHandler(registerOptions.onDropMethod, registerOptions.onDropScript, dropEvent);
             const dropHandler = (ev) => __awaiter(this, void 0, void 0, function* () {
+                var _a;
                 ev.preventDefault();
+                this.elementDataTransfers.clear();
                 if (ev.target instanceof HTMLElement) {
-                    yield getFilesAsync((ev.dataTransfer)).then(files => {
-                        var _a;
-                        if (registerOptions.additive) {
-                            const existing = (_a = this.elementDataTransfers.get(element)) !== null && _a !== void 0 ? _a : new FileList();
-                            if (existing.length > 0) {
-                                files = new ConcatFileList_1.ConcatFileList(existing, files);
-                            }
+                    let files = yield getFilesAsync((ev.dataTransfer));
+                    if (registerOptions.additive) {
+                        const existing = (_a = this.elementDataTransfers.get(element)) !== null && _a !== void 0 ? _a : new FileList();
+                        if (existing.length > 0) {
+                            files = new ConcatFileList_1.ConcatFileList(existing, files);
                         }
-                        this.elementDataTransfers.set(element, files);
-                    });
+                    }
+                    this.elementDataTransfers.set(element, files);
                 }
                 onAfterDropHandler(ev, element, this);
             });

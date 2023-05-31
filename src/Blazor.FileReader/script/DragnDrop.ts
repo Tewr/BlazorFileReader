@@ -47,6 +47,7 @@ function BuildDragEventHandler(declaredMethod: string, script: string, eventDesc
 
 // Go through the data transfer object to pull out the files and folders
 async function getFilesAsync(dataTransfer: DataTransfer): Promise<FileList> {
+    //return await new Promise<FileList>((resolve, reject) => {
     const files: File[] = [];
     const len = dataTransfer.items.length;
     const webkitQueue: FileSystemEntry[] = [];
@@ -70,70 +71,71 @@ async function getFilesAsync(dataTransfer: DataTransfer): Promise<FileList> {
 
     // Get the content for the web kit files
     for (let i = 0; i < webkitQueue.length; i++) {
-        const entry = webkitQueue[i];
-
-        await readEntryContentAsync(entry).then(entryContent => files.push(...entryContent));
+        const file = await readEntryAsync(webkitQueue[i]);
+        files.push(...file);
     }
 
     // Get the content for any other files
-    for (let i = 0; i < fileQueue.length; i++) {
-        const entry = fileQueue[i];
-        files.push(entry);
-    }
+    files.push(...fileQueue);
 
-    return new FileEntryList(files);;
+    return new FileEntryList(files);
 }
 
-// Returns a promise with all the files in the directory hierarchy
-async function readEntryContentAsync(entry: FileSystemEntry): Promise<File[]> {
-    return await new Promise<File[]>((resolve, reject) => {
-        let reading = 0;
-        const contents: File[] = [];
+async function readEntryAsync(innerEntry: FileSystemEntry): Promise<File[]> {
+    const files: File[] = [];
 
-        readEntry(entry);
-
-        function readEntry(innerEntry: FileSystemEntry) {
-            if (isFile(innerEntry)) {
-                reading++;
-                let fullPath = innerEntry.fullPath;
-                if (fullPath.charAt(0) === "/" || fullPath.charAt(0) === "\\")
-                    fullPath = fullPath.substring(1);
-
-                innerEntry.file(file => {
-                    reading--;
-                    // overwrite the webkitRelativePath to ensure the correct path is added from the entry.
-                    Object.defineProperty(file, "webkitRelativePath",
-                        {
-                            get() {
-                                return fullPath;
-                            }
-                        });
-                    contents.push(file);
-
-                    if (reading === 0) {
-                        resolve(contents);
-                    }
-                });
-            } else if (isDirectory(innerEntry)) {
-                readReaderContent(innerEntry.createReader());
+    if (isFile(innerEntry)) {
+        let fullPath = innerEntry.fullPath;
+        if (fullPath.charAt(0) === "/" || fullPath.charAt(0) === "\\")
+            fullPath = fullPath.substring(1);
+        try {
+            const file = await getFile(innerEntry);
+            files.push(redefineWebkitRelativePath(file, fullPath));
+        } catch (err) {
+            console.error(`error on ${fullPath}`);
+            console.error(err);
+        }
+    } else if (isDirectory(innerEntry)) {
+        try {
+            const entries = await getEntries(innerEntry.createReader());
+            for (const entry of entries) {
+                const innerFiles = await readEntryAsync(entry);
+                files.push(...innerFiles);
             }
+        } catch (err2) {
+            console.error(err2);
         }
+    }
 
-        function readReaderContent(reader: FileSystemDirectoryReader) {
-            reading++;
+    return files;
+}
 
-            reader.readEntries(function (entries) {
-                reading--;
-                for (const entry of entries) {
-                    readEntry(entry);
-                }
+async function getEntries(reader): Promise<FileSystemFileEntry[]> {
+    try {
+        return await new Promise((resolve, reject) => reader.readEntries(resolve, reject));
+    } catch (err) {
+        console.error(err);
+    }
+}
 
-                if (reading === 0) {
-                    resolve(contents);
-                }
-            });
-        }
-    });
+async function getFile(fileEntry: FileSystemFileEntry): Promise<File> {
+    try {
+        return new Promise((resolve, reject) => fileEntry.file(resolve, reject));
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+function redefineWebkitRelativePath(file: File, fullPath: string): File {
+    // overwrite the webkitRelativePath to ensure the correct path is added from the entry.
+    Object.defineProperty(file, "webkitRelativePath",
+        {
+            get() {
+                return fullPath;
+            }
+        });
+
+    return file;
 }
 
 // for TypeScript typing (type guard function)
@@ -152,18 +154,17 @@ function RegisterDropEvents(this: FileReaderComponent, element: HTMLElement, reg
     const onAfterDropHandler = BuildDragEventHandler(registerOptions.onDropMethod, registerOptions.onDropScript, dropEvent);
     const dropHandler = async (ev: DragEvent) => {
         ev.preventDefault();
-
+        this.elementDataTransfers.clear();
         if (ev.target instanceof HTMLElement) {
-            await getFilesAsync((ev.dataTransfer)).then(files => {
-                if (registerOptions.additive) {
-                    const existing = this.elementDataTransfers.get(element) ?? new FileList();
-                    if (existing.length > 0) {
-                        files = new ConcatFileList(existing, files);
-                    }
+            let files = await getFilesAsync((ev.dataTransfer));
+            if (registerOptions.additive) {
+                const existing = this.elementDataTransfers.get(element) ?? new FileList();
+                if (existing.length > 0) {
+                    files = new ConcatFileList(existing, files);
                 }
+            }
 
-                this.elementDataTransfers.set(element, files);
-            });
+            this.elementDataTransfers.set(element, files);
         }
 
         onAfterDropHandler(ev, element, this);
