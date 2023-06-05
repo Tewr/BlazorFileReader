@@ -1,6 +1,7 @@
 ﻿import { FileReaderComponent } from "./FileReaderComponent"
 import { FileReaderJsInterop } from "./FileReaderJsInterop"
 import { ConcatFileList } from "./ConcatFileList"
+import { FileEntryList } from "./FileEntryList"
 
 const nameof = <T>(name: keyof T) => name;
 const dropEvent = nameof<DragEvents>("drop");
@@ -44,23 +45,120 @@ function BuildDragEventHandler(declaredMethod: string, script: string, eventDesc
     return (() => { }) as DragEventHandler;
 }
 
+// Go through the data transfer object to pull out the files and folders
+async function getFilesAsync(dataTransfer: DataTransfer): Promise<FileList> {
+    //return await new Promise<FileList>((resolve, reject) => {
+    const files: File[] = [];
+    const len = dataTransfer.items.length;
+    const webkitQueue: FileSystemEntry[] = [];
+    const fileQueue: File[] = [];
+
+    // First must save off all the files
+    for (let i = 0; i < len; i++) {
+        const item = dataTransfer.items[i];
+        if (item.kind === "file") {
+            if (typeof item.webkitGetAsEntry === "function") {
+                const entry = item.webkitGetAsEntry();
+                webkitQueue.push(entry);
+            } else {
+                const file = item.getAsFile();
+                if (file) {
+                    fileQueue.push(file);
+                }
+            }
+        }
+    }
+
+    // Get the content for the web kit files
+    for (let i = 0; i < webkitQueue.length; i++) {
+        const file = await readEntryAsync(webkitQueue[i]);
+        files.push(...file);
+    }
+
+    // Get the content for any other files
+    files.push(...fileQueue);
+
+    return new FileEntryList(files);
+}
+
+async function readEntryAsync(innerEntry: FileSystemEntry): Promise<File[]> {
+    const files: File[] = [];
+
+    if (isFile(innerEntry)) {
+        let fullPath = innerEntry.fullPath;
+        if (fullPath.charAt(0) === "/" || fullPath.charAt(0) === "\\")
+            fullPath = fullPath.substring(1);
+        try {
+            const file = await getFile(innerEntry);
+            files.push(redefineWebkitRelativePath(file, fullPath));
+        } catch (err) {
+            console.error(`error on ${fullPath}`);
+            console.error(err);
+            throw err;
+        }
+    } else if (isDirectory(innerEntry)) {
+        try {
+            const entries = await getEntries(innerEntry.createReader());
+            for (const entry of entries) {
+                const innerFiles = await readEntryAsync(entry);
+                files.push(...innerFiles);
+            }
+        } catch (err2) {
+            console.error(err2);
+            throw err2;
+        }
+    }
+
+    return files;
+}
+
+async function getEntries(reader): Promise<FileSystemFileEntry[]> {
+    return await new Promise((resolve, reject) => reader.readEntries(resolve, reject));
+}
+
+async function getFile(fileEntry: FileSystemFileEntry): Promise<File> {
+    return new Promise((resolve, reject) => fileEntry.file(resolve, reject));
+}
+
+function redefineWebkitRelativePath(file: File, fullPath: string): File {
+    // overwrite the webkitRelativePath to ensure the correct path is added from the entry.
+    Object.defineProperty(file, "webkitRelativePath",
+        {
+            get() {
+                return fullPath;
+            }
+        });
+
+    return file;
+}
+
+// for TypeScript typing (type guard function)
+// https://www.typescriptlang.org/docs/handbook/advanced-types.html#user-defined-type-guards
+function isDirectory(entry: FileSystemEntry): entry is FileSystemDirectoryEntry {
+    return entry.isDirectory;
+}
+
+function isFile(entry: FileSystemEntry): entry is FileSystemFileEntry {
+    return entry.isFile;
+}
+
 function RegisterDropEvents(this: FileReaderComponent, element: HTMLElement, registerOptions: DropEventsOptions): boolean {
     this.LogIfNull(element);
 
     const onAfterDropHandler = BuildDragEventHandler(registerOptions.onDropMethod, registerOptions.onDropScript, dropEvent);
-    const dropHandler = (ev: DragEvent) => {
+    const dropHandler = async (ev: DragEvent) => {
         ev.preventDefault();
+        this.elementDataTransfers.clear();
         if (ev.target instanceof HTMLElement) {
-            let list = ev.dataTransfer.files;
-            
+            let files = await getFilesAsync((ev.dataTransfer));
             if (registerOptions.additive) {
-                const existing = this.elementDataTransfers.get(element);
-                if (existing !== undefined && existing.length > 0) {
-                    list = new ConcatFileList(existing, list);
+                const existing = this.elementDataTransfers.get(element) ?? new FileList();
+                if (existing.length > 0) {
+                    files = new ConcatFileList(existing, files);
                 }
             }
 
-            this.elementDataTransfers.set(element, list);
+            this.elementDataTransfers.set(element, files);
         }
 
         onAfterDropHandler(ev, element, this);

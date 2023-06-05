@@ -2,7 +2,6 @@
     invokeMethodAsync<T>(assemblyName: string, methodIdentifier: string, ...args: any[]): Promise<T>;
 }
 
-
 interface IBlazor {
     platform: IBlazorPlatform;
 }
@@ -51,7 +50,7 @@ interface ReadFileSliceResult {
 
 interface IFileInfo {
     name: string;
-    nonStandardProperties: any;
+    nonStandardProperties: Record<string, any>;
     size: number;
     type: string;
     lastModified: number;

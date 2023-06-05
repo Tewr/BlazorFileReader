@@ -183,7 +183,7 @@ namespace Tewr.Blazor.FileReader
         /// <summary>
         /// Returns a list of non-standard DOM properties attached to the object, like the webkitRelativePath property.
         /// </summary>
-        Dictionary<string,object> NonStandardProperties { get; }
+        Dictionary<string, object> NonStandardProperties { get; }
 
         /// <summary>
         /// Returns the size of the file in bytes.
@@ -210,14 +210,38 @@ namespace Tewr.Blazor.FileReader
         /// </summary>
         IFilePositionInfo PositionInfo { get; }
     }
-    
+
     internal class FileReaderRef : IFileReaderRef
     {
-        public async Task<IEnumerable<IFileReference>> EnumerateFilesAsync() => 
-            Enumerable.Range(0, Math.Max(0, await this.FileReaderJsInterop.GetFileCount(this.ElementRef)))
+        public async Task<IEnumerable<IFileReference>> EnumerateFilesAsync()
+        {
+            var count = await GetFileCount();
+            var result = Enumerable.Range(0, Math.Max(0, count))
                 .Select(index => (IFileReference)new FileReference(this, index));
+            return result;
+        }
 
-        public async Task RegisterDropEventsAsync(bool additive) => 
+        // Get the count twice. Ensure that both numbers are the same. if not, keep getting until the number is stable.
+        // This is a workaround for the event handler firing off before the AfterDrop event.
+        public async Task<int> GetFileCount()
+        {
+            var lastCount = -10;
+            while (true)
+            {
+                var currentCount = await FileReaderJsInterop.GetFileCount(ElementRef);
+
+                if (lastCount == currentCount)
+                {
+                    break;
+                }
+
+                lastCount = currentCount;
+                await Task.Delay(500);
+            }
+
+            return lastCount;
+        }
+        public async Task RegisterDropEventsAsync(bool additive) =>
             await RegisterDropEventsAsync(new DropEventsOptions { Additive = additive });
 
         public async Task RegisterDropEventsAsync(DropEventsOptions dropEventsOptions)
@@ -247,7 +271,7 @@ namespace Tewr.Blazor.FileReader
 
         public async Task UnregisterPasteEventAsync() => await this.FileReaderJsInterop.UnregisterPasteEvent(this.ElementRef);
 
-        public async Task ClearValue() 
+        public async Task ClearValue()
             => await this.FileReaderJsInterop.ClearValue(this.ElementRef);
 
         public ElementReference ElementRef { get; private set; }
@@ -278,7 +302,8 @@ namespace Tewr.Blazor.FileReader
             return await CreateMemoryStreamAsync(CancellationToken.None);
         }
 
-        public async Task<MemoryStream> CreateMemoryStreamAsync(CancellationToken cancellationToken) {
+        public async Task<MemoryStream> CreateMemoryStreamAsync(CancellationToken cancellationToken)
+        {
             return await CreateMemoryStreamAsync((int)(await ReadFileInfoAsync()).Size, cancellationToken);
         }
 
@@ -323,7 +348,7 @@ namespace Tewr.Blazor.FileReader
             {
                 memoryStream = new MemoryStream(bufferSize);
             }
-            
+
             await using (var fs = await OpenReadAsync())
             {
                 await fs.CopyToAsync(memoryStream, bufferSize, cancellationToken);
@@ -369,12 +394,14 @@ namespace Tewr.Blazor.FileReader
 
         public Dictionary<string, object> NonStandardProperties { get; set; }
 
-        public long Size { 
-            get => size; 
-            set { 
+        public long Size
+        {
+            get => size;
+            set
+            {
                 size = value;
                 this.filePositionInfo.FileSize = size;
-            } 
+            }
         }
 
         public string Type { get; set; }

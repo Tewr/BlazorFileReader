@@ -1,4 +1,6 @@
 ﻿@using System.IO;
+@using System.Threading
+@using Tewr.Blazor.FileReader.DropEvents
 @inject IFileReaderService fileReaderService;
 
 <style>
@@ -16,7 +18,7 @@
         font-weight: bold;
     }
 </style>
-
+Multiple files, directories, or a combination of both may be dropped onto the div element.
 <div class="@DropClass"
      @ref=dropTargetElement
      @ondrop=OnDrop
@@ -29,12 +31,9 @@
 
     @foreach (var fileInfo in DropFileList)
     {
-        <br />@fileInfo.Name
+        <br />@fileInfo.NonStandardProperties["webkitRelativePath"]
     }
 </div>
-
-
-
 
 <input id="additivediv" type="checkbox" checked=@Additive @onchange="OnAdditiveChange" />
 <label for="additivediv">Additive</label>
@@ -42,13 +41,15 @@
 <button @onclick="ReadDrop" class="btn btn-primary">Read file</button>
 <button @onclick="ClearDrop" class="btn btn-primary">Clear</button>
 <br /><br />
-<textarea style="max-width: 100%;" cols="50" rows="20">@Output</textarea>
+<textarea style="max-width: 100%; width: 100%" cols="50" rows="20">@Output</textarea>
 @code {
     ElementReference dropTargetElement;
     ElementReference dropTargetInput;
     IFileReaderRef dropReference;
     IFileReaderRef ipReference;
     bool Additive { get; set; }
+
+    private static readonly string nl = Environment.NewLine;
 
     const string dropTargetDragClass = "droptarget-drag";
     const string dropTargetClass = "droptarget";
@@ -95,7 +96,7 @@
 
     public async Task OnDrop(EventArgs e)
     {
-        Output += "Dropped a file.";
+        Output += "Dropped a file.\n";
         _dropClasses.Remove(dropTargetDragClass);
         this.StateHasChanged();
         await this.RefreshDropFileList();
@@ -104,7 +105,9 @@
     private async Task RefreshDropFileList()
     {
         DropFileList.Clear();
-        foreach (var file in await dropReference.EnumerateFilesAsync())
+        var files = (await dropReference.EnumerateFilesAsync()).ToList();
+        Output += $"{files.Count} files.\n";
+        foreach (var file in files)
         {
             var fileInfo = await file.ReadFileInfoAsync();
             DropFileList.Add(fileInfo);
@@ -123,30 +126,25 @@
     public async Task ReadFile(IFileReaderRef list)
     {
         Output = string.Empty;
-        this.StateHasChanged();
-        var nl = Environment.NewLine;
+        _ = InvokeAsync(StateHasChanged);
         foreach (var file in await list.EnumerateFilesAsync())
         {
             var fileInfo = await file.ReadFileInfoAsync();
-            Output += $"{nameof(IFileInfo)}.{nameof(fileInfo.Name)}: {fileInfo.Name}{nl}";
-            Output += $"{nameof(IFileInfo)}.{nameof(fileInfo.Size)}: {fileInfo.Size}{nl}";
-            Output += $"{nameof(IFileInfo)}.{nameof(fileInfo.Type)}: {fileInfo.Type}{nl}";
-            Output += $"{nameof(IFileInfo)}.{nameof(fileInfo.LastModifiedDate)}: {fileInfo.LastModifiedDate?.ToString() ?? "(N/A)"}{nl}";
-            Output += $"Reading file...";
-            this.StateHasChanged();
-            fileInfo.PositionInfo.PositionChanged += (s, e) => {
+            Output += DragnDropCommon.WriteFileInfoOutput(fileInfo, nl);
+            _ = InvokeAsync(StateHasChanged);
+            fileInfo.PositionInfo.PositionChanged += (s, e) =>
+            {
                 Output += $"Read {e.PositionDeltaSinceAcknowledge}, {e.Position} / {fileInfo.Size} ({e.Percentage:0.00}%){nl}";
-                this.StateHasChanged();
+                _ = InvokeAsync(StateHasChanged);
             };
-
             var bufferSize = 20480;
             using (var ps = new PositionStream())
             using (var fs = await file.OpenReadAsync())
             {
                 await fs.CopyToAsync(ps, bufferSize);
-                Output += $"Done reading file {fileInfo.Name}{nl}.";
+                Output += $"Done reading file {fileInfo.Name}.{nl}{nl}";
             }
-            this.StateHasChanged();
+            _ = InvokeAsync(StateHasChanged);
         }
 
     }

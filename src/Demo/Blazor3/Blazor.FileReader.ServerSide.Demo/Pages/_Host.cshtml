@@ -21,7 +21,7 @@
     </environment>
     <link href="css/site.css" rel="stylesheet" />
 </head>
-<body>
+<body flow-prevent-drop="">
     <app>@(await Html.RenderComponentAsync<App>(RenderMode.Server))</app>
     <script src="_framework/blazor.server.js"></script>
 </body>

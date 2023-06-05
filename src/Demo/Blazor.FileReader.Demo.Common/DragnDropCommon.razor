@@ -28,7 +28,16 @@ else if (currentOption == "DragnDropInputCommon")
 }
 
 @code {
-
+    public static string WriteFileInfoOutput(IFileInfo fileInfo, string nl) {
+        var output = string.Empty;
+        output += $"{nameof(IFileInfo)}.{nameof(fileInfo.Name)}: {fileInfo?.Name}{nl}";
+        output += $"{nameof(IFileInfo)}.{nameof(fileInfo.Size)}: {fileInfo?.Size}{nl}";
+        output += $"{nameof(IFileInfo)}.{nameof(fileInfo.Type)}: {fileInfo?.Type}{nl}";
+        output += $"{nameof(IFileInfo)}.{nameof(fileInfo.LastModifiedDate)}: {fileInfo?.LastModifiedDate?.ToString() ?? "(N/A)"}{nl}";
+        output += fileInfo?.NonStandardProperties?.Keys.Aggregate(output, (current, property) => current + $"{nameof(IFileInfo)}.{property} (nonstandard): {fileInfo.NonStandardProperties[property]}{nl}");
+        output += $"Reading file...{nl}";
+        return output;
+    }
     private class PossibleOption { public string Id { get; set; } public string Description { get; set; } public Func<bool> IsActive { get; set; } }
     List<PossibleOption> possibleOptions = new List<PossibleOption> {
         new PossibleOption { Id = "DragnDropDivCommon", Description= "Drag and Drop on Element" },
