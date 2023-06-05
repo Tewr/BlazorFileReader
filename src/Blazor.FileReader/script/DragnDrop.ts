@@ -94,6 +94,7 @@ async function readEntryAsync(innerEntry: FileSystemEntry): Promise<File[]> {
         } catch (err) {
             console.error(`error on ${fullPath}`);
             console.error(err);
+            throw err;
         }
     } else if (isDirectory(innerEntry)) {
         try {
@@ -104,6 +105,7 @@ async function readEntryAsync(innerEntry: FileSystemEntry): Promise<File[]> {
             }
         } catch (err2) {
             console.error(err2);
+            throw err2;
         }
     }
 
@@ -111,19 +113,11 @@ async function readEntryAsync(innerEntry: FileSystemEntry): Promise<File[]> {
 }
 
 async function getEntries(reader): Promise<FileSystemFileEntry[]> {
-    try {
-        return await new Promise((resolve, reject) => reader.readEntries(resolve, reject));
-    } catch (err) {
-        console.error(err);
-    }
+    return await new Promise((resolve, reject) => reader.readEntries(resolve, reject));
 }
 
 async function getFile(fileEntry: FileSystemFileEntry): Promise<File> {
-    try {
-        return new Promise((resolve, reject) => fileEntry.file(resolve, reject));
-    } catch (err) {
-        console.error(err);
-    }
+    return new Promise((resolve, reject) => fileEntry.file(resolve, reject));
 }
 
 function redefineWebkitRelativePath(file: File, fullPath: string): File {
