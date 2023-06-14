@@ -146,19 +146,26 @@ function RegisterDropEvents(this: FileReaderComponent, element: HTMLElement, reg
     this.LogIfNull(element);
 
     const onAfterDropHandler = BuildDragEventHandler(registerOptions.onDropMethod, registerOptions.onDropScript, dropEvent);
-    const dropHandler = async (ev: DragEvent) => {
+    const dropHandler = (ev: DragEvent) => {
         ev.preventDefault();
         this.elementDataTransfers.clear();
         if (ev.target instanceof HTMLElement) {
-            let files = await getFilesAsync((ev.dataTransfer));
-            if (registerOptions.additive) {
-                const existing = this.elementDataTransfers.get(element) ?? new FileList();
-                if (existing.length > 0) {
-                    files = new ConcatFileList(existing, files);
+            const filePromise = new Promise<FileList>(async (resolve, reject) => {
+                try {
+$                    let files = await getFilesAsync((ev.dataTransfer));
+                    if (registerOptions.additive) {
+                        const existing = await this.elementDataTransfers.get(element) ?? new FileList();
+                        if (existing.length > 0) {
+                            files = new ConcatFileList(existing, files);
+                        }
+                    }
+                        resolve(files);
+                } catch (e) {
+                    reject(e);
                 }
-            }
+            });
 
-            this.elementDataTransfers.set(element, files);
+            this.elementDataTransfers.set(element, filePromise);
         }
 
         onAfterDropHandler(ev, element, this);
