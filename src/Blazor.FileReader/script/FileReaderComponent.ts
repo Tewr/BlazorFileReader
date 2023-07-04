@@ -12,7 +12,7 @@ class FileReaderComponent {
 
     protected readonly dragElements = new Map<HTMLElement, DragEvents>();
     protected readonly pasteElements = new Map<HTMLElement, EventListenerOrEventListenerObject>();
-    protected readonly elementDataTransfers = new Map<HTMLElement, FileList>();
+    protected readonly elementDataTransfers = new Map<HTMLElement, Promise<FileList>>();
     private readonly readResultByTaskId = new Map<number, IReadFileData>();
 
     protected LogIfNull(element: HTMLElement) {
@@ -29,29 +29,29 @@ class FileReaderComponent {
 
     public UnregisterPasteEvent = UnregisterPasteEvent;
 
-    private GetFiles(element: HTMLElement): FileList {
+    private async GetFiles(element: HTMLElement): Promise<FileList> {
         let files: FileList = null;
         if (element instanceof HTMLInputElement) {
             files = (element as HTMLInputElement).files;
         } else {
             const dataTransfer = this.elementDataTransfers.get(element);
             if (dataTransfer) {
-                files = dataTransfer;
+                files = await dataTransfer;
             }
         }
 
         return files;
     }
 
-    public GetJSObjectReference(element: HTMLElement, fileIndex: number): File {
+    public async GetJSObjectReference(element: HTMLElement, fileIndex: number): Promise<File> {
         this.LogIfNull(element);
-        const files = this.GetFiles(element);
+        const files = await this.GetFiles(element);
         return files.item(fileIndex);
     }
 
-    public GetFileCount = (element: HTMLElement): number => {
+    public async GetFileCount(element: HTMLElement): Promise<number> {
         this.LogIfNull(element);
-        const files = this.GetFiles(element);
+        const files = await this.GetFiles(element);
         if (!files) {
             return -1;
         }
@@ -71,9 +71,9 @@ class FileReaderComponent {
     };
 
     // Called from cs.
-    public GetFileInfoFromElement = (element: HTMLElement, index: number): IFileInfo => {
+    public async GetFileInfoFromElement(element: HTMLElement, index: number): Promise<IFileInfo> {
         this.LogIfNull(element);
-        const files = this.GetFiles(element);
+        const files = await this.GetFiles(element);
         if (!files) {
             return null;
         }
@@ -112,10 +112,10 @@ class FileReaderComponent {
         return result;
     }
 
-    public OpenRead = (element: HTMLElement, fileIndex: number, useWasmSharedBuffer: boolean): number => {
+    public async OpenRead(element: HTMLElement, fileIndex: number, useWasmSharedBuffer: boolean): Promise<number> {
         this.LogIfNull(element);
 
-        const files = this.GetFiles(element);
+        const files = await this.GetFiles(element);
         if (!files) {
             throw 'No FileList available.';
         }

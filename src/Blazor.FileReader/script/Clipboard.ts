@@ -4,20 +4,29 @@ import { ConcatFileList } from "./ConcatFileList"
 function RegisterPasteEvent(this: FileReaderComponent, element: HTMLElement, registerOptions: PasteEventOptions): boolean {
     this.LogIfNull(element);
 
-    const pasteHandler = (ev: ClipboardEvent) => {
+    const pasteHandler = async (ev: ClipboardEvent) => {
         if (ev.target instanceof HTMLElement) {
-            let list = ev.clipboardData.files;
-            if (list.length > 0) {
-                ev.preventDefault();
-                if (registerOptions.additive) {
-                    const existing = this.elementDataTransfers.get(element);
-                    if (existing !== undefined && existing.length > 0) {
-                        list = new ConcatFileList(existing, list);
+            const listPromise = new Promise<FileList>(async (resolve, reject) => {
+                try {
+                    let list = ev.clipboardData.files;
+                    if (list.length > 0) {
+                        ev.preventDefault();
+                        if (registerOptions.additive) {
+                            const existing = await this.elementDataTransfers.get(element);
+                            if (existing !== undefined && existing.length > 0) {
+                                list = new ConcatFileList(existing, list);
+                            }
+                        }
                     }
-                }
-            }
 
-            this.elementDataTransfers.set(element, list);
+                    resolve(list);
+                }
+                catch (e) {
+                    reject(e);
+                }
+            });
+
+            this.elementDataTransfers.set(element, listPromise);
         }
     };
 

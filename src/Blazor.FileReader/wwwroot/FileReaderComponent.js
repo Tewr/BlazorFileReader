@@ -165,6 +165,7 @@
                     catch (err) {
                         console.error(`error on ${fullPath}`);
                         console.error(err);
+                        throw err;
                     }
                 }
                 else if (isDirectory(innerEntry)) {
@@ -177,6 +178,7 @@
                     }
                     catch (err2) {
                         console.error(err2);
+                        throw err2;
                     }
                 }
                 return files;
@@ -184,22 +186,12 @@
         }
         function getEntries(reader) {
             return __awaiter(this, void 0, void 0, function* () {
-                try {
-                    return yield new Promise((resolve, reject) => reader.readEntries(resolve, reject));
-                }
-                catch (err) {
-                    console.error(err);
-                }
+                return yield new Promise((resolve, reject) => reader.readEntries(resolve, reject));
             });
         }
         function getFile(fileEntry) {
             return __awaiter(this, void 0, void 0, function* () {
-                try {
-                    return new Promise((resolve, reject) => fileEntry.file(resolve, reject));
-                }
-                catch (err) {
-                    console.error(err);
-                }
+                return new Promise((resolve, reject) => fileEntry.file(resolve, reject));
             });
         }
         function redefineWebkitRelativePath(file, fullPath) {
@@ -219,22 +211,29 @@
         function RegisterDropEvents(element, registerOptions) {
             this.LogIfNull(element);
             const onAfterDropHandler = BuildDragEventHandler(registerOptions.onDropMethod, registerOptions.onDropScript, dropEvent);
-            const dropHandler = (ev) => __awaiter(this, void 0, void 0, function* () {
-                var _a;
+            const dropHandler = (ev) => {
                 ev.preventDefault();
-                this.elementDataTransfers.clear();
                 if (ev.target instanceof HTMLElement) {
-                    let files = yield getFilesAsync((ev.dataTransfer));
-                    if (registerOptions.additive) {
-                        const existing = (_a = this.elementDataTransfers.get(element)) !== null && _a !== void 0 ? _a : new FileList();
-                        if (existing.length > 0) {
-                            files = new ConcatFileList_1.ConcatFileList(existing, files);
+                    const filePromise = new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
+                        var _a;
+                        try {
+                            let files = yield getFilesAsync(ev.dataTransfer);
+                            if (registerOptions.additive) {
+                                const existing = (_a = yield this.elementDataTransfers.get(element)) !== null && _a !== void 0 ? _a : new FileList();
+                                if (existing.length > 0) {
+                                    files = new ConcatFileList_1.ConcatFileList(existing, files);
+                                }
+                            }
+                            resolve(files);
                         }
-                    }
-                    this.elementDataTransfers.set(element, files);
+                        catch (e) {
+                            reject(e);
+                        }
+                    }));
+                    this.elementDataTransfers.set(element, filePromise);
                 }
                 onAfterDropHandler(ev, element, this);
-            });
+            };
             const onAfterDragOverHandler = BuildDragEventHandler(registerOptions.onDragOverMethod, registerOptions.onDragOverScript, dragOverEvent);
             const dragOverHandler = (ev) => {
                 ev.preventDefault();
@@ -278,15 +277,6 @@
                 this.UnregisterDropEvents = DragnDrop_1.UnregisterDropEvents;
                 this.RegisterPasteEvent = Clipboard_1.RegisterPasteEvent;
                 this.UnregisterPasteEvent = Clipboard_1.UnregisterPasteEvent;
-                this.GetFileCount = (element) => {
-                    this.LogIfNull(element);
-                    const files = this.GetFiles(element);
-                    if (!files) {
-                        return -1;
-                    }
-                    const result = files.length;
-                    return result;
-                };
                 this.ClearValue = (element) => {
                     this.LogIfNull(element);
                     if (element instanceof HTMLInputElement) {
@@ -297,32 +287,8 @@
                     }
                     return 0;
                 };
-                this.GetFileInfoFromElement = (element, index) => {
-                    this.LogIfNull(element);
-                    const files = this.GetFiles(element);
-                    if (!files) {
-                        return null;
-                    }
-                    const file = files.item(index);
-                    if (!file) {
-                        return null;
-                    }
-                    return this.GetFileInfoFromFile(file);
-                };
                 this.Dispose = (fileRef) => {
                     return delete (this.fileStreams[fileRef]);
-                };
-                this.OpenRead = (element, fileIndex, useWasmSharedBuffer) => {
-                    this.LogIfNull(element);
-                    const files = this.GetFiles(element);
-                    if (!files) {
-                        throw 'No FileList available.';
-                    }
-                    const file = files.item(fileIndex);
-                    if (!file) {
-                        throw `No file with index ${fileIndex} available.`;
-                    }
-                    return this.OpenReadFile(file, useWasmSharedBuffer);
                 };
                 this.OpenReadFile = (file, useWasmSharedBuffer) => {
                     if (useWasmSharedBuffer && !FileReaderJsInterop_2.FileReaderJsInterop.initialized) {
@@ -413,22 +379,51 @@
                 }
             }
             GetFiles(element) {
-                let files = null;
-                if (element instanceof HTMLInputElement) {
-                    files = element.files;
-                }
-                else {
-                    const dataTransfer = this.elementDataTransfers.get(element);
-                    if (dataTransfer) {
-                        files = dataTransfer;
+                return __awaiter(this, void 0, void 0, function* () {
+                    let files = null;
+                    if (element instanceof HTMLInputElement) {
+                        files = element.files;
                     }
-                }
-                return files;
+                    else {
+                        const dataTransfer = this.elementDataTransfers.get(element);
+                        if (dataTransfer) {
+                            files = yield dataTransfer;
+                        }
+                    }
+                    return files;
+                });
             }
             GetJSObjectReference(element, fileIndex) {
-                this.LogIfNull(element);
-                const files = this.GetFiles(element);
-                return files.item(fileIndex);
+                return __awaiter(this, void 0, void 0, function* () {
+                    this.LogIfNull(element);
+                    const files = yield this.GetFiles(element);
+                    return files.item(fileIndex);
+                });
+            }
+            GetFileCount(element) {
+                return __awaiter(this, void 0, void 0, function* () {
+                    this.LogIfNull(element);
+                    const files = yield this.GetFiles(element);
+                    if (!files) {
+                        return -1;
+                    }
+                    const result = files.length;
+                    return result;
+                });
+            }
+            GetFileInfoFromElement(element, index) {
+                return __awaiter(this, void 0, void 0, function* () {
+                    this.LogIfNull(element);
+                    const files = yield this.GetFiles(element);
+                    if (!files) {
+                        return null;
+                    }
+                    const file = files.item(index);
+                    if (!file) {
+                        return null;
+                    }
+                    return this.GetFileInfoFromFile(file);
+                });
             }
             GetFileInfoFromFile(file) {
                 const result = {
@@ -449,6 +444,20 @@
                 result.nonStandardProperties = properties;
                 return result;
             }
+            OpenRead(element, fileIndex, useWasmSharedBuffer) {
+                return __awaiter(this, void 0, void 0, function* () {
+                    this.LogIfNull(element);
+                    const files = yield this.GetFiles(element);
+                    if (!files) {
+                        throw 'No FileList available.';
+                    }
+                    const file = files.item(fileIndex);
+                    if (!file) {
+                        throw `No file with index ${fileIndex} available.`;
+                    }
+                    return this.OpenReadFile(file, useWasmSharedBuffer);
+                });
+            }
             ReadFileSliceAsync(fileRef, position, count) {
                 return __awaiter(this, void 0, void 0, function* () {
                     const file = this.fileStreams[fileRef];
@@ -467,21 +476,29 @@
         exports.UnregisterPasteEvent = exports.RegisterPasteEvent = void 0;
         function RegisterPasteEvent(element, registerOptions) {
             this.LogIfNull(element);
-            const pasteHandler = (ev) => {
+            const pasteHandler = (ev) => __awaiter(this, void 0, void 0, function* () {
                 if (ev.target instanceof HTMLElement) {
-                    let list = ev.clipboardData.files;
-                    if (list.length > 0) {
-                        ev.preventDefault();
-                        if (registerOptions.additive) {
-                            const existing = this.elementDataTransfers.get(element);
-                            if (existing !== undefined && existing.length > 0) {
-                                list = new ConcatFileList_2.ConcatFileList(existing, list);
+                    const listPromise = new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
+                        try {
+                            let list = ev.clipboardData.files;
+                            if (list.length > 0) {
+                                ev.preventDefault();
+                                if (registerOptions.additive) {
+                                    const existing = yield this.elementDataTransfers.get(element);
+                                    if (existing !== undefined && existing.length > 0) {
+                                        list = new ConcatFileList_2.ConcatFileList(existing, list);
+                                    }
+                                }
                             }
+                            resolve(list);
                         }
-                    }
-                    this.elementDataTransfers.set(element, list);
+                        catch (e) {
+                            reject(e);
+                        }
+                    }));
+                    this.elementDataTransfers.set(element, listPromise);
                 }
-            };
+            });
             this.pasteElements.set(element, pasteHandler);
             element.addEventListener("paste", pasteHandler);
             return true;
