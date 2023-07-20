@@ -214,14 +214,17 @@
             const dropHandler = (ev) => {
                 ev.preventDefault();
                 if (ev.target instanceof HTMLElement) {
+                    const existingFilePromise = this.elementDataTransfers.get(element);
                     const filePromise = new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
                         var _a;
                         try {
                             let files = yield getFilesAsync(ev.dataTransfer);
                             if (registerOptions.additive) {
-                                const existing = (_a = yield this.elementDataTransfers.get(element)) !== null && _a !== void 0 ? _a : new FileList();
-                                if (existing.length > 0) {
-                                    files = new ConcatFileList_1.ConcatFileList(existing, files);
+                                if (existingFilePromise) {
+                                    const existing = (_a = yield existingFilePromise) !== null && _a !== void 0 ? _a : new FileList();
+                                    if (existing.length > 0) {
+                                        files = new ConcatFileList_1.ConcatFileList(existing, files);
+                                    }
                                 }
                             }
                             resolve(files);
