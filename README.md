@@ -115,6 +115,8 @@ The code for views looks the same for both [client](src/Demo/Blazor.FileReader.W
 ```
 
 ## Version notes
+Version <code>3.3.2.23201</code> Fixes a <a href="https://github.com/Tewr/BlazorFileReader/issues/194">a bug</a> in 3.3.2.23185 related to drag and drop
+
 Version <code>3.3.2.23185</code> Adds the possibility to drop multiple files and directories on elements.
   
 Version <code>3.3.1.21360</code> Fixes <a href="https://github.com/Tewr/BlazorFileReader/issues/186">a bug</a> related to platform detection under .net6
