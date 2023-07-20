@@ -219,12 +219,10 @@
                         var _a;
                         try {
                             let files = yield getFilesAsync(ev.dataTransfer);
-                            if (registerOptions.additive) {
-                                if (existingFilePromise) {
-                                    const existing = (_a = yield existingFilePromise) !== null && _a !== void 0 ? _a : new FileList();
-                                    if (existing.length > 0) {
-                                        files = new ConcatFileList_1.ConcatFileList(existing, files);
-                                    }
+                            if (registerOptions.additive && existingFilePromise) {
+                                const existing = (_a = yield existingFilePromise) !== null && _a !== void 0 ? _a : new FileList();
+                                if (existing.length > 0) {
+                                    files = new ConcatFileList_1.ConcatFileList(existing, files);
                                 }
                             }
                             resolve(files);
