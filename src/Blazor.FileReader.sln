@@ -33,6 +33,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blazor.FileReader.Wasm.Demo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Blazor.FileReader.ServerSide.Demo", "Demo\Net6\Blazor.FileReader.ServerSide.Demo\Blazor.FileReader.ServerSide.Demo.csproj", "{4AFCC00A-7CC4-4143-9D12-0E0E3CA4A630}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Net9", "Net9", "{593A5165-5576-481B-BC31-EBB59C95A687}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Blazor.FileReader.ServerSide.Demo", "Demo\Net9\Blazor.FileReader.ServerSide.Demo\Blazor.FileReader.ServerSide.Demo.csproj", "{8582499E-5845-4832-B034-370912150DE2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Blazor.FileReader.Wasm.Demo", "Demo\Net9\Blazor.FileReader.Wasm.Demo\Blazor.FileReader.Wasm.Demo.csproj", "{ABD80EB4-6419-485E-B98B-6C773441D47C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -99,6 +105,18 @@ Global
 		{4AFCC00A-7CC4-4143-9D12-0E0E3CA4A630}.Ghpages|Any CPU.Build.0 = Debug|Any CPU
 		{4AFCC00A-7CC4-4143-9D12-0E0E3CA4A630}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4AFCC00A-7CC4-4143-9D12-0E0E3CA4A630}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8582499E-5845-4832-B034-370912150DE2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8582499E-5845-4832-B034-370912150DE2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8582499E-5845-4832-B034-370912150DE2}.Ghpages|Any CPU.ActiveCfg = Debug|Any CPU
+		{8582499E-5845-4832-B034-370912150DE2}.Ghpages|Any CPU.Build.0 = Debug|Any CPU
+		{8582499E-5845-4832-B034-370912150DE2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8582499E-5845-4832-B034-370912150DE2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ABD80EB4-6419-485E-B98B-6C773441D47C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ABD80EB4-6419-485E-B98B-6C773441D47C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ABD80EB4-6419-485E-B98B-6C773441D47C}.Ghpages|Any CPU.ActiveCfg = Debug|Any CPU
+		{ABD80EB4-6419-485E-B98B-6C773441D47C}.Ghpages|Any CPU.Build.0 = Debug|Any CPU
+		{ABD80EB4-6419-485E-B98B-6C773441D47C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ABD80EB4-6419-485E-B98B-6C773441D47C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -116,6 +134,9 @@ Global
 		{C3DC632D-7249-4B55-A0F4-68742064C71F} = {8AA482CE-0130-43A1-84BC-92215AF25AED}
 		{96778444-7F44-4CF8-B8B2-4124865A826A} = {C3DC632D-7249-4B55-A0F4-68742064C71F}
 		{4AFCC00A-7CC4-4143-9D12-0E0E3CA4A630} = {C3DC632D-7249-4B55-A0F4-68742064C71F}
+		{593A5165-5576-481B-BC31-EBB59C95A687} = {8AA482CE-0130-43A1-84BC-92215AF25AED}
+		{8582499E-5845-4832-B034-370912150DE2} = {593A5165-5576-481B-BC31-EBB59C95A687}
+		{ABD80EB4-6419-485E-B98B-6C773441D47C} = {593A5165-5576-481B-BC31-EBB59C95A687}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7BCBB258-C07A-4039-838A-09F3B45F7E58}
