@@ -2,7 +2,7 @@
 
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;net5.0;net6.0</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;net5.0;net6.0;net9.0</TargetFrameworks>
     <BlazorLinkOnBuild>true</BlazorLinkOnBuild>
     <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
     <LangVersion>latest</LangVersion>
@@ -14,15 +14,15 @@
     <PackageTags>blazor blazor-component stream filestream file-stream read-file filereader</PackageTags>
     <Configurations>Debug;Release;Ghpages</Configurations>
     <PackageId>Tewr.Blazor.FileReader</PackageId>
-    <PackageReleaseNotes>Fixes a bug introduced in 3.2.23185, additive drag and drop would never return</PackageReleaseNotes>
+    <PackageReleaseNotes>NET9 Support</PackageReleaseNotes>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageIcon>icon.png</PackageIcon>
     <RazorLangVersion>3.0</RazorLangVersion>
     <AssemblyName>Tewr.Blazor.FileReader</AssemblyName>
     <RootNamespace>Tewr.Blazor.FileReader</RootNamespace>
-    <AssemblyVersion>3.3.2.23201</AssemblyVersion>
-    <Version>3.3.2.23201</Version>
-    <FileVersion>3.3.2.23201</FileVersion>
+    <AssemblyVersion>3.4.0.24340</AssemblyVersion>
+    <Version>3.4.0.24340</Version>
+    <FileVersion>3.4.0.24340</FileVersion>
 
     
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
@@ -47,6 +47,11 @@
   <ItemGroup>
     <!-- .js/.css files will be referenced via <script>/<link> tags; other content files will just be included in the app's 'dist' directory without any tags referencing them -->
     <EmbeddedResource Include="wwwroot\**\*.js" LogicalName="blazor:js:%(RecursiveDir)%(Filename)%(Extension)" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)'=='net9.0'">
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="9.0.0" />
+    <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="9.0.0" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)'=='net6.0'">

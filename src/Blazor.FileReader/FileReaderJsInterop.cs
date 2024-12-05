@@ -23,8 +23,9 @@ namespace Tewr.Blazor.FileReader
 
 
         internal IJSRuntime CurrentJSRuntime;
+#if !NET9_0_OR_GREATER
         internal IJSUnmarshalledRuntime UnmarshalledRuntime;
-
+#endif
         internal FileReaderJsInterop(IJSRuntime jsRuntime, FileReaderServiceOptions options)
         {
             CurrentJSRuntime = jsRuntime;
@@ -215,7 +216,7 @@ namespace Tewr.Blazor.FileReader
             using var readStream = await streamReference.OpenReadStreamAsync(cancellationToken: cancellationToken);
             return await readStream.ReadAsync(buffer.AsMemory((int)bufferOffset, count), cancellationToken);
         }
-#endif
+#else
 
         private async Task<int> ReadFileUnmarshalledAsync(
             int fileRef, byte[] buffer, long position, long bufferOffset, int count,
@@ -251,7 +252,7 @@ namespace Tewr.Blazor.FileReader
             
             return bytesRead;
         }
-
+#endif
         /// <summary>
         /// Called from Js
         /// </summary>

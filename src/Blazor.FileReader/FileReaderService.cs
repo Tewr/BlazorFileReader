@@ -25,6 +25,9 @@ namespace Tewr.Blazor.FileReader
         /// For client-side blazor, uses shared memory buffer to transfer data quickly.
         /// Not available for server-side blazor.
         /// </summary>
+#if NET9_0_OR_GREATER
+        [Obsolete("This option is ignored, should no longer be used, and will be removed in a future version.")]
+#endif
         bool UseWasmSharedBuffer { get; set; }
     }
 
@@ -32,7 +35,12 @@ namespace Tewr.Blazor.FileReader
     {
         public bool InitializeOnFirstCall { get; set; } = true;
 
+#if NET9_0_OR_GREATER
+        [Obsolete("This option is ignored, should no longer be used, and will be removed in a future version.")]
+        public bool UseWasmSharedBuffer { get { return false; } set { } }
+#else
         public bool UseWasmSharedBuffer { get; set; } = false;
+#endif
 
         /// <summary>
         /// Activates server-side buffer chunking. Activated if not running on WASM.
